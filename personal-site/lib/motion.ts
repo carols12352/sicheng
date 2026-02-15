@@ -1,16 +1,16 @@
 export const MOTION = {
   duration: {
     micro: 0.18,
-    hero: 1.3,
-    section: 0.85,
-    page: 2,
-    stagger: 0.16,
+    hero: 1.35,
+    section: 1.1,
+    page: 0.6,
+    stagger: 0.12,
   },
   easeOut: [0.16, 1, 0.3, 1] as const,
   y: {
-    page: 3,
+    page: 2,
     hero: 4,
-    section: 4,
+    section: 3,
     hover: -1,
   },
 };
@@ -34,7 +34,7 @@ export const variants = {
       y: 0,
       transition: {
         duration: MOTION.duration.hero,
-        delay: 0.18,
+        delay: 0.08,
         ease: MOTION.easeOut,
       },
     },
@@ -52,7 +52,7 @@ export const variants = {
   },
   articleHorizontal: {
     fromRight: {
-      initial: { opacity: 0, x: 14 },
+      initial: { opacity: 0, x: 6 },
       animate: {
         opacity: 1,
         x: 0,
@@ -63,7 +63,7 @@ export const variants = {
       },
     },
     fromLeft: {
-      initial: { opacity: 0, x: -14 },
+      initial: { opacity: 0, x: -6 },
       animate: {
         opacity: 1,
         x: 0,
@@ -89,7 +89,7 @@ export const variants = {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.82,
+        duration: 0.8,
         ease: MOTION.easeOut,
       },
     },

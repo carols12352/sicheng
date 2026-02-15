@@ -1,112 +1,172 @@
 import Link from "next/link";
+import { AutoGrowthLine } from "@/components/home/auto-growth-line";
 import { RevealItem, RevealSection, RevealStagger } from "@/components/motion/reveal";
 
 const focusItems = [
   {
-    title: "Full-Stack System Design",
+    title: "Backend Reliability",
     description:
-      "I approach features as complete systems rather than isolated components, thinking through data flow, API contracts, state management, and how frontend and backend interact over time.",
+      "Building FastAPI/Flask services with explicit API contracts, pagination strategy, and failure-aware request paths.",
   },
   {
-    title: "User Experience on Top",
+    title: "Applied ML Iteration",
     description:
-      "I care about how systems feel in actually use — responsiveness, consistency, and clarity — making sure technical decisions ultimately serve real user behavior.",
+      "Running practical model experiments, tuning parameters, and evaluating quality with clear comparison criteria.",
   },
   {
-    title: "Applied AI/ML",
+    title: "Product Delivery",
     description:
-      "I focus on practical AI integration, evaluating models, tuning inputs and outputs, and building pipelines that turn messy user input into structured, reliable results.",
+      "Turning prototypes into usable products across web, mobile, and desktop with measurable user outcomes.",
   },
   {
-    title: "From Start to Finish",
+    title: "Developer Tooling",
     description:
-      "I enjoy taking ideas from prototype to deployment, handling authentication, persistence, iteration, and real-world feedback without relying on large rewrites.",
+      "Designing lightweight CLI workflows and deterministic command boundaries to reduce operational mistakes.",
   },
 ];
 
 const selectedWork = [
   {
-    title: "Realtime Chat Infrastructure",
+    title: "Chat WebSocket Demo",
     description:
-      "Evolved from a single service into a queue-backed delivery pipeline.",
+      "FastAPI + WebSocket + PostgreSQL + Next.js with JWT auth, email verification, and incremental message sync.",
     href: "/projects",
   },
   {
-    title: "Engineering Workflow CLI",
+    title: "Todo List Web & Desktop App",
     description:
-      "Unified setup and release commands with validation and dry-run modes.",
+      "React + Flask + MySQL task system with cross-platform tray app packaging for macOS and Windows.",
     href: "/projects",
   },
   {
-    title: "Reliability Notes",
+    title: "Resume Analyzer",
     description:
-      "Writing on boundary decisions, trade-offs, and production feedback loops.",
-    href: "/writing",
+      "Flask + React tool integrated with OpenAI API for structured resume evaluation and actionable feedback.",
+    href: "/projects",
+  },
+];
+
+const growthTimeline = [
+  {
+    phase: "2023",
+    period: "Mobile + Data Foundations",
+    detail: "Built a React Native maps app with storage/render optimizations and ran handwriting recognition experiments up to 96% accuracy.",
+  },
+  {
+    phase: "2024",
+    period: "ML Internship (Tencent Music)",
+    detail: "Evaluated 10 speech synthesis models with 20+ experiments and delivered a 20% gain in vocal consistency.",
+  },
+  {
+    phase: "2023-2025",
+    period: "Co-Founder Product Build",
+    detail: "Built and operated an A-Level study platform (WordPress + MySQL + Tencent Cloud) with about 1,000 daily active users.",
+  },
+  {
+    phase: "Now",
+    period: "Software Engineering @ UWaterloo",
+    detail: "Deepening systems and algorithm foundations while continuing full-stack and AI-oriented project delivery.",
   },
 ];
 
 export default function Home() {
   return (
-    <>
-      <RevealSection tone="hero">
-        <p className="text-sm text-gray-500">
-          Software Engineering @{" "}
-          <a
-            href="https://uwaterloo.ca/future-students/programs/software-engineering"
-            target="_blank"
-            rel="noreferrer"
-            className="ui-link"
-          >
-            UWaterloo
-          </a>
-        </p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-          Sicheng Ouyang
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-700">
-          Student at UWaterloo software engineering class of 2030, interested in full-stack web development, applied AI/ML.
-        </p>
-      </RevealSection>
-
-      <RevealSection className="mt-20">
-        <h2 className="text-lg font-semibold text-gray-900">What I Do</h2>
-        <RevealStagger className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {focusItems.map((item) => (
-            <RevealItem key={item.title} className="ui-item border-t border-gray-200 pt-4">
-              <h3 className="text-sm font-semibold text-gray-900">
-                {item.title}
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-gray-600">
-                {item.description}
-              </p>
-            </RevealItem>
-          ))}
-        </RevealStagger>
-      </RevealSection>
-
-      <RevealSection className="mt-20">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="text-lg font-semibold text-gray-900">Selected Work</h2>
-          <Link href="/projects" className="ui-link ui-underline text-sm">
-            View all projects
-          </Link>
-        </div>
-        <RevealStagger className="mt-6 space-y-5">
-          {selectedWork.map((item) => (
-            <RevealItem key={item.title}>
-              <Link
-                href={item.href}
-                className="ui-item block border-t border-gray-200 pt-4"
+    <div className="home-canvas home-load-enter">
+      <RevealSection
+        tone="hero"
+        className="home-band home-hero home-hero-sweep flex min-h-[calc(100svh-8.5rem)] items-center px-6 py-10 sm:px-10 sm:py-14 lg:px-14"
+      >
+        <div className="home-hero-grid mx-auto w-full max-w-6xl">
+          <div>
+            <p className="text-sm text-gray-500">
+              Software Engineering @{" "}
+              <a
+                href="https://uwaterloo.ca/future-students/programs/software-engineering"
+                target="_blank"
+                rel="noreferrer"
+                className="ui-link"
               >
-                <h3 className="text-base font-semibold text-gray-900">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-gray-600">
-                  {item.description}
-                </p>
+                UWaterloo
+              </a>
+            </p>
+
+            <h1 className="home-hero-title mt-4 text-gray-900">
+              Sicheng Ouyang
+            </h1>
+            <span aria-hidden className="mt-5 block h-px w-20 bg-gray-300" />
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-gray-600">
+              Software Engineering student at UWaterloo focused on reliable backend systems, practical ML workflows, and product delivery.
+            </p>
+
+            <div className="home-hero-actions mt-8">
+              <Link href="/projects" className="home-btn home-btn-primary">
+                View Projects
               </Link>
-            </RevealItem>
-          ))}
-        </RevealStagger>
+              <Link href="/writing" className="home-btn home-btn-ghost">
+                Read Writing
+              </Link>
+            </div>
+          </div>
+
+          <div className="home-hero-panel">
+            <p className="home-hero-panel-title">Growth Line</p>
+            <AutoGrowthLine items={growthTimeline} />
+          </div>
+        </div>
       </RevealSection>
-    </>
+
+      <RevealSection className="home-band home-section px-6 py-[4.5rem] sm:px-10 sm:py-[5.5rem] lg:px-14">
+        <div className="capability-layout mx-auto w-full max-w-6xl">
+          <div>
+            <h2 className="section-title">What I Do</h2>
+            <p className="mt-4 max-w-sm text-sm leading-6 text-gray-600">
+              Engineering focus areas that guide how I design systems, ship features, and iterate in production.
+            </p>
+          </div>
+          <RevealStagger className="capability-rail">
+            {focusItems.map((item, index) => (
+              <RevealItem key={item.title} className="capability-row ui-item">
+                <p className="capability-index">0{index + 1}</p>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-gray-600">
+                    {item.description}
+                  </p>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealStagger>
+        </div>
+      </RevealSection>
+
+      <RevealSection className="home-band home-section px-6 pb-[4.5rem] pt-[3.5rem] sm:px-10 sm:pb-[5.5rem] sm:pt-[4rem] lg:px-14">
+        <div className="mx-auto w-full max-w-6xl">
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="section-title">Selected Work</h2>
+            <Link href="/projects" className="ui-link ui-underline text-sm">
+              View all projects
+            </Link>
+          </div>
+          <RevealStagger className="work-layout mt-6">
+            {selectedWork.map((item, index) => (
+              <RevealItem key={item.title} className={index === 0 ? "work-feature" : "work-side"}>
+                <Link
+                  href={item.href}
+                  className={`work-link ui-item block ${index === 0 ? "work-link-feature" : ""}`}
+                >
+                  <p className="work-meta">Project {index + 1}</p>
+                  <h3 className="mt-2 text-base font-semibold text-gray-900">{item.title}</h3>
+                  <p className="mt-4 text-sm leading-6 text-gray-600">
+                    {item.description}
+                  </p>
+                </Link>
+              </RevealItem>
+            ))}
+          </RevealStagger>
+        </div>
+      </RevealSection>
+    </div>
   );
 }

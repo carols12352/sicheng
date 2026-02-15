@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageTransition } from "@/components/motion/page-transition";
 import { NavLink } from "@/components/navigation/nav-link";
 import "./globals.css";
@@ -27,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white text-gray-700 antialiased">
+      <body className="antialiased">
         <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-10 sm:py-12">
           <header>
             <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
@@ -41,39 +40,24 @@ export default function RootLayout({
             <PageTransition>{children}</PageTransition>
           </main>
 
-          <footer className="mt-20 border-t border-gray-200 pt-10 pb-2 text-sm text-gray-500">
-            <p className="font-semibold text-gray-800">Sicheng Ouyang</p>
+          <footer className="mt-24 border-t border-gray-200 pt-8 pb-2 text-sm text-gray-500">
+            <p className="font-semibold text-gray-900">Sicheng Ouyang</p>
 
-            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
-              <Link href="/resume" className="ui-link">
-                Resume
-              </Link>
-              <Link href="/projects" className="ui-link">
-                Projects
-              </Link>
-              <Link href="/writing" className="ui-link">
-                Writing
-              </Link>
-              <Link href="/about" className="ui-link">
-                About
-              </Link>
-            </div>
-
-            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-              <a href="https://github.com/carols12352" target="_blank" rel="noreferrer" className="ui-link">
+            <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+              <a href="https://github.com/carols12352" target="_blank" rel="noreferrer" className="ui-link ui-underline">
                 GitHub
               </a>
-              <a href="https://www.linkedin.com/in/sicheng-ouyang/" target="_blank" rel="noreferrer" className="ui-link">
+              <span className="text-gray-400">·</span>
+              <a href="https://www.linkedin.com/in/sicheng-ouyang/" target="_blank" rel="noreferrer" className="ui-link ui-underline">
                 LinkedIn
               </a>
-              <a href="mailto:ouyangsicheng577+work@gmail.com" target="_blank" rel="noreferrer" className="ui-link">
+              <span className="text-gray-400">·</span>
+              <a href="mailto:sicheng.ouyang@uwaterloo.ca" target="_blank" rel="noreferrer" className="ui-link ui-underline">
                 Contact
               </a>
             </div>
 
-            <div className="mt-6 text-xs text-gray-400">
-              © {new Date().getFullYear()} All rights reserved.
-            </div>
+            <p className="mt-5 text-xs text-gray-400">© 2026 All rights reserved.</p>
           </footer>
         </div>
       </body>
