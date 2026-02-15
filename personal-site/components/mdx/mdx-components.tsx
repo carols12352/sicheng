@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { isValidElement } from "react";
 import { Callout } from "@/components/mdx/callout";
 import { CodeBlock } from "@/components/mdx/code-block";
@@ -30,8 +30,9 @@ function extractText(children: ReactNode): string {
     return children.map(extractText).join(" ").trim();
   }
 
-  if (isValidElement<{ children?: ReactNode }>(children)) {
-    return extractText(children.props.children);
+  if (isValidElement(children)) {
+    const element = children as ReactElement<{ children?: ReactNode }>;
+    return extractText(element.props.children);
   }
 
   return "";
