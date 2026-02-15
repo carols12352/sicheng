@@ -32,24 +32,9 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
   },
   icons: {
-    icon: [
-      {
-        url: "/favicon.ico",
-        type: "image/x-icon",
-      },
-      {
-        url: "/favicon-light.ico",
-        type: "image/x-icon",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/favicon-dark.ico",
-        type: "image/x-icon",
-        media: "(prefers-color-scheme: dark)",
-      },
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/favicon-light.png",
+    icon: "/favicon-dark.ico",
+    shortcut: "/favicon-dark.ico",
+    apple: "/favicon-dark.png",
   },
   robots: {
     index: true,
