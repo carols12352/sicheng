@@ -1,0 +1,19 @@
+---
+title: System Boundaries Before Framework Choices
+date: 2026-02-15
+summary: Defining service boundaries early reduces accidental coupling and simplifies long-term scaling.
+---
+
+## Context
+In early versions of a system, it is easy to optimize for speed of coding and delay boundary decisions. This often creates hidden coupling that becomes expensive during growth.
+
+## Core Decision
+I define boundaries around ownership of data and failure handling, not around team preferences or framework conventions.
+
+## Trade-Offs
+here are trade-offs to consider when defining boundaries:
+- Strong boundaries add short-term friction during feature delivery.
+- Weak boundaries look fast early but increase migration cost later.
+
+## Practical Result
+When ownership is explicit, service evolution from v1 to v3 can happen incrementally without large rewrites.
