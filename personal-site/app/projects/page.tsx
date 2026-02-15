@@ -2,6 +2,8 @@ import { MermaidDiagram } from "@/components/projects/mermaid-diagram";
 import { TerminalDemo } from "@/components/projects/terminal-demo";
 
 type ProjectEntry = {
+  anchor: string;
+  period: string;
   name: string;
   repo: string;
   summary: string;
@@ -17,6 +19,8 @@ type ProjectEntry = {
 
 const projectEntries: ProjectEntry[] = [
   {
+    anchor: "chat-websocket-demo",
+    period: "2025-2026",
     name: "Chat WebSocket Demo",
     repo: "https://github.com/carols12352/chat",
     summary:
@@ -53,39 +57,8 @@ flowchart LR
 `,
   },
   {
-    name: "Todo List Web & Desktop App",
-    repo: "https://github.com/carols12352/todo",
-    summary:
-      "Full-stack task manager built for both browser and desktop tray usage with natural language task input.",
-    stack: [
-      { name: "React", href: "https://react.dev/" },
-      { name: "Flask", href: "https://flask.palletsprojects.com/" },
-      { name: "MySQL", href: "https://www.mysql.com/" },
-      { name: "BERT", href: "https://huggingface.co/docs/transformers/model_doc/bert" },
-      { name: "Desktop Tray App", href: "https://www.electronjs.org/docs/latest/api/tray" },
-    ],
-    highlights: [
-      "Built full CRUD task flows with a React + Flask + MySQL stack.",
-      "Packaged a cross-platform desktop tray app for both macOS and Windows usage.",
-      "Fine-tuned BERT-based parsing to convert natural language input into structured task JSON.",
-    ],
-    challenges:
-      "Maintaining behavior parity between web and desktop clients requires strict API contracts and normalization of input parsing outputs.",
-    nextSteps: [
-      "Add optimistic updates with conflict resolution for concurrent edits.",
-      "Improve parser confidence scoring and fallback prompts when intent is ambiguous.",
-    ],
-    mermaidTitle: "Web/Desktop System Flow",
-    mermaidChart: `
-flowchart TD
-  UI[React Web UI] --> API[Flask API]
-  TRAY[Desktop Tray App] --> API
-  API --> DB[(MySQL)]
-  NLP[BERT Parser] --> API
-  API --> OUT[Task JSON + CRUD Results]
-`,
-  },
-  {
+    anchor: "resume-analyzer",
+    period: "2025",
     name: "Resume Analyzer",
     repo: "https://github.com/carols12352/resume-analyser",
     summary:
@@ -123,6 +96,78 @@ sequenceDiagram
 `,
   },
   {
+    anchor: "todo-list-web-desktop-app",
+    period: "2024-2025",
+    name: "Todo List Web & Desktop App",
+    repo: "https://github.com/carols12352/todo",
+    summary:
+      "Full-stack task manager built for both browser and desktop tray usage with natural language task input.",
+    stack: [
+      { name: "React", href: "https://react.dev/" },
+      { name: "Flask", href: "https://flask.palletsprojects.com/" },
+      { name: "MySQL", href: "https://www.mysql.com/" },
+      { name: "BERT", href: "https://huggingface.co/docs/transformers/model_doc/bert" },
+      { name: "Desktop Tray App", href: "https://www.electronjs.org/docs/latest/api/tray" },
+    ],
+    highlights: [
+      "Built full CRUD task flows with a React + Flask + MySQL stack.",
+      "Packaged a cross-platform desktop tray app for both macOS and Windows usage.",
+      "Fine-tuned BERT-based parsing to convert natural language input into structured task JSON.",
+    ],
+    challenges:
+      "Maintaining behavior parity between web and desktop clients requires strict API contracts and normalization of input parsing outputs.",
+    nextSteps: [
+      "Add optimistic updates with conflict resolution for concurrent edits.",
+      "Improve parser confidence scoring and fallback prompts when intent is ambiguous.",
+    ],
+    mermaidTitle: "Web/Desktop System Flow",
+    mermaidChart: `
+flowchart TD
+  UI[React Web UI] --> API[Flask API]
+  TRAY[Desktop Tray App] --> API
+  API --> DB[(MySQL)]
+  NLP[BERT Parser] --> API
+  API --> OUT[Task JSON + CRUD Results]
+`,
+  },
+  {
+    anchor: "nurel-ai-playground",
+    period: "2024",
+    name: "Nurel AI Playground",
+    repo: "https://github.com/carols12352/nurel-ai-playground",
+    summary:
+      "A team-built local AI experimentation web app for model training controls and real-time training visualization.",
+    stack: [
+      { name: "FastAPI", href: "https://fastapi.tiangolo.com/" },
+      { name: "React", href: "https://react.dev/" },
+      { name: "Python", href: "https://docs.python.org/3/" },
+      { name: "Training Visualization", href: "https://d3js.org/" },
+    ],
+    highlights: [
+      "Built with a team of 4 to provide configurable hyperparameter controls in a browser UI.",
+      "Connected FastAPI training endpoints to real-time frontend charts for experiment monitoring.",
+      "Optimized for local execution to keep iteration fast for exploratory workflows.",
+    ],
+    challenges:
+      "The hardest part was keeping training-state updates consistent between backend jobs and frontend visual state during frequent parameter changes.",
+    nextSteps: [
+      "Add experiment versioning and comparison between multiple runs.",
+      "Introduce resumable training jobs with checkpoint-aware UI state.",
+    ],
+    mermaidTitle: "Experiment Loop",
+    mermaidChart: `
+flowchart LR
+  U[Researcher UI] --> C[Hyperparameter Config]
+  C --> A[FastAPI Training API]
+  A --> T[Training Worker]
+  T --> M[Metrics Stream]
+  M --> V[React Visualization]
+  V --> U
+`,
+  },
+  {
+    anchor: "bookkeeping-command-line-tool",
+    period: "2023-2024",
     name: "Bookkeeping Command-Line Tool",
     repo: "https://github.com/carols12352/bookkeeping",
     summary:
@@ -155,6 +200,30 @@ sequenceDiagram
       "total ............ 113.50",
     ],
   },
+  {
+    anchor: "obsidian-oreo-theme",
+    period: "2023",
+    name: "Obsidian Oreo Theme",
+    repo: "https://github.com/carols12352/obsidian-oreo-theme",
+    summary:
+      "A custom Obsidian theme focused on readable contrast and a polished Oreo-inspired visual style.",
+    stack: [
+      { name: "CSS", href: "https://developer.mozilla.org/docs/Web/CSS" },
+      { name: "HTML", href: "https://developer.mozilla.org/docs/Web/HTML" },
+      { name: "Obsidian", href: "https://help.obsidian.md/Themes" },
+    ],
+    highlights: [
+      "Designed and implemented a complete custom theme package for Obsidian.",
+      "Published the theme with community adoption exceeding 3,000 downloads.",
+      "Balanced aesthetics with practical readability for long-form note taking.",
+    ],
+    challenges:
+      "Theme work required handling many edge UI states while keeping a coherent visual language across plugins and markdown content patterns.",
+    nextSteps: [
+      "Add broader plugin-specific style coverage and maintain compatibility across app updates.",
+      "Ship accessibility-focused variants with stronger contrast presets.",
+    ],
+  },
 ];
 
 type ProjectSectionProps = {
@@ -164,12 +233,16 @@ type ProjectSectionProps = {
 
 function ProjectSection({ index, project }: ProjectSectionProps) {
   return (
-    <article className="mt-14 border-t border-gray-300 pt-8 first:mt-0 first:border-t-0 first:pt-0">
+    <article
+      id={project.anchor}
+      className="mt-14 border-t border-gray-300 pt-8 first:mt-0 first:border-t-0 first:pt-0"
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold tracking-[0.1em] text-gray-500 uppercase">
             Project {String(index + 1).padStart(2, "0")}
           </p>
+          <p className="mt-1 text-xs text-gray-500">{project.period}</p>
           <h2 className="text-lg font-semibold">{project.name}</h2>
         </div>
         <a

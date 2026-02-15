@@ -6,8 +6,8 @@ export default function AboutPage() {
           About
         </h1>
         <p className="mt-4 max-w-2xl">
-          I&apos;m Sicheng Ouyang, a Software Engineering student at the University of Waterloo (Sep 2025 - present).
-          I build backend-heavy products with practical ML integrations across web, mobile, and desktop.
+          Hi there! I&apos;m Sicheng Ouyang, a Software Engineering student at the University of Waterloo (Sep 2025 - 2030).
+          I like building full stack web apps and exploring practical ML applications. I have experience in backend systems, ML workflows, and product delivery from my own projects and serveral internships. And I&apos;m passionate about learning from production data and iterating quickly in real environments.
         </p>
       </section>
 
@@ -24,9 +24,7 @@ export default function AboutPage() {
       <section className="mt-12">
         <h2 className="text-lg font-semibold">How I Build</h2>
         <p className="mt-4">
-          I start from interfaces, failure boundaries, and explicit data flow.
-          I prefer simple and debuggable designs first, then increase complexity
-          only when production behavior shows clear need.
+          I start from the basic file tree to backend API design, then build up to the frontend and user experience. I prefer simple and debuggable designs first, then increase complexity only when production behavior shows clear need. I also like to learn from data, whether it&apos;s user feedback or system metrics, and iterate quickly in real environments.
         </p>
       </section>
 
@@ -39,6 +37,13 @@ export default function AboutPage() {
           <li>Languages spoken: English (fluent), Mandarin Chinese (native), French (basic).</li>
         </ul>
       </section>
+      
+      <section className="mt-12">
+        <h2 className="text-lg font-semibold">More About Me</h2>
+          <p className="mt-4">
+            besides all of the coding, I am also a big fan of going to the gym and play tennis, FPS games are also a fun way to relax and connect with friends. I also enjoy traveling and exploring new places, especially if there are good food around!
+          </p>
+        </section>
     </>
   );
 }

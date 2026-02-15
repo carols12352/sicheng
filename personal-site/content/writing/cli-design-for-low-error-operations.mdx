@@ -1,0 +1,25 @@
+---
+title: CLI Design for Low-Error Operations
+date: 2026-02-12
+summary: Good CLI tools are not about fancy flags. They are about reducing operator mistakes under pressure.
+tags:
+  - tooling
+  - cli
+  - engineering
+---
+
+## Goal
+I design CLI tools for predictable behavior, not clever interfaces.
+
+## Principles
+
+1. Every mutating command has a dry-run mode.
+2. Output is structured and stable enough for scripts.
+3. Validation happens before side effects.
+4. Errors are explicit and mapped to actionable fixes.
+
+## Example Pattern
+For bookkeeping-style operations, a command should confirm what it parsed and what it will write before writing anything.
+
+## Outcome
+The tool becomes safer for daily use and easier to integrate into CI or scheduled tasks.

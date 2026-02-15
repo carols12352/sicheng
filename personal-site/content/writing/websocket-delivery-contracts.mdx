@@ -1,0 +1,25 @@
+---
+title: WebSocket Delivery Contracts That Actually Hold
+date: 2026-02-15
+summary: Realtime systems fail when delivery semantics are vague. I prefer explicit contracts for ordering, replay, and reconnect.
+tags:
+  - backend
+  - websocket
+  - architecture
+---
+
+## Problem
+Most chat demos look correct under perfect connectivity, then break under reconnect, duplicate delivery, or partial history sync.
+
+## Contract First
+Before optimizing throughput, I define three behaviors:
+
+1. Ordering scope: per-conversation ordering, not global ordering.
+2. Replay rule: client can request messages after `last_seen_message_id`.
+3. Duplicate handling: writes are idempotent on the server boundary.
+
+## Why This Works
+These contracts keep client and server assumptions aligned. The frontend can recover safely after disconnection, and backend workers can retry without creating inconsistent state.
+
+## Practical Note
+If your contracts are unclear, no amount of queue or cache work will save the user experience during unstable network conditions.

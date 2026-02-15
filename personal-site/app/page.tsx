@@ -4,24 +4,24 @@ import { RevealItem, RevealSection, RevealStagger } from "@/components/motion/re
 
 const focusItems = [
   {
-    title: "Backend Reliability",
+    title: "Backend Systems",
     description:
-      "Building FastAPI/Flask services with explicit API contracts, pagination strategy, and failure-aware request paths.",
+      "I build using Typescript and Python, focusing on accurate error handing, clear data ownership and clear API routes",
   },
   {
-    title: "Applied ML Iteration",
+    title: "Applied ML",
     description:
-      "Running practical model experiments, tuning parameters, and evaluating quality with clear comparison criteria.",
+      "I love fine-tuning and evaluating open-source models for practical use cases, and have a lot of fun with muti-agent experiments and prompt engineering.",
   },
   {
-    title: "Product Delivery",
+    title: "Practical Product Delivery",
     description:
-      "Turning prototypes into usable products across web, mobile, and desktop with measurable user outcomes.",
+      "Turning prototypes into actual usable products across web, mobile, and desktop with measurable user outcomes and feedbacks.",
   },
   {
-    title: "Developer Tooling",
+    title: "Light Weight Developer Tooling",
     description:
-      "Designing lightweight CLI workflows and deterministic command boundaries to reduce operational mistakes.",
+      "I like making small but useful tools that improve my daily productivity, and I prefer simple scripts and local setups over complex platforms and cloud services for most use cases.",
   },
 ];
 
@@ -30,19 +30,19 @@ const selectedWork = [
     title: "Chat WebSocket Demo",
     description:
       "FastAPI + WebSocket + PostgreSQL + Next.js with JWT auth, email verification, and incremental message sync.",
-    href: "/projects",
+    href: "/projects#chat-websocket-demo",
   },
   {
     title: "Todo List Web & Desktop App",
     description:
       "React + Flask + MySQL task system with cross-platform tray app packaging for macOS and Windows.",
-    href: "/projects",
+    href: "/projects#todo-list-web-desktop-app",
   },
   {
     title: "Resume Analyzer",
     description:
       "Flask + React tool integrated with OpenAI API for structured resume evaluation and actionable feedback.",
-    href: "/projects",
+    href: "/projects#resume-analyzer",
   },
 ];
 

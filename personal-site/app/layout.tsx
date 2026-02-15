@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageTransition } from "@/components/motion/page-transition";
 import { NavLink } from "@/components/navigation/nav-link";
+import { ThemeToggle } from "@/components/navigation/theme-toggle";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,11 +30,14 @@ export default function RootLayout({
       <body className="antialiased">
         <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-10 sm:py-12">
           <header>
-            <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-              {navItems.map((item) => (
-                <NavLink key={item.href} href={item.href} label={item.label} />
-              ))}
-            </nav>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                {navItems.map((item) => (
+                  <NavLink key={item.href} href={item.href} label={item.label} />
+                ))}
+              </nav>
+              <ThemeToggle />
+            </div>
           </header>
 
           <main className="mt-12 flex-1">

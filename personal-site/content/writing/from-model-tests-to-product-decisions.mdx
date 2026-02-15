@@ -1,0 +1,26 @@
+---
+title: From Model Tests to Product Decisions
+date: 2026-02-14
+summary: Running many model experiments is easy. Turning them into product decisions requires a clear evaluation frame.
+tags:
+  - machine-learning
+  - experimentation
+  - product
+---
+
+## The Trap
+Teams often run a large set of model experiments but still cannot answer one question: should this ship?
+
+## My Evaluation Frame
+For each experiment, I record:
+
+1. Input conditions.
+2. Parameter changes.
+3. Output quality metrics.
+4. Failure examples that matter to users.
+
+## Decision Rule
+I only promote a model change when it improves target quality and does not increase important failure modes.
+
+## Result
+This keeps iteration speed high while avoiding "metric-only wins" that hurt real user outcomes.
