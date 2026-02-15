@@ -5,16 +5,31 @@ import Link from "next/link";
 import { PageTransition } from "@/components/motion/page-transition";
 import { NavLink } from "@/components/navigation/nav-link";
 import { ThemeToggle } from "@/components/navigation/theme-toggle";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import {
+  SITE_AUTHOR,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  SITE_OG_IMAGE,
+  SITE_TITLE,
+  SITE_URL,
+} from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: SITE_NAME,
+    default: SITE_TITLE,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_AUTHOR, url: SITE_URL }],
+  creator: SITE_AUTHOR,
+  publisher: SITE_AUTHOR,
+  category: "technology",
+  referrer: "origin-when-cross-origin",
   alternates: {
     canonical: "/",
   },
@@ -25,11 +40,20 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     siteName: SITE_NAME,
     locale: "en_CA",
+    images: [
+      {
+        url: SITE_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} portfolio cover`,
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
+    images: [SITE_OG_IMAGE],
   },
   icons: {
     icon: "/favicon-dark.ico",
@@ -73,6 +97,18 @@ export default function RootLayout({
     ],
     alumniOf: "University of Waterloo",
     jobTitle: "Software Engineering Student",
+  };
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    inLanguage: "en-CA",
+    author: {
+      "@type": "Person",
+      name: SITE_AUTHOR,
+    },
   };
 
   return (
@@ -156,6 +192,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(personJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
           }}
         />
       </body>

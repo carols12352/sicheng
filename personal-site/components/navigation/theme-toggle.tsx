@@ -21,18 +21,20 @@ function applyTheme(mode: ThemeMode) {
 }
 
 export function ThemeToggle() {
-  const [mode, setMode] = useState<ThemeMode>("system");
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    if (typeof window === "undefined") {
+      return "system";
+    }
+
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    return saved === "light" || saved === "dark" || saved === "system"
+      ? saved
+      : "system";
+  });
 
   useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    const initial: ThemeMode =
-      saved === "light" || saved === "dark" || saved === "system"
-        ? saved
-        : "system";
-
-    setMode(initial);
-    applyTheme(initial);
-  }, []);
+    applyTheme(mode);
+  }, [mode]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");

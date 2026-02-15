@@ -3,7 +3,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { Prose } from "@/components/mdx/prose";
-import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { SITE_AUTHOR, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 import { getAllPosts, getPostBySlug } from "@/lib/writing";
 
 type PageProps = {
@@ -28,6 +28,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: post.meta.title,
     description: post.meta.summary,
+    authors: [{ name: SITE_AUTHOR, url: SITE_URL }],
+    keywords: post.meta.tags,
     alternates: {
       canonical: `/writing/${slug}`,
     },
@@ -38,11 +40,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: post.meta.summary,
       siteName: SITE_NAME,
       publishedTime: post.meta.date || undefined,
+      authors: [SITE_AUTHOR],
+      tags: post.meta.tags,
+      images: [
+        {
+          url: SITE_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `${post.meta.title} cover image`,
+        },
+      ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: post.meta.title,
       description: post.meta.summary,
+      images: [SITE_OG_IMAGE],
     },
   };
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 type MermaidRuntime = {
   initialize: (config: Record<string, unknown>) => void;
@@ -66,11 +66,8 @@ type MermaidDiagramProps = {
 export function MermaidDiagram({ chart, title }: MermaidDiagramProps) {
   const [svg, setSvg] = useState<string>("");
   const [hasError, setHasError] = useState(false);
-
-  const diagramId = useMemo(
-    () => `mermaid-${Math.random().toString(36).slice(2, 10)}`,
-    [],
-  );
+  const reactId = useId();
+  const diagramId = `mermaid-${reactId.replace(/:/g, "")}`;
 
   useEffect(() => {
     let cancelled = false;
