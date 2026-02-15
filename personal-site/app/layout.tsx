@@ -157,6 +157,10 @@ export default function RootLayout({
               <a href="mailto:sicheng.ouyang@uwaterloo.ca" target="_blank" rel="noreferrer" className="ui-link ui-underline">
                 Contact
               </a>
+              <span className="text-gray-400">·</span>
+              <a href="/sitemap.xml" target="_blank" rel="noreferrer" className="ui-link ui-underline">
+                Sitemap
+              </a>
             </div>
 
             <p className="mt-5 text-xs text-gray-400">© 2026 All rights reserved.</p>
