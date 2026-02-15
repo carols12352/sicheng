@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PageTransition } from "@/components/motion/page-transition";
 import { NavLink } from "@/components/navigation/nav-link";
 import { ThemeToggle } from "@/components/navigation/theme-toggle";
@@ -64,6 +65,7 @@ export default function RootLayout({
             <p className="mt-5 text-xs text-gray-400">© 2026 All rights reserved.</p>
           </footer>
         </div>
+        <SpeedInsights />
       </body>
     </html>
   );
