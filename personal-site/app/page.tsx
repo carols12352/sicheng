@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { AutoGrowthLine } from "@/components/home/auto-growth-line";
 import { RevealItem, RevealSection, RevealStagger } from "@/components/motion/reveal";
+import { SITE_DESCRIPTION } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+};
 
 const focusItems = [
   {

@@ -3,6 +3,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { Prose } from "@/components/mdx/prose";
+import { SITE_NAME, SITE_URL } from "@/lib/seo";
 import { getAllPosts, getPostBySlug } from "@/lib/writing";
 
 type PageProps = {
@@ -22,9 +23,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Writing" };
   }
 
+  const articleUrl = `${SITE_URL}/writing/${slug}`;
+
   return {
     title: post.meta.title,
     description: post.meta.summary,
+    alternates: {
+      canonical: `/writing/${slug}`,
+    },
+    openGraph: {
+      type: "article",
+      url: articleUrl,
+      title: post.meta.title,
+      description: post.meta.summary,
+      siteName: SITE_NAME,
+      publishedTime: post.meta.date || undefined,
+    },
+    twitter: {
+      card: "summary",
+      title: post.meta.title,
+      description: post.meta.summary,
+    },
   };
 }
 

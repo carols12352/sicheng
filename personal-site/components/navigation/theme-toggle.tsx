@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 type ThemeMode = "light" | "dark" | "system";
 
 const STORAGE_KEY = "site-theme-mode";
+const FAVICON_BY_THEME = {
+  light: "/favicon-light.ico",
+  dark: "/favicon-dark.ico",
+} as const;
 
 function resolveSystemTheme(): "light" | "dark" {
   if (typeof window === "undefined") {
@@ -13,10 +17,28 @@ function resolveSystemTheme(): "light" | "dark" {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+function applyFavicon(theme: "light" | "dark") {
+  const head = document.head;
+  if (!head) return;
+
+  let icon = head.querySelector<HTMLLinkElement>('link[data-dynamic-favicon="true"]');
+  if (!icon) {
+    icon = document.createElement("link");
+    icon.rel = "icon";
+    icon.type = "image/x-icon";
+    icon.dataset.dynamicFavicon = "true";
+    head.appendChild(icon);
+  }
+
+  icon.href = FAVICON_BY_THEME[theme];
+}
+
 function applyTheme(mode: ThemeMode) {
   const root = document.documentElement;
+  const resolvedTheme = mode === "system" ? resolveSystemTheme() : mode;
   root.dataset.theme = mode;
-  root.style.colorScheme = mode === "system" ? resolveSystemTheme() : mode;
+  root.style.colorScheme = resolvedTheme;
+  applyFavicon(resolvedTheme);
 }
 
 export function ThemeToggle() {

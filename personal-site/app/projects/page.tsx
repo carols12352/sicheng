@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import { MermaidDiagram } from "@/components/projects/mermaid-diagram";
 import { TerminalDemo } from "@/components/projects/terminal-demo";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description:
+    "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
+  alternates: {
+    canonical: "/projects",
+  },
+};
 
 type ProjectEntry = {
   anchor: string;

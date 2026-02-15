@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Resume",
+  description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
+  alternates: {
+    canonical: "/resume",
+  },
+};
+
 const RESUME_PATH = "/resume_26.2.14.pdf";
 
 export default function ResumePage() {

@@ -161,6 +161,53 @@ p {
   color: var(--text-strong);
 }
 
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.site-logo {
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  display: block;
+}
+
+.site-logo-dark {
+  display: none;
+}
+
+:root[data-theme="dark"] .site-logo-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .site-logo-dark {
+  display: inline-block;
+}
+
+:root[data-theme="light"] .site-logo-light {
+  display: inline-block;
+}
+
+:root[data-theme="light"] .site-logo-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .site-logo-light,
+  :root[data-theme="system"] .site-logo-light {
+    display: none;
+  }
+
+  :root:not([data-theme]) .site-logo-dark,
+  :root[data-theme="system"] .site-logo-dark {
+    display: inline-block;
+  }
+}
+
 .theme-toggle {
   display: inline-flex;
   align-items: center;

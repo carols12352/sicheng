@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "About Sicheng Ouyang: background, engineering approach, experience highlights, and technical skill set.",
+  alternates: {
+    canonical: "/about",
+  },
+};
+
 export default function AboutPage() {
   return (
     <>
@@ -44,6 +55,7 @@ export default function AboutPage() {
             besides all of the coding, I am also a big fan of going to the gym and play tennis, FPS games are also a fun way to relax and connect with friends. I also enjoy traveling and exploring new places, especially if there are good food around!
           </p>
         </section>
+
     </>
   );
 }

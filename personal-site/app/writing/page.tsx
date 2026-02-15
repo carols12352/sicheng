@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/writing";
+
+export const metadata: Metadata = {
+  title: "Writing",
+  description:
+    "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
+  alternates: {
+    canonical: "/writing",
+  },
+};
 
 export default async function WritingPage() {
   const posts = await getAllPosts();
