@@ -1,13 +1,26 @@
 import type { Metadata } from "next";
 import { MermaidDiagram } from "@/components/projects/mermaid-diagram";
 import { TerminalDemo } from "@/components/projects/terminal-demo";
+import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description:
-    "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
+  description: "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
   alternates: {
     canonical: "/projects",
+  },
+  openGraph: {
+    type: "website",
+    url: `${SITE_URL}/projects`,
+    title: `Projects | ${SITE_NAME}`,
+    description: "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
+    images: [SITE_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Projects | ${SITE_NAME}`,
+    description: "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
+    images: [SITE_OG_IMAGE],
   },
 };
 

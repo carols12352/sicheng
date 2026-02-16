@@ -1,14 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AutoGrowthLine } from "@/components/home/auto-growth-line";
+import { HoverCard } from "@/components/motion/hover-card";
 import { RevealItem, RevealSection, RevealStagger } from "@/components/motion/reveal";
-import { SITE_DESCRIPTION } from "@/lib/seo";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Home",
   description: SITE_DESCRIPTION,
   alternates: {
     canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [SITE_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [SITE_OG_IMAGE],
   },
 };
 
@@ -136,15 +150,17 @@ export default function Home() {
           <RevealStagger className="capability-rail">
             {focusItems.map((item, index) => (
               <RevealItem key={item.title} className="capability-row ui-item">
-                <p className="capability-index">0{index + 1}</p>
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-gray-600">
-                    {item.description}
-                  </p>
-                </div>
+                <HoverCard className="flex gap-4">
+                  <p className="capability-index">0{index + 1}</p>
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-gray-600">
+                      {item.description}
+                    </p>
+                  </div>
+                </HoverCard>
               </RevealItem>
             ))}
           </RevealStagger>
@@ -162,16 +178,18 @@ export default function Home() {
           <RevealStagger className="work-layout mt-6">
             {selectedWork.map((item, index) => (
               <RevealItem key={item.title} className={index === 0 ? "work-feature" : "work-side"}>
-                <Link
-                  href={item.href}
-                  className={`work-link ui-item block ${index === 0 ? "work-link-feature" : ""}`}
-                >
-                  <p className="work-meta">Project {index + 1}</p>
-                  <h3 className="mt-2 text-base font-semibold text-gray-900">{item.title}</h3>
-                  <p className="mt-4 text-sm leading-6 text-gray-600">
-                    {item.description}
-                  </p>
-                </Link>
+                <HoverCard>
+                  <Link
+                    href={item.href}
+                    className={`work-link ui-item block ${index === 0 ? "work-link-feature" : ""}`}
+                  >
+                    <p className="work-meta">Project {index + 1}</p>
+                    <h3 className="mt-2 text-base font-semibold text-gray-900">{item.title}</h3>
+                    <p className="mt-4 text-sm leading-6 text-gray-600">
+                      {item.description}
+                    </p>
+                  </Link>
+                </HoverCard>
               </RevealItem>
             ))}
           </RevealStagger>

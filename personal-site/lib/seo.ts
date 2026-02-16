@@ -1,6 +1,6 @@
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") ??
-  "https://sicheng.vercel.app";
+  "https://sicheng.dev";
 
 export const SITE_NAME = "Sicheng Ouyang";
 export const SITE_TITLE = "Sicheng Ouyang | Software Engineering Student";

@@ -1,13 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 import { getAllPosts } from "@/lib/writing";
 
 export const metadata: Metadata = {
   title: "Writing",
-  description:
-    "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
+  description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
   alternates: {
     canonical: "/writing",
+  },
+  openGraph: {
+    type: "website",
+    url: `${SITE_URL}/writing`,
+    title: `Writing | ${SITE_NAME}`,
+    description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
+    images: [SITE_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Writing | ${SITE_NAME}`,
+    description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
+    images: [SITE_OG_IMAGE],
   },
 };
 

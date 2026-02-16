@@ -1,10 +1,24 @@
 import type { Metadata } from "next";
+import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Resume",
   description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
   alternates: {
     canonical: "/resume",
+  },
+  openGraph: {
+    type: "profile",
+    url: `${SITE_URL}/resume`,
+    title: `Resume | ${SITE_NAME}`,
+    description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
+    images: [SITE_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Resume | ${SITE_NAME}`,
+    description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
+    images: [SITE_OG_IMAGE],
   },
 };
 
