@@ -6,8 +6,9 @@ export const SITE_NAME = "Sicheng Ouyang";
 export const SITE_TITLE = "Sicheng Ouyang | Software Engineering Student";
 export const SITE_DESCRIPTION =
   "Software Engineering student at UWaterloo focused on backend systems, practical ML workflows, and product delivery.";
-export const SITE_OG_IMAGE = `${SITE_URL}/image.png`;
+export const SITE_OG_IMAGE = `${SITE_URL}/opengraph-image`;
 export const SITE_AUTHOR = "Sicheng Ouyang";
+export const SITE_LOCALE = "en_CA";
 export const SITE_KEYWORDS = [
   "Sicheng Ouyang",
   "software engineering student",

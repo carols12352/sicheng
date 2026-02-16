@@ -6,6 +6,7 @@ import {
   SITE_AUTHOR,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
+  SITE_LOCALE,
   SITE_NAME,
   SITE_OG_IMAGE,
   SITE_TITLE,
@@ -27,16 +28,30 @@ export const metadata: Metadata = {
   publisher: SITE_AUTHOR,
   category: "technology",
   referrer: "origin-when-cross-origin",
+  manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
+  },
+  bookmarks: [SITE_URL, `${SITE_URL}/projects`, `${SITE_URL}/writing`],
+  archives: [`${SITE_URL}/resume`],
+  assets: [SITE_OG_IMAGE, `${SITE_URL}/resume_26.2.15.pdf`],
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  appleWebApp: {
+    capable: true,
+    title: SITE_NAME,
+    statusBarStyle: "default",
   },
   openGraph: {
     type: "website",
     url: SITE_URL,
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     siteName: SITE_NAME,
-    locale: "en_CA",
+    locale: SITE_LOCALE,
     images: [
       {
         url: SITE_OG_IMAGE,
@@ -48,17 +63,24 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     images: [SITE_OG_IMAGE],
   },
   icons: {
+    shortcut: [{ url: "/favicon.ico" }],
+    apple: [{ url: "/favicon-256x256.png", sizes: "256x256", type: "image/png" }],
     icon: [
       { url: "/favicon.ico" },
       { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
       { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
       { url: "/favicon-256x256.png", sizes: "256x256", type: "image/png" },
     ],
+  },
+  other: {
+    "theme-color": "#ffffff",
+    "color-scheme": "light dark",
+    "msapplication-TileColor": "#111111",
   },
   robots: {
     index: true,
