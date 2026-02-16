@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
 };
 
-const RESUME_PATH = "/resume_26.2.14.pdf";
+const RESUME_PATH = "/resume_26.2.15.pdf";
 
 export default function ResumePage() {
   return (
