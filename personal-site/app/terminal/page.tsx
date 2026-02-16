@@ -13,7 +13,7 @@ type TerminalLine = {
 };
 type CrashVariant = "kernel" | "humor" | "minimal";
 
-const ROOT_ITEMS = ["projects/", "resume.pdf", "about.txt", "contact.txt", "notes.md"];
+const ROOT_ITEMS = ["projects/", "resume.pdf", "about.txt", "contact.txt", "notes.md", "ops-key.txt"];
 const PROJECT_ITEMS = [
   "chat-websocket-demo",
   "todo-list-web-desktop-app",
@@ -39,10 +39,26 @@ const HELP_LINES = [
 const FILES: Record<string, string> = {
   "about.txt": "Sicheng Ouyang | Software Engineering @ UWaterloo | Backend systems + practical ML.",
   "contact.txt": "email: sicheng.ouyang@uwaterloo.ca | github: github.com/carols12352",
-  "notes.md": "Build small, ship fast, keep interfaces clear.",
+  "notes.md": "Build small, ship fast, keep interfaces clear. Ops note: if sudo asks questions, check ops-key.txt.",
+  "ops-key.txt": "sudo password: thankyouforplaying",
   "projects/readme.txt": "Use `ls` then `open <project-name>` to jump to project details.",
 };
 const CRASH_VARIANTS: CrashVariant[] = ["kernel", "humor", "minimal"];
+const SUDO_PASSWORD = "thankyouforplaying";
+const RECOVERY_LINES: Record<CrashVariant, [string, string]> = {
+  kernel: [
+    "Rollback complete. Kernel stabilized and init restored.",
+    "Diagnostic note: / is still protected. Maybe try `help` instead of chaos.",
+  ],
+  humor: [
+    "Rollback complete. The System Cat has stepped away from the keyboard.",
+    "Treat debt forgiven. You may continue in guest mode.",
+  ],
+  minimal: [
+    "Rollback complete. Reality.exe restored from clean snapshot.",
+    "Matrix rain stopped. Filesystem integrity: green.",
+  ],
+};
 
 const BOOT_LINES = [
   "booting SichengOS ...",
@@ -59,6 +75,11 @@ export default function TerminalPage() {
     { id: 1, text: "SichengOS 1.0.0 - terminal mode" },
     { id: 2, text: "Type `help` to list commands." },
   ]);
+  const [commandHistory, setCommandHistory] = useState<string[]>(["sudo rm -rf /"]);
+  const [historyCursor, setHistoryCursor] = useState<number | null>(null);
+  const [historyDraft, setHistoryDraft] = useState("");
+  const [awaitingSudoPassword, setAwaitingSudoPassword] = useState(false);
+  const [sudoAttempts, setSudoAttempts] = useState(0);
   const [crashVariant, setCrashVariant] = useState<CrashVariant | null>(null);
   const [catSeed, setCatSeed] = useState("init");
   const [rainGlyphs, setRainGlyphs] = useState<Array<{ id: number; left: number; char: string; duration: number; delay: number }>>([]);
@@ -66,17 +87,26 @@ export default function TerminalPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const nextIdRef = useRef(3);
 
-  const prompt = useMemo(() => `guest@sicheng.dev:${cwd}$`, [cwd]);
+  const prompt = useMemo(
+    () => (awaitingSudoPassword ? "[sudo] password for guest:" : `guest@sicheng.dev:${cwd}$`),
+    [awaitingSudoPassword, cwd],
+  );
 
-  const recoverCrash = useCallback(() => {
+  const recoverCrash = useCallback((variant: CrashVariant | null = crashVariant) => {
     setCrashVariant(null);
+    setAwaitingSudoPassword(false);
+    setSudoAttempts(0);
     setCwd("/");
+    const recovery = variant ? RECOVERY_LINES[variant] : [
+      "Rollback complete. Filesystem restored.",
+      "Type `help` to continue.",
+    ];
     setLines([
-      { id: 1, text: "Rollback complete. Filesystem restored." },
-      { id: 2, text: "System Cat accepted your apology. Type `help`." },
+      { id: 1, text: recovery[0] },
+      { id: 2, text: recovery[1] },
     ]);
     nextIdRef.current = 3;
-  }, []);
+  }, [crashVariant]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setBooting(false), 1800);
@@ -96,7 +126,8 @@ export default function TerminalPage() {
       return;
     }
 
-    const onKeyDown = () => recoverCrash();
+    const variant = crashVariant;
+    const onKeyDown = () => recoverCrash(variant);
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [crashVariant, recoverCrash]);
@@ -113,8 +144,6 @@ export default function TerminalPage() {
   };
 
   const triggerCrashSequence = () => {
-    pushLine("[sudo] password for guest: ********", "warn");
-    pushLine("Deleting / ...", "error");
     const variant = CRASH_VARIANTS[Math.floor(Math.random() * CRASH_VARIANTS.length)];
     setCrashVariant(variant);
     setCatSeed(Math.random().toString(36).slice(2, 10));
@@ -131,6 +160,45 @@ export default function TerminalPage() {
     }
   };
 
+  const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (awaitingSudoPassword || commandHistory.length === 0) {
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (historyCursor === null) {
+        setHistoryDraft(input);
+        const nextCursor = commandHistory.length - 1;
+        setHistoryCursor(nextCursor);
+        setInput(commandHistory[nextCursor]);
+        return;
+      }
+
+      const nextCursor = Math.max(0, historyCursor - 1);
+      setHistoryCursor(nextCursor);
+      setInput(commandHistory[nextCursor]);
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      if (historyCursor === null) {
+        return;
+      }
+
+      event.preventDefault();
+      if (historyCursor >= commandHistory.length - 1) {
+        setHistoryCursor(null);
+        setInput(historyDraft);
+        return;
+      }
+
+      const nextCursor = historyCursor + 1;
+      setHistoryCursor(nextCursor);
+      setInput(commandHistory[nextCursor]);
+    }
+  };
+
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const command = input.trim();
@@ -138,8 +206,35 @@ export default function TerminalPage() {
       return;
     }
 
+    if (awaitingSudoPassword) {
+      setInput("");
+
+      if (command === SUDO_PASSWORD) {
+        setAwaitingSudoPassword(false);
+        setSudoAttempts(0);
+        pushLine("Authentication successful.", "warn");
+        pushLine("Deleting / ...", "error");
+        triggerCrashSequence();
+      } else {
+        const nextAttempts = sudoAttempts + 1;
+        if (nextAttempts >= 3) {
+          setAwaitingSudoPassword(false);
+          setSudoAttempts(0);
+          pushLine("sudo: 3 incorrect password attempts", "error");
+          pushLine("Hint by Sicheng: How did I forget again... maybe I should put the password in a txt file.", "warn");
+        } else {
+          setSudoAttempts(nextAttempts);
+          pushLine("Sorry, try again.", "error");
+        }
+      }
+      return;
+    }
+
     pushLine(`${prompt} ${command}`);
     setInput("");
+    setHistoryCursor(null);
+    setHistoryDraft("");
+    setCommandHistory((prev) => [...prev, command]);
 
     if (command === "help") {
       HELP_LINES.forEach((item) => pushLine(item));
@@ -177,6 +272,7 @@ export default function TerminalPage() {
         pushLine("|-- resume.pdf");
         pushLine("|-- about.txt");
         pushLine("|-- contact.txt");
+        pushLine("|-- ops-key.txt");
         pushLine("`-- notes.md");
       }
       return;
@@ -198,7 +294,7 @@ export default function TerminalPage() {
       return;
     }
 
-    if (command === "cat about.txt" || command === "cat contact.txt" || command === "cat notes.md") {
+    if (command === "cat about.txt" || command === "cat contact.txt" || command === "cat notes.md" || command === "cat ops-key.txt") {
       if (cwd !== "/") {
         pushLine(`cat: ${command.replace("cat ", "")}: No such file in ${cwd}`, "warn");
         return;
@@ -258,8 +354,24 @@ export default function TerminalPage() {
       return;
     }
 
-    if (command === "rm -rf /" || command === "sudo rm -rf /") {
-      triggerCrashSequence();
+    if (command === "rm -rf /") {
+      pushLine("rm: cannot remove '/': Permission denied. Try sudo.", "warn");
+      return;
+    }
+
+    if (command === "sudo rm -rf /") {
+      setSudoAttempts(0);
+      setAwaitingSudoPassword(true);
+      return;
+    }
+
+    if (command === "sudo") {
+      pushLine("sudo: a command is required. Try `sudo rm -rf /`.", "warn");
+      return;
+    }
+
+    if (command.startsWith("sudo ")) {
+      pushLine("sudo: target not recognized. If you insist, try `sudo rm -rf /`.", "warn");
       return;
     }
 
@@ -302,7 +414,13 @@ export default function TerminalPage() {
               <input
                 id="terminal-input"
                 value={input}
-                onChange={(event) => setInput(event.target.value)}
+                onChange={(event) => {
+                  setInput(event.target.value);
+                  if (!awaitingSudoPassword && historyCursor === null) {
+                    setHistoryDraft(event.target.value);
+                  }
+                }}
+                onKeyDown={onInputKeyDown}
                 className="w-full bg-transparent text-green-200 caret-green-300 outline-none"
                 autoFocus
                 autoComplete="off"
@@ -356,14 +474,14 @@ export default function TerminalPage() {
 
         {crashVariant === "kernel" ? (
           <motion.div
-            className="fixed inset-0 z-50 bg-black px-4 py-8 font-mono text-sm text-gray-100"
+                className="fixed inset-0 z-50 bg-black px-4 py-8 font-mono text-sm text-gray-100"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.95, 1] }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.45 }}
             onClick={(event) => {
-              if (event.target === event.currentTarget) {
-                recoverCrash();
+                if (event.target === event.currentTarget) {
+                recoverCrash("kernel");
               }
             }}
           >
@@ -384,7 +502,7 @@ export default function TerminalPage() {
             exit={{ opacity: 0 }}
             onClick={(event) => {
               if (event.target === event.currentTarget) {
-                recoverCrash();
+                recoverCrash("humor");
               }
             }}
           >
@@ -437,7 +555,7 @@ export default function TerminalPage() {
             exit={{ opacity: 0 }}
             onClick={(event) => {
               if (event.target === event.currentTarget) {
-                recoverCrash();
+                recoverCrash("minimal");
               }
             }}
           >

@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     type: "website",
     url: `${SITE_URL}/projects`,
     title: `Projects | ${SITE_NAME}`,
+    siteName: SITE_NAME,
     description: "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
     images: [SITE_OG_IMAGE],
   },

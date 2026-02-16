@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     type: "profile",
     url: `${SITE_URL}/resume`,
     title: `Resume | ${SITE_NAME}`,
+    siteName: SITE_NAME,
     description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
     images: [SITE_OG_IMAGE],
   },

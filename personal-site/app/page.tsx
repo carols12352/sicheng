@@ -4,6 +4,7 @@ import { AutoGrowthLine } from "@/components/home/auto-growth-line";
 import { HoverCard } from "@/components/motion/hover-card";
 import { RevealItem, RevealSection, RevealStagger } from "@/components/motion/reveal";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { details } from "framer-motion/client";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     title: SITE_NAME,
+    siteName: SITE_NAME,
     description: SITE_DESCRIPTION,
     images: [SITE_OG_IMAGE],
   },
@@ -30,7 +32,7 @@ const focusItems = [
   {
     title: "Backend Systems",
     description:
-      "I build using Typescript and Python, focusing on accurate error handing, clear data ownership and clear API routes",
+      "I build mostly using Typescript and Python(actively discovering new languages), focusing on accurate error handing, clear data ownership and clear API routes",
   },
   {
     title: "Applied ML",
@@ -59,7 +61,7 @@ const selectedWork = [
   {
     title: "Todo List Web & Desktop App",
     description:
-      "React + Flask + MySQL task system with cross-platform tray app packaging for macOS and Windows.",
+      "React + Flask + MySQL task system with cross-platform tray app packaging for macOS and Windows, with a finetuned BERT model for natural language processing.",
     href: "/projects#todo-list-web-desktop-app",
   },
   {
@@ -87,9 +89,14 @@ const growthTimeline = [
     detail: "Built and operated an A-Level study platform (WordPress + MySQL + Tencent Cloud) with about 1,000 daily active users.",
   },
   {
+    phase: "2025",
+    period: "Graduation",
+    detail: "I graduated from High School! On to university and new adventures!",
+  },
+  {
     phase: "Now",
     period: "Software Engineering @ UWaterloo",
-    detail: "Deepening systems and algorithm foundations while continuing full-stack and AI-oriented project delivery.",
+    detail: "Deepening systems, maths and algorithm foundations while continuing full-stack projects delivery and exploring other applications",
   },
 ];
 

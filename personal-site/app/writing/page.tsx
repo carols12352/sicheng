@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     type: "website",
     url: `${SITE_URL}/writing`,
     title: `Writing | ${SITE_NAME}`,
+    siteName: SITE_NAME,
     description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
     images: [SITE_OG_IMAGE],
   },

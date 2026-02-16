@@ -21,7 +21,7 @@ export function HoverCard({ children, className }: HoverCardProps) {
       whileHover={{
         y: -6,
         scale: 1.01,
-        boxShadow: "0 14px 32px -20px rgba(15, 23, 42, 0.45)",
+        boxShadow: "var(--hover-card-shadow)",
       }}
       whileTap={{ scale: 0.995 }}
       transition={{
