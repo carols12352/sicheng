@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type TerminalLine = {
   id: number;
@@ -41,6 +41,13 @@ const FILES: Record<string, string> = {
   "projects/readme.txt": "Use `ls` then `open <project-name>` to jump to project details.",
 };
 
+const BOOT_LINES = [
+  "booting SichengOS ...",
+  "loading shell modules ...",
+  "mounting /projects and /writing ...",
+  "starting interactive console ...",
+];
+
 export default function TerminalPage() {
   const router = useRouter();
   const [cwd, setCwd] = useState("/");
@@ -50,10 +57,24 @@ export default function TerminalPage() {
     { id: 2, text: "Type `help` to list commands." },
   ]);
   const [crashing, setCrashing] = useState(false);
+  const [booting, setBooting] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const nextIdRef = useRef(3);
 
   const prompt = useMemo(() => `guest@sicheng.dev:${cwd}$`, [cwd]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setBooting(false), 1800);
+    const dismiss = () => setBooting(false);
+    window.addEventListener("keydown", dismiss);
+    window.addEventListener("pointerdown", dismiss);
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("keydown", dismiss);
+      window.removeEventListener("pointerdown", dismiss);
+    };
+  }, []);
 
   const pushLine = (text: string, tone: TerminalLine["tone"] = "normal") => {
     const id = nextIdRef.current;
@@ -239,7 +260,7 @@ export default function TerminalPage() {
                 id="terminal-input"
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
-                className="w-full bg-transparent text-green-200 outline-none"
+                className="w-full bg-transparent text-green-200 caret-green-300 outline-none"
                 autoFocus
                 autoComplete="off"
                 spellCheck={false}
@@ -250,6 +271,46 @@ export default function TerminalPage() {
       </div>
 
       <AnimatePresence>
+        {booting ? (
+          <motion.div
+            className="fixed inset-0 z-40 bg-black"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <div className="relative mx-auto flex h-full w-full max-w-5xl items-center justify-center px-6">
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/10 to-transparent"
+                initial={{ y: "-100%" }}
+                animate={{ y: "100%" }}
+                transition={{ duration: 1.2, ease: "easeInOut" }}
+              />
+              <div className="w-full max-w-2xl rounded-xl border border-green-900/70 bg-black/85 p-6 font-mono text-sm">
+                <p className="mb-3 text-green-300">TERMINAL BOOT SEQUENCE</p>
+                {BOOT_LINES.map((line, index) => (
+                  <motion.p
+                    key={line}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15 + index * 0.18, duration: 0.25 }}
+                    className="text-green-500"
+                  >
+                    {">"} {line}
+                  </motion.p>
+                ))}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.3, 1, 0.3] }}
+                  transition={{ duration: 0.9, repeat: Infinity }}
+                  className="mt-4 text-xs text-green-400/90"
+                >
+                  Press any key to continue
+                </motion.p>
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+
         {crashing ? (
           <motion.div
             className="pointer-events-none fixed inset-0 z-50 bg-red-700/80"
