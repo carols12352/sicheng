@@ -5,7 +5,7 @@ type TerminalDemoProps = {
 
 export function TerminalDemo({ title, lines }: TerminalDemoProps) {
   return (
-    <figure className="terminal-demo mt-4">
+    <figure className="terminal-demo">
       <figcaption className="terminal-demo-head">{title}</figcaption>
       <pre className="terminal-demo-body" aria-label={title}>
         <code>

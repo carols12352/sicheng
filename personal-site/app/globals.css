@@ -45,6 +45,8 @@
   --font-sans:
     "SF Pro Text", "SF Pro Display", "PingFang SC", "Noto Sans CJK SC",
     "Microsoft YaHei", "Segoe UI", sans-serif;
+  --font-serif:
+    "Charter", "Bitstream Charter", "Sitka Text", Cambria, serif;
   --font-mono:
     "SF Mono", "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas,
     monospace;

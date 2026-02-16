@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { MermaidDiagram } from "@/components/projects/mermaid-diagram";
-import { TerminalDemo } from "@/components/projects/terminal-demo";
+import { ProjectsTreeTimeline, type ProjectEntry } from "@/components/projects/projects-tree-timeline";
 import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -24,26 +23,36 @@ export const metadata: Metadata = {
   },
 };
 
-type ProjectEntry = {
-  anchor: string;
-  period: string;
-  name: string;
-  repo: string;
-  summary: string;
-  stack: Array<{ name: string; href: string }>;
-  highlights: string[];
-  challenges: string;
-  nextSteps: string[];
-  mermaidTitle?: string;
-  mermaidChart?: string;
-  terminalTitle?: string;
-  terminalLines?: string[];
-};
-
 const projectEntries: ProjectEntry[] = [
   {
+    anchor: "personal-site",
+    period: "2026.01 - 2026.02",
+    name: "Personal Site (This Website)",
+    repo: "https://github.com/carols12352/sicheng",
+    summary:
+      "My personal portfolio site built with Next.js App Router, combining content presentation, technical writing, and interactive easter eggs.",
+    stack: [
+      { name: "Next.js", href: "https://nextjs.org/" },
+      { name: "React", href: "https://react.dev/" },
+      { name: "TypeScript", href: "https://www.typescriptlang.org/" },
+      { name: "Framer Motion", href: "https://www.framer.com/motion/" },
+      { name: "MDX", href: "https://mdxjs.com/" },
+    ],
+    highlights: [
+      "Designed a content-first portfolio with dedicated sections for projects, writing, and resume.",
+      "Implemented SEO metadata, robots rules, and dynamic sitemap generation for better search visibility.",
+      "Built interactive terminal and custom 404 experience to add personality without affecting core navigation.",
+    ],
+    challenges:
+      "Balancing playful interactions with production-quality performance and crawlability required careful routing and metadata boundaries.",
+    nextSteps: [
+      "Add lightweight analytics dashboards for page and content engagement trends.",
+      "Introduce a small CMS or content pipeline to simplify long-term writing and project updates.",
+    ],
+  },
+  {
     anchor: "chat-websocket-demo",
-    period: "2025-2026",
+    period: "2025.12 - 2026.02",
     name: "Chat WebSocket Demo",
     repo: "https://github.com/carols12352/chat",
     summary:
@@ -81,7 +90,7 @@ flowchart LR
   },
   {
     anchor: "todo-list-web-desktop-app",
-    period: "2025-2026",
+    period: "2025.10 - 2026.01",
     name: "Todo List Web & Desktop App",
     repo: "https://github.com/carols12352/todo",
     summary:
@@ -116,7 +125,7 @@ flowchart TD
   },
   {
     anchor: "bookkeeping-command-line-tool",
-    period: "2025",
+    period: "2025.08 - 2025.09",
     name: "Bookkeeping Command-Line Tool",
     repo: "https://github.com/carols12352/bookkeeping",
     summary:
@@ -151,7 +160,7 @@ flowchart TD
   },
   {
     anchor: "nurel-ai-playground",
-    period: "2025",
+    period: "2025.06 - 2025.07",
     name: "Nurel AI Playground",
     repo: "https://github.com/carols12352/Neural-Network-Playground",
     summary:
@@ -186,7 +195,7 @@ flowchart LR
   },
   {
     anchor: "resume-analyzer",
-    period: "2025",
+    period: "2025.03 - 2025.05",
     name: "Resume Analyzer",
     repo: "https://github.com/carols12352/resume-analyser",
     summary:
@@ -225,7 +234,7 @@ sequenceDiagram
   },
   {
     anchor: "latex-template-resume",
-    period: "2025",
+    period: "2025.02 - 2025.03",
     name: "LaTeX Resume Template",
     repo: "https://github.com/carols12352/latex-template-resume",
     summary:
@@ -249,7 +258,7 @@ sequenceDiagram
   },
   {
     anchor: "obsidian-oreo-theme",
-    period: "2023-2024",
+    period: "2023.09 - 2024.02",
     name: "Obsidian Oreo Theme",
     repo: "https://github.com/carols12352/Oreo-theme",
     summary:
@@ -274,102 +283,6 @@ sequenceDiagram
 
 ];
 
-type ProjectSectionProps = {
-  index: number;
-  project: ProjectEntry;
-};
-
-function ProjectSection({ index, project }: ProjectSectionProps) {
-  return (
-    <article
-      id={project.anchor}
-      className="mt-14 border-t border-gray-300 pt-8 first:mt-0 first:border-t-0 first:pt-0"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold tracking-[0.1em] text-gray-500 uppercase">
-            Project {String(index + 1).padStart(2, "0")}
-          </p>
-          <p className="mt-1 text-xs text-gray-500">{project.period}</p>
-          <h2 className="text-lg font-semibold">{project.name}</h2>
-        </div>
-        <a
-          href={project.repo}
-          target="_blank"
-          rel="noreferrer"
-          className="ui-link ui-underline text-xs uppercase tracking-[0.08em]"
-        >
-          GitHub Repo
-        </a>
-      </div>
-
-      <section className="mt-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-          Project Summary
-        </h3>
-        <p className="mt-2">{project.summary}</p>
-      </section>
-
-      <section className="mt-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-          Stack
-        </h3>
-        <ul className="evidence-strip mt-3">
-          {project.stack.map((item) => (
-            <li key={item.name}>
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                className="evidence-pill-link"
-              >
-                {item.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-          Delivered
-        </h3>
-        <ul className="mt-2 list-disc space-y-2 pl-5">
-          {project.highlights.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </section>
-
-      {project.mermaidChart && project.mermaidTitle ? (
-        <MermaidDiagram chart={project.mermaidChart} title={project.mermaidTitle} />
-      ) : null}
-
-      {project.terminalLines && project.terminalTitle ? (
-        <TerminalDemo title={project.terminalTitle} lines={project.terminalLines} />
-      ) : null}
-
-      <section className="mt-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-          Technical Challenge
-        </h3>
-        <p className="mt-2">{project.challenges}</p>
-      </section>
-
-      <section className="mt-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-          Next Iteration
-        </h3>
-        <ul className="mt-2 list-disc space-y-2 pl-5">
-          {project.nextSteps.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </section>
-    </article>
-  );
-}
-
 export default function ProjectsPage() {
   return (
     <>
@@ -383,9 +296,7 @@ export default function ProjectsPage() {
         </p>
       </section>
 
-      {projectEntries.map((project, index) => (
-        <ProjectSection key={project.name} index={index} project={project} />
-      ))}
+      <ProjectsTreeTimeline projects={projectEntries} />
     </>
   );
 }

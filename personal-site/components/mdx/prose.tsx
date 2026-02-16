@@ -6,7 +6,7 @@ type ProseProps = {
 
 export function Prose({ children }: ProseProps) {
   return (
-    <div className="mx-auto max-w-[44rem] text-[1.02rem] leading-[1.9] text-gray-700 [&>p:first-of-type]:mt-8 [&>p:first-of-type]:text-[1.08rem]">
+    <div className="mx-auto max-w-[42.5rem] font-serif text-[1.04rem] leading-[1.85] text-gray-700">
       {children}
     </div>
   );

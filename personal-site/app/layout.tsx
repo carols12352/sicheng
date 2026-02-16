@@ -53,9 +53,12 @@ export const metadata: Metadata = {
     images: [SITE_OG_IMAGE],
   },
   icons: {
-    icon: "/favicon-dark.ico",
-    shortcut: "/favicon-dark.ico",
-    apple: "/favicon-dark.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon-256x256.png", sizes: "256x256", type: "image/png" },
+    ],
   },
   robots: {
     index: true,

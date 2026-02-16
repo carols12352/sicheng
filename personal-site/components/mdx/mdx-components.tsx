@@ -91,35 +91,35 @@ export const mdxComponents = {
   h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
     <AnchorHeading
       as="h2"
-      className="mt-16 mb-5 scroll-mt-24 text-2xl font-semibold tracking-tight text-gray-900"
+      className="mt-12 mb-0 scroll-mt-24 text-[1.7rem] font-semibold tracking-tight text-gray-900 first:mt-0"
       {...props}
     />
   ),
   h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
     <AnchorHeading
       as="h3"
-      className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold text-gray-900"
+      className="mt-10 mb-0 scroll-mt-24 text-[1.35rem] font-semibold tracking-tight text-gray-900 first:mt-0"
       {...props}
     />
   ),
   p: (props: React.ComponentPropsWithoutRef<"p">) => (
-    <p className="mt-5 leading-[1.9] text-gray-700" {...props} />
+    <p className="mt-5 leading-[1.85] text-gray-700 first:mt-0" {...props} />
   ),
   ul: (props: React.ComponentPropsWithoutRef<"ul">) => (
-    <ul className="mt-4 list-disc space-y-1.5 pl-5 marker:text-gray-500" {...props} />
+    <ul className="mt-5 m-0 list-disc pl-6 marker:text-gray-500 first:mt-0 [&>li]:m-0 [&>li+li]:mt-3" {...props} />
   ),
   ol: (props: React.ComponentPropsWithoutRef<"ol">) => (
-    <ol className="mt-4 list-decimal space-y-1.5 pl-5 marker:text-gray-500" {...props} />
+    <ol className="mt-5 m-0 list-decimal pl-6 marker:text-gray-500 first:mt-0 [&>li]:m-0 [&>li+li]:mt-3" {...props} />
   ),
   li: (props: React.ComponentPropsWithoutRef<"li">) => (
     <li
-      className="leading-[1.8] text-gray-700 [&>p]:mt-0 [&>p]:leading-[1.8] [&>ul]:mt-1.5 [&>ol]:mt-1.5"
+      className="leading-[1.85] text-gray-700 [&>p]:mt-0 [&>p]:leading-[1.85] [&>ul]:mt-3 [&>ol]:mt-3"
       {...props}
     />
   ),
   a: (props: React.ComponentPropsWithoutRef<"a">) => <InternalLink {...props} />,
   blockquote: (props: React.ComponentPropsWithoutRef<"blockquote">) => (
-    <blockquote className="mt-6 border-l-2 border-gray-300 pl-4 text-gray-600" {...props} />
+    <blockquote className="mt-8 border-l-2 border-gray-300 pl-5 text-gray-600 italic" {...props} />
   ),
   code: (props: React.ComponentPropsWithoutRef<"code">) => (
     <code
@@ -129,12 +129,12 @@ export const mdxComponents = {
   ),
   pre: (props: React.ComponentPropsWithoutRef<"pre">) => (
     <pre
-      className="mt-6 overflow-x-auto border border-gray-200 p-4 text-sm leading-6 text-gray-800"
+      className="mt-8 overflow-x-auto border border-gray-200 bg-gray-50 p-5 text-sm leading-6 text-gray-800"
       {...props}
     />
   ),
   table: (props: React.ComponentPropsWithoutRef<"table">) => (
-    <div className="mt-6 overflow-x-auto">
+    <div className="mt-8 overflow-x-auto">
       <table className="w-full border-collapse text-sm" {...props} />
     </div>
   ),
@@ -149,7 +149,7 @@ export const mdxComponents = {
   ),
   img: (props: React.ComponentPropsWithoutRef<"img">) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className="mx-auto mt-6 w-full rounded-md border border-gray-200" {...props} alt={props.alt ?? ""} />
+    <img className="mx-auto mt-8 w-full rounded-md border border-gray-200" {...props} alt={props.alt ?? ""} />
   ),
   Callout,
   Figure,

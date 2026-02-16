@@ -101,7 +101,7 @@ export function MermaidDiagram({ chart, title }: MermaidDiagramProps) {
   }, [chart, diagramId]);
 
   return (
-    <figure className="terminal-demo mt-4">
+    <figure className="terminal-demo">
       <figcaption className="terminal-demo-head">{title}</figcaption>
       <div className="mermaid-diagram">
         {svg ? (
