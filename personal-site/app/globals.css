@@ -639,6 +639,46 @@ p {
   stroke-width: 1;
 }
 
+.project-timeline-rail {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--line) 92%, transparent),
+    color-mix(in srgb, var(--line-strong) 88%, transparent),
+    color-mix(in srgb, var(--line) 92%, transparent)
+  );
+}
+
+.project-timeline-node {
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--surface) 96%, transparent);
+}
+
+.project-card-surface {
+  background-color: color-mix(in srgb, var(--surface) 96%, transparent);
+}
+
+.project-card-active-shadow {
+  box-shadow: 0 14px 34px -26px color-mix(in srgb, var(--text-strong) 42%, transparent);
+}
+
+.project-modal-surface {
+  box-shadow: 0 30px 90px -45px color-mix(in srgb, var(--text-strong) 54%, transparent);
+}
+
+.project-modal-backdrop {
+  background: color-mix(in srgb, #000 42%, transparent);
+}
+
+:root[data-theme="dark"] .project-modal-backdrop {
+  background: color-mix(in srgb, #000 58%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .project-modal-backdrop,
+  :root[data-theme="system"] .project-modal-backdrop {
+    background: color-mix(in srgb, #000 58%, transparent);
+  }
+}
+
 .terminal-demo {
   border: 1px solid var(--line);
   border-radius: 8px;

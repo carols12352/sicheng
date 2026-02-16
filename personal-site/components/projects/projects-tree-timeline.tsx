@@ -62,20 +62,20 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
   return (
     <LayoutGroup id="projects-window">
       <div className="relative mt-12">
-        <div className="pointer-events-none absolute top-2 bottom-2 left-[1.05rem] w-px bg-gradient-to-b from-gray-200 via-gray-300 to-gray-200" />
+        <div className="project-timeline-rail pointer-events-none absolute top-2 bottom-2 left-[1.05rem] w-px" />
         <div className="space-y-8">
           {orderedProjects.map((project) => {
             const isActive = activeProject?.anchor === project.anchor;
             return (
               <article key={project.anchor} id={project.anchor} className="relative pl-12">
-                <span className="absolute left-2 top-3 h-[0.95rem] w-[0.95rem] rounded-full border border-gray-300 bg-white shadow-[0_0_0_5px_rgba(255,255,255,0.95)]" />
+                <span className="project-timeline-node absolute left-2 top-3 h-[0.95rem] w-[0.95rem] rounded-full border border-gray-300 bg-white" />
                 <motion.button
                   type="button"
                   layoutId={`project-card-${project.anchor}`}
                   transition={cardTransition}
                   onClick={() => setActiveProject(project)}
-                  className={`w-full rounded-xl border bg-white/95 p-5 text-left transition-colors ${
-                    isActive ? "border-gray-300 shadow-[0_14px_34px_-26px_rgba(15,23,42,0.48)]" : "border-gray-200 shadow-sm hover:border-gray-300"
+                  className={`project-card-surface w-full rounded-xl border bg-white/95 p-5 text-left transition-colors ${
+                    isActive ? "border-gray-300 project-card-active-shadow" : "border-gray-200 shadow-sm hover:border-gray-300"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-4">
@@ -104,7 +104,7 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
             <motion.button
               type="button"
               aria-label="Close project window"
-              className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[1px]"
+              className="project-modal-backdrop fixed inset-0 z-40 backdrop-blur-[1px]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -126,7 +126,7 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
                 role="dialog"
                 aria-modal="true"
                 aria-label={activeProject.name}
-                className="mx-auto w-full max-w-5xl rounded-2xl border border-gray-300 bg-white p-7 text-left shadow-[0_30px_90px_-45px_rgba(15,23,42,0.7)] sm:p-12"
+                className="project-card-surface project-modal-surface mx-auto w-full max-w-5xl rounded-2xl border border-gray-300 bg-white p-7 text-left sm:p-12"
               >
                 <div className="mb-6 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-1.5">
