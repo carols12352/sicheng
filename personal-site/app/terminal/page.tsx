@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type TerminalLine = {
   id: number;
@@ -68,6 +68,16 @@ export default function TerminalPage() {
 
   const prompt = useMemo(() => `guest@sicheng.dev:${cwd}$`, [cwd]);
 
+  const recoverCrash = useCallback(() => {
+    setCrashVariant(null);
+    setCwd("/");
+    setLines([
+      { id: 1, text: "Rollback complete. Filesystem restored." },
+      { id: 2, text: "System Cat accepted your apology. Type `help`." },
+    ]);
+    nextIdRef.current = 3;
+  }, []);
+
   useEffect(() => {
     const timer = window.setTimeout(() => setBooting(false), 1800);
     const dismiss = () => setBooting(false);
@@ -86,20 +96,10 @@ export default function TerminalPage() {
       return;
     }
 
-    const recover = () => {
-      setCrashVariant(null);
-      setCwd("/");
-      setLines([
-        { id: 1, text: "Rollback complete. Filesystem restored." },
-        { id: 2, text: "System Cat accepted your apology. Type `help`." },
-      ]);
-      nextIdRef.current = 3;
-    };
-
-    const onKeyDown = () => recover();
+    const onKeyDown = () => recoverCrash();
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [crashVariant]);
+  }, [crashVariant, recoverCrash]);
 
   const pushLine = (text: string, tone: TerminalLine["tone"] = "normal") => {
     const id = nextIdRef.current;
@@ -361,6 +361,11 @@ export default function TerminalPage() {
             animate={{ opacity: [0, 1, 0.95, 1] }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.45 }}
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                recoverCrash();
+              }
+            }}
           >
             <div className="mx-auto max-w-4xl space-y-2">
               <p>[  0.001234] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000</p>
@@ -372,11 +377,22 @@ export default function TerminalPage() {
         ) : null}
 
         {crashVariant === "humor" ? (
-          <motion.div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                recoverCrash();
+              }
+            }}
+          >
             <motion.div
               initial={{ scale: 0.94, y: 10 }}
               animate={{ scale: 1, y: 0 }}
               className="w-full max-w-2xl rounded-xl border border-red-500 bg-red-950/70 p-6 font-mono"
+              onClick={(event) => event.stopPropagation()}
             >
               <p className="text-lg font-semibold text-red-300">[ERROR] UNAUTHORIZED DESTRUCTIVE COMMAND</p>
               <p className="mt-3 text-sm text-red-100">
@@ -414,7 +430,17 @@ export default function TerminalPage() {
         ) : null}
 
         {crashVariant === "minimal" ? (
-          <motion.div className="fixed inset-0 z-50 overflow-hidden bg-black/88" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            className="fixed inset-0 z-50 overflow-hidden bg-black/88"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                recoverCrash();
+              }
+            }}
+          >
             {rainGlyphs.map((glyph) => (
               <motion.span
                 key={glyph.id}
@@ -427,8 +453,8 @@ export default function TerminalPage() {
                 {glyph.char}
               </motion.span>
             ))}
-            <div className="absolute inset-0 flex items-center justify-center px-4 text-center font-mono text-sm text-gray-100 sm:text-base">
-              <div>
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-4 text-center font-mono text-sm text-gray-100 sm:text-base">
+              <div className="pointer-events-auto" onClick={(event) => event.stopPropagation()}>
                 <p>Deleting your boredom... [100%]</p>
                 <p className="mt-1">Error: Reality.exe cannot be deleted.</p>
                 <p className="mt-4 text-green-300">Press any key to rollback.</p>
