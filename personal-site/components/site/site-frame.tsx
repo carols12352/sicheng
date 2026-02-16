@@ -95,10 +95,6 @@ export function SiteFrame({ children }: SiteFrameProps) {
             Contact
           </a>
           <span className="text-gray-400">·</span>
-          <a href="/sitemap.xml" target="_blank" rel="noreferrer" className="ui-link ui-underline">
-            Sitemap
-          </a>
-          <span className="text-gray-400">·</span>
           <a
             href="https://www.buymeacoffee.com/ouyang12352"
             target="_blank"
@@ -106,6 +102,10 @@ export function SiteFrame({ children }: SiteFrameProps) {
             className="ui-link ui-underline"
           >
             Buy Me a Coffee
+          </a>
+          <span className="text-gray-400">·</span>
+          <a href="/sitemap.xml" target="_blank" rel="noreferrer" className="ui-link ui-underline">
+            Sitemap
           </a>
         </div>
 
