@@ -98,6 +98,15 @@ export function SiteFrame({ children }: SiteFrameProps) {
           <a href="/sitemap.xml" target="_blank" rel="noreferrer" className="ui-link ui-underline">
             Sitemap
           </a>
+          <span className="text-gray-400">·</span>
+          <a
+            href="https://www.buymeacoffee.com/ouyang12352"
+            target="_blank"
+            rel="noreferrer"
+            className="ui-link ui-underline"
+          >
+            Buy Me a Coffee
+          </a>
         </div>
 
         <FooterTerminalHint />

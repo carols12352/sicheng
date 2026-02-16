@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -10,6 +11,7 @@ type TerminalLine = {
   text: string;
   tone?: "normal" | "warn" | "error";
 };
+type CrashVariant = "kernel" | "humor" | "minimal";
 
 const ROOT_ITEMS = ["projects/", "resume.pdf", "about.txt", "contact.txt", "notes.md"];
 const PROJECT_ITEMS = [
@@ -31,7 +33,7 @@ const HELP_LINES = [
   "open home",
   "open <item>",
   "clear",
-  "sudo rm -rf /",
+  "> rm: Remove files (Usage restricted to sudoers. Please don't try on /)",
 ];
 
 const FILES: Record<string, string> = {
@@ -40,6 +42,7 @@ const FILES: Record<string, string> = {
   "notes.md": "Build small, ship fast, keep interfaces clear.",
   "projects/readme.txt": "Use `ls` then `open <project-name>` to jump to project details.",
 };
+const CRASH_VARIANTS: CrashVariant[] = ["kernel", "humor", "minimal"];
 
 const BOOT_LINES = [
   "booting SichengOS ...",
@@ -56,7 +59,9 @@ export default function TerminalPage() {
     { id: 1, text: "SichengOS 1.0.0 - terminal mode" },
     { id: 2, text: "Type `help` to list commands." },
   ]);
-  const [crashing, setCrashing] = useState(false);
+  const [crashVariant, setCrashVariant] = useState<CrashVariant | null>(null);
+  const [catSeed, setCatSeed] = useState("init");
+  const [rainGlyphs, setRainGlyphs] = useState<Array<{ id: number; left: number; char: string; duration: number; delay: number }>>([]);
   const [booting, setBooting] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const nextIdRef = useRef(3);
@@ -76,6 +81,26 @@ export default function TerminalPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!crashVariant) {
+      return;
+    }
+
+    const recover = () => {
+      setCrashVariant(null);
+      setCwd("/");
+      setLines([
+        { id: 1, text: "Rollback complete. Filesystem restored." },
+        { id: 2, text: "System Cat accepted your apology. Type `help`." },
+      ]);
+      nextIdRef.current = 3;
+    };
+
+    const onKeyDown = () => recover();
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [crashVariant]);
+
   const pushLine = (text: string, tone: TerminalLine["tone"] = "normal") => {
     const id = nextIdRef.current;
     nextIdRef.current += 1;
@@ -85,6 +110,25 @@ export default function TerminalPage() {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
     }, 0);
+  };
+
+  const triggerCrashSequence = () => {
+    pushLine("[sudo] password for guest: ********", "warn");
+    pushLine("Deleting / ...", "error");
+    const variant = CRASH_VARIANTS[Math.floor(Math.random() * CRASH_VARIANTS.length)];
+    setCrashVariant(variant);
+    setCatSeed(Math.random().toString(36).slice(2, 10));
+    if (variant === "minimal") {
+      setRainGlyphs(
+        Array.from({ length: 36 }, (_, i) => ({
+          id: i,
+          left: Math.random() * 100,
+          char: "01/$#;[]".charAt(Math.floor(Math.random() * 8)),
+          duration: 1.8 + Math.random() * 2.2,
+          delay: Math.random() * 0.9,
+        })),
+      );
+    }
   };
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -204,19 +248,18 @@ export default function TerminalPage() {
       return;
     }
 
-    if (command === "sudo rm -rf /") {
-      pushLine("[sudo] password for guest: ********", "warn");
-      pushLine("Deleting / ...", "error");
-      setCrashing(true);
-      window.setTimeout(() => {
-        setCrashing(false);
-        setCwd("/");
-        setLines([
-          { id: 1, text: "Kernel panic (not really). System restored." },
-          { id: 2, text: "Nice try. Type `help`." },
-        ]);
-        nextIdRef.current = 3;
-      }, 2200);
+    if (command === "rm") {
+      pushLine("What do you want to remove? You have no power here.", "warn");
+      return;
+    }
+
+    if (command === "rm -rf") {
+      pushLine("Target missing. Are you looking for '/'?", "warn");
+      return;
+    }
+
+    if (command === "rm -rf /" || command === "sudo rm -rf /") {
+      triggerCrashSequence();
       return;
     }
 
@@ -311,16 +354,85 @@ export default function TerminalPage() {
           </motion.div>
         ) : null}
 
-        {crashing ? (
+        {crashVariant === "kernel" ? (
           <motion.div
-            className="pointer-events-none fixed inset-0 z-50 bg-red-700/80"
+            className="fixed inset-0 z-50 bg-black px-4 py-8 font-mono text-sm text-gray-100"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.2, 1, 0] }}
+            animate={{ opacity: [0, 1, 0.95, 1] }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 2.2 }}
+            transition={{ duration: 0.45 }}
           >
-            <div className="flex h-full items-center justify-center px-4 text-center font-mono text-lg font-semibold text-white sm:text-2xl">
-              SYSTEM FAILURE: SEGMENTATION FAULT
+            <div className="mx-auto max-w-4xl space-y-2">
+              <p>[  0.001234] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000</p>
+              <p>[  0.002567] rm: cannot remove &apos;/&apos;: Permission denied (Nice try, kid.)</p>
+              <p>[  1.042069] System halted. Please refresh to restore reality.</p>
+              <p className="mt-6 text-green-300">Press any key to rollback.</p>
+            </div>
+          </motion.div>
+        ) : null}
+
+        {crashVariant === "humor" ? (
+          <motion.div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div
+              initial={{ scale: 0.94, y: 10 }}
+              animate={{ scale: 1, y: 0 }}
+              className="w-full max-w-2xl rounded-xl border border-red-500 bg-red-950/70 p-6 font-mono"
+            >
+              <p className="text-lg font-semibold text-red-300">[ERROR] UNAUTHORIZED DESTRUCTIVE COMMAND</p>
+              <p className="mt-3 text-sm text-red-100">
+                sudo: guest is not in the sudoers file. This incident will be reported.
+              </p>
+              <p className="mt-3 text-sm text-red-100">
+                Oops. You tried to delete my hard work. Luckily, this code lives on GitHub.
+              </p>
+              <p className="mt-3 text-sm text-red-200">
+                Your destructive command was intercepted by the System Cat. Please provide treats to continue.
+              </p>
+              <div className="mt-4 inline-block overflow-hidden rounded-md border border-red-400/70">
+                <Image
+                  src={`https://cataas.com/cat?width=120&height=120&random=${catSeed}`}
+                  alt="System cat guard"
+                  width={120}
+                  height={120}
+                  className="h-16 w-16 object-cover"
+                />
+              </div>
+              <p className="mt-2 text-sm text-red-100">
+                Treats link:{" "}
+                <a
+                  href="https://www.buymeacoffee.com/ouyang12352"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline decoration-red-300/70 underline-offset-2 hover:text-red-50"
+                >
+                  buymeacoffee.com/ouyang12352
+                </a>
+              </p>
+              <p className="mt-6 text-sm text-red-100">Press any key to rollback.</p>
+            </motion.div>
+          </motion.div>
+        ) : null}
+
+        {crashVariant === "minimal" ? (
+          <motion.div className="fixed inset-0 z-50 overflow-hidden bg-black/88" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            {rainGlyphs.map((glyph) => (
+              <motion.span
+                key={glyph.id}
+                className="pointer-events-none absolute top-0 font-mono text-sm text-green-300/55"
+                style={{ left: `${glyph.left}%` }}
+                initial={{ y: -24, opacity: 0 }}
+                animate={{ y: "110vh", opacity: [0, 0.8, 0.35] }}
+                transition={{ duration: glyph.duration, delay: glyph.delay, ease: "linear" }}
+              >
+                {glyph.char}
+              </motion.span>
+            ))}
+            <div className="absolute inset-0 flex items-center justify-center px-4 text-center font-mono text-sm text-gray-100 sm:text-base">
+              <div>
+                <p>Deleting your boredom... [100%]</p>
+                <p className="mt-1">Error: Reality.exe cannot be deleted.</p>
+                <p className="mt-4 text-green-300">Press any key to rollback.</p>
+              </div>
             </div>
           </motion.div>
         ) : null}

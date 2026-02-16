@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Personal Site
+
+Personal portfolio site built with Next.js (App Router), focused on clean UX, practical SEO, and playful easter eggs.
+
+## Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- MDX (`next-mdx-remote`)
+
+## Pages
+
+- `/` Home
+- `/projects`
+- `/writing`
+- `/writing/[slug]`
+- `/resume`
+- `/about`
+- `/terminal` interactive terminal easter egg
+- custom `404` page with embedded Dino game
 
 ## Getting Started
 
-First, run the development server:
+Run locally:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev
+npm run lint
+npm run build
+npm run start
+```
 
-## Learn More
+## SEO
 
-To learn more about Next.js, take a look at the following resources:
+- Global metadata in `app/layout.tsx`
+- Dynamic article metadata in `app/writing/[slug]/page.tsx`
+- `robots.txt` via `app/robots.ts`
+- `sitemap.xml` via `app/sitemap.ts`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Terminal Easter Egg
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+In `/terminal`, try:
 
-## Deploy on Vercel
+- `help`
+- `ls`
+- `tree`
+- `cat about.txt`
+- `open home`
+- `rm`
+- `rm -rf`
+- `rm -rf /` (random crash animation)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy on Vercel. Set production env var:
+
+```bash
+NEXT_PUBLIC_SITE_URL=your-url
+```
