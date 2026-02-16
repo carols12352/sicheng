@@ -105,6 +105,7 @@ export default function RootLayout({
       <body className="antialiased">
         <SiteFrame>{children}</SiteFrame>
         <SpeedInsights />
+        <Analytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
