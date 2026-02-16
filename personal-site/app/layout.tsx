@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteFrame } from "@/components/site/site-frame";
+import { Analytics } from "@vercel/analytics/next"
 import {
   SITE_AUTHOR,
   SITE_DESCRIPTION,
