@@ -860,6 +860,13 @@ p {
   vertical-align: -0.08em;
   animation: terminalCaretBlink 1s steps(1, end) infinite;
 }
+.mdx-prose > p {
+  margin-bottom: 0.5rem;
+}
+
+.mdx-prose > p:last-child {
+  margin-bottom: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .ui-link,

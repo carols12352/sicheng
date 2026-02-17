@@ -4,7 +4,6 @@ import { AutoGrowthLine } from "@/components/home/auto-growth-line";
 import { HoverCard } from "@/components/motion/hover-card";
 import { RevealItem, RevealSection, RevealStagger } from "@/components/motion/reveal";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
-import { details } from "framer-motion/client";
 
 export const metadata: Metadata = {
   title: "Home",

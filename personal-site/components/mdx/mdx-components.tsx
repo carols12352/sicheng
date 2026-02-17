@@ -103,13 +103,13 @@ export const mdxComponents = {
     />
   ),
   p: (props: React.ComponentPropsWithoutRef<"p">) => (
-    <p className="mt-5 leading-[1.85] text-gray-700 first:mt-0" {...props} />
+    <p className="leading-[1.9] text-gray-700" {...props} />
   ),
   ul: (props: React.ComponentPropsWithoutRef<"ul">) => (
-    <ul className="mt-5 m-0 list-disc pl-6 marker:text-gray-500 first:mt-0 [&>li]:m-0 [&>li+li]:mt-3" {...props} />
+    <ul className="mt-3 mb-2 list-disc pl-6 marker:text-gray-500 first:mt-0 [&>li]:m-0 [&>li+li]:mt-3" {...props} />
   ),
   ol: (props: React.ComponentPropsWithoutRef<"ol">) => (
-    <ol className="mt-5 m-0 list-decimal pl-6 marker:text-gray-500 first:mt-0 [&>li]:m-0 [&>li+li]:mt-3" {...props} />
+    <ol className="mt-3 mb-2 list-decimal pl-6 marker:text-gray-500 first:mt-0 [&>li]:m-0 [&>li+li]:mt-3" {...props} />
   ),
   li: (props: React.ComponentPropsWithoutRef<"li">) => (
     <li

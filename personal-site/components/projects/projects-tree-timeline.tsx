@@ -69,29 +69,39 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
             return (
               <article key={project.anchor} id={project.anchor} className="relative pl-12">
                 <span className="project-timeline-node absolute left-2 top-3 h-[0.95rem] w-[0.95rem] rounded-full border border-gray-300 bg-white" />
-                <motion.button
-                  type="button"
+                <motion.div
                   layoutId={`project-card-${project.anchor}`}
                   transition={cardTransition}
-                  onClick={() => setActiveProject(project)}
                   className={`project-card-surface w-full rounded-xl border bg-white/95 p-5 text-left transition-colors ${
                     isActive ? "border-gray-300 project-card-active-shadow" : "border-gray-200 shadow-sm hover:border-gray-300"
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <p className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">
-                        {project.period}
-                      </p>
-                      <h2 className="mt-3 text-xl font-semibold tracking-tight text-gray-900 sm:text-2xl">{project.name}</h2>
-                      <p className="mt-3 text-sm text-gray-600">{project.summary}</p>
+                  <button type="button" onClick={() => setActiveProject(project)} className="w-full text-left">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <p className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">
+                          {project.period}
+                        </p>
+                        <h2 className="mt-3 text-xl font-semibold tracking-tight text-gray-900 sm:text-2xl">{project.name}</h2>
+                        <p className="mt-3 text-sm text-gray-600">{project.summary}</p>
+                      </div>
+                      <span className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+                        open
+                        <span>▸</span>
+                      </span>
                     </div>
-                    <span className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-                      open
-                      <span>▸</span>
-                    </span>
-                  </div>
-                </motion.button>
+                  </button>
+                  <a
+                    href={project.repo}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="absolute top-14 right-5 inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
+                    aria-label={`${project.name} repository`}
+                  >
+                    repo
+                    <span aria-hidden>↗</span>
+                  </a>
+                </motion.div>
               </article>
             );
           })}
@@ -151,8 +161,9 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
                     href={activeProject.repo}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center rounded-md border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-gray-300 hover:text-gray-900"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
                   >
+                    <span aria-hidden>↗</span>
                     GitHub Repo
                   </a>
                 </div>
