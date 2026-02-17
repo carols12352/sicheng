@@ -10,6 +10,7 @@ export type ProjectEntry = {
   period: string;
   name: string;
   repo: string;
+  demo?: string;
   summary: string;
   stack: Array<{ name: string; href: string }>;
   highlights: string[];
@@ -91,16 +92,30 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
                       </span>
                     </div>
                   </button>
-                  <a
-                    href={project.repo}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="absolute top-14 right-5 inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
-                    aria-label={`${project.name} repository`}
-                  >
-                    repo
-                    <span aria-hidden>↗</span>
-                  </a>
+                  <div className="absolute top-14 right-5 flex items-center gap-3">
+                    {project.demo ? (
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
+                        aria-label={`${project.name} demo`}
+                      >
+                        demo
+                        <span aria-hidden>↗</span>
+                      </a>
+                    ) : null}
+                    <a
+                      href={project.repo}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
+                      aria-label={`${project.name} repository`}
+                    >
+                      repo
+                      <span aria-hidden>↗</span>
+                    </a>
+                  </div>
                 </motion.div>
               </article>
             );
@@ -157,15 +172,28 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
                   <p className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">
                     {activeProject.period}
                   </p>
-                  <a
-                    href={activeProject.repo}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
-                  >
-                    <span aria-hidden>↗</span>
-                    GitHub Repo
-                  </a>
+                  <div className="flex items-center gap-3">
+                    {activeProject.demo ? (
+                      <a
+                        href={activeProject.demo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
+                      >
+                        <span aria-hidden>↗</span>
+                        Live Demo
+                      </a>
+                    ) : null}
+                    <a
+                      href={activeProject.repo}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
+                    >
+                      <span aria-hidden>↗</span>
+                      GitHub Repo
+                    </a>
+                  </div>
                 </div>
                 <h2 className="mt-6 text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">{activeProject.name}</h2>
                 <p className="mt-6 max-w-3xl text-sm leading-7 text-gray-600 sm:text-base">{activeProject.summary}</p>

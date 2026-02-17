@@ -163,6 +163,7 @@ flowchart TD
     anchor: "nurel-ai-playground",
     period: "2025.06 - 2025.07",
     name: "Nurel AI Playground",
+    demo: "https://nurel.app/",
     repo: "https://github.com/carols12352/Neural-Network-Playground",
     summary:
       "A team-built local AI experimentation web app for model training controls and real-time training visualization.",
