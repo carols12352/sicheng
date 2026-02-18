@@ -44,9 +44,9 @@ export function FooterTerminalHint() {
         {showCursor ? <span className="terminal-caret ml-1" aria-hidden /> : null}
       </p>
       <p className="mt-2 font-mono text-[11px] text-gray-500">
-        Tip: press <span className="text-gray-600">?</span> for Vim-style navigation (
-        <span className="text-gray-600">j</span>/<span className="text-gray-600">k</span>,{" "}
-        <span className="text-gray-600">/</span>)
+        Tip: <span className="text-gray-600">?</span> shortcuts,{" "}
+        <span className="text-gray-600">j</span>/<span className="text-gray-600">k</span> scroll,{" "}
+        <span className="text-gray-600">/</span> search (Writing/Projects/Article)
       </p>
       <p className="mt-2 flex items-center gap-2 font-mono text-[11px] text-gray-500">
         <span className="build-status-dot" aria-hidden />

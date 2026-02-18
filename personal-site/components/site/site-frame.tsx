@@ -50,7 +50,12 @@ export function SiteFrame({ children }: SiteFrameProps) {
         return;
       }
 
-      if (event.key === "?" || (event.key === "/" && event.shiftKey)) {
+      const isQuestionShortcut =
+        event.key === "?" ||
+        event.key === "？" ||
+        (event.code === "Slash" && event.shiftKey);
+
+      if (isQuestionShortcut) {
         event.preventDefault();
         setShowShortcutHelp((prev) => !prev);
         return;
@@ -214,7 +219,7 @@ export function SiteFrame({ children }: SiteFrameProps) {
             <ul className="mt-3 space-y-2 text-sm text-gray-600">
               <li><span className="font-mono">j</span> scroll down</li>
               <li><span className="font-mono">k</span> scroll up</li>
-              <li><span className="font-mono">/</span> focus search (if available)</li>
+              <li><span className="font-mono">/</span> search in Writing/Projects/Article</li>
               <li><span className="font-mono">?</span> toggle this panel</li>
               <li><span className="font-mono">Esc</span> close panel</li>
             </ul>
