@@ -31,11 +31,18 @@ export function FooterTerminalHint() {
   }, []);
 
   return (
-    <p className="mt-4 font-mono text-[11px] text-gray-500">
-      <a href="/terminal" className="ui-link ui-underline">
-        Last login: <span suppressHydrationWarning>{lastLogin}</span> on ttys001
-      </a>
-      {showCursor ? <span className="terminal-caret ml-1" aria-hidden /> : null}
-    </p>
+    <>
+      <p className="mt-4 font-mono text-[11px] text-gray-500">
+        <a href="/terminal" className="ui-link ui-underline">
+          Last login: <span suppressHydrationWarning>{lastLogin}</span> on ttys001
+        </a>
+        {showCursor ? <span className="terminal-caret ml-1" aria-hidden /> : null}
+      </p>
+      <p className="mt-2 font-mono text-[11px] text-gray-500">
+        Tip: press <span className="text-gray-600">?</span> for Vim-style navigation (
+        <span className="text-gray-600">j</span>/<span className="text-gray-600">k</span>,{" "}
+        <span className="text-gray-600">/</span>)
+      </p>
+    </>
   );
 }

@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { PageTransition } from "@/components/motion/page-transition";
 import { NavLink } from "@/components/navigation/nav-link";
 import { ThemeToggle } from "@/components/navigation/theme-toggle";
@@ -22,8 +23,60 @@ type SiteFrameProps = {
 };
 
 export function SiteFrame({ children }: SiteFrameProps) {
+  const router = useRouter();
   const pathname = usePathname();
   const isTerminalPage = pathname === "/terminal";
+  const [showShortcutHelp, setShowShortcutHelp] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const isTypingTarget = (target: EventTarget | null) => {
+      if (!(target instanceof HTMLElement)) {
+        return false;
+      }
+      const tagName = target.tagName.toLowerCase();
+      return tagName === "input" || tagName === "textarea" || target.isContentEditable;
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey || isTypingTarget(event.target)) {
+        return;
+      }
+
+      if (event.key === "?" || (event.key === "/" && event.shiftKey)) {
+        event.preventDefault();
+        setShowShortcutHelp((prev) => !prev);
+        return;
+      }
+
+      if (event.key === "Escape") {
+        setShowShortcutHelp(false);
+        setShowSearch(false);
+        return;
+      }
+
+      if (event.key === "/") {
+        event.preventDefault();
+        setShowSearch(true);
+        window.requestAnimationFrame(() => {
+          searchInputRef.current?.focus();
+        });
+        return;
+      }
+
+      if (event.key === "j" || event.key === "k") {
+        event.preventDefault();
+        window.scrollBy({
+          top: event.key === "j" ? 120 : -120,
+          behavior: "smooth",
+        });
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   if (isTerminalPage) {
     return <>{children}</>;
@@ -112,6 +165,59 @@ export function SiteFrame({ children }: SiteFrameProps) {
         <FooterTerminalHint />
         <p className="mt-5 text-xs text-gray-400">© 2026 All rights reserved.</p>
       </footer>
+
+      {showShortcutHelp ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-4"
+          onClick={() => setShowShortcutHelp(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-xl border border-gray-300 bg-white p-5"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="text-sm font-semibold text-gray-900">Keyboard Shortcuts</p>
+            <ul className="mt-3 space-y-2 text-sm text-gray-600">
+              <li><span className="font-mono">j</span> scroll down</li>
+              <li><span className="font-mono">k</span> scroll up</li>
+              <li><span className="font-mono">/</span> focus search (if available)</li>
+              <li><span className="font-mono">?</span> toggle this panel</li>
+              <li><span className="font-mono">Esc</span> close panel</li>
+            </ul>
+          </div>
+        </div>
+      ) : null}
+
+      {showSearch ? (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/20 px-4 pt-20"
+          onClick={() => setShowSearch(false)}
+        >
+          <form
+            action="/writing"
+            method="get"
+            className="w-full max-w-md rounded-md border border-gray-200 bg-white px-2.5 py-2 shadow-sm"
+            onClick={(event) => event.stopPropagation()}
+            onSubmit={(event) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const query = String(formData.get("q") ?? "").trim();
+              router.push(query ? `/writing?q=${encodeURIComponent(query)}` : "/writing");
+              setShowSearch(false);
+            }}
+          >
+            <label htmlFor="site-search" className="sr-only">Search writing</label>
+            <input
+              ref={searchInputRef}
+              id="site-search"
+              name="q"
+              type="search"
+              data-site-search
+              placeholder="Search writing..."
+              className="h-7 w-full bg-transparent px-0.5 text-sm text-gray-700 outline-none placeholder:text-gray-400"
+            />
+          </form>
+        </div>
+      ) : null}
     </div>
   );
 }

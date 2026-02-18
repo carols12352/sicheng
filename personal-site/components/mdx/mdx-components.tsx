@@ -4,6 +4,8 @@ import { isValidElement } from "react";
 import { Callout } from "@/components/mdx/callout";
 import { CodeBlock } from "@/components/mdx/code-block";
 import { Figure } from "@/components/mdx/figure";
+import { Sidenote } from "@/components/mdx/sidenote";
+import { ZoomableImage } from "@/components/mdx/zoomable-image";
 
 type HeadingProps = React.ComponentPropsWithoutRef<"h2">;
 
@@ -147,11 +149,9 @@ export const mdxComponents = {
   td: (props: React.ComponentPropsWithoutRef<"td">) => (
     <td className="border-b border-gray-200 px-3 py-2 text-gray-700" {...props} />
   ),
-  img: (props: React.ComponentPropsWithoutRef<"img">) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img className="mx-auto mt-8 w-full rounded-md border border-gray-200" {...props} alt={props.alt ?? ""} />
-  ),
+  img: (props: React.ComponentPropsWithoutRef<"img">) => <ZoomableImage {...props} />,
   Callout,
   Figure,
   CodeBlock,
+  Sidenote,
 };

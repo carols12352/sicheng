@@ -69,7 +69,7 @@ export default function AboutPage() {
         <section className="mt-12 rounded-xl border border-gray-200 bg-gray-50/60 p-5">
         <h2 className="text-lg font-semibold">Note</h2>
         <p className="mt-3">
-          Thank you for reading all of this! If you've comed this far into the website, maybe try the terminal puzzle I built up on the &gt;_ section, there are three different animations in it and I put many effort in making it.
+          Thank you for reading all of this! If you&apos;ve comed this far into the website, maybe try the terminal puzzle I built up on the &gt;_ section, there are three different animations in it and I put many effort in making it.
         </p>
       </section>
     </>

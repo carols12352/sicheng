@@ -14,6 +14,21 @@ import {
 } from "@/lib/seo";
 import "./globals.css";
 
+const THEME_INIT_SCRIPT = `
+(() => {
+  try {
+    const storageKey = "site-theme-mode";
+    const saved = window.localStorage.getItem(storageKey);
+    const mode = saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const resolved = mode === "system" ? (systemDark ? "dark" : "light") : mode;
+    const root = document.documentElement;
+    root.dataset.theme = mode;
+    root.style.colorScheme = resolved;
+  } catch {}
+})();
+`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -126,7 +141,14 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: THEME_INIT_SCRIPT,
+          }}
+        />
+      </head>
       <body className="antialiased">
         <SiteFrame>{children}</SiteFrame>
         <SpeedInsights />

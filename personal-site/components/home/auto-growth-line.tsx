@@ -13,10 +13,6 @@ type AutoGrowthLineProps = {
 };
 
 export function AutoGrowthLine({ items }: AutoGrowthLineProps) {
-  if (items.length === 0) {
-    return null;
-  }
-
   const trackRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
   const offsetRef = useRef(0);
@@ -87,6 +83,10 @@ export function AutoGrowthLine({ items }: AutoGrowthLineProps) {
       ))}
     </ol>
   );
+
+  if (items.length === 0) {
+    return null;
+  }
 
   return (
     <div className="growth-line-scroll mt-4" onPointerEnter={handlePointerEnter} onPointerLeave={handlePointerLeave}>
