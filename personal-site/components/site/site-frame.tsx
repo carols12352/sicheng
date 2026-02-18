@@ -26,8 +26,14 @@ export function SiteFrame({ children }: SiteFrameProps) {
   const router = useRouter();
   const pathname = usePathname();
   const isTerminalPage = pathname === "/terminal";
+  const isWritingListPage = pathname === "/writing";
+  const isProjectsPage = pathname === "/projects";
+  const isWritingArticlePage = /^\/writing\/[^/]+$/.test(pathname);
+  const canOpenSearch = isWritingArticlePage || isWritingListPage || isProjectsPage;
   const [showShortcutHelp, setShowShortcutHelp] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResultCount, setSearchResultCount] = useState<number | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -57,7 +63,12 @@ export function SiteFrame({ children }: SiteFrameProps) {
       }
 
       if (event.key === "/") {
+        if (!canOpenSearch) {
+          return;
+        }
         event.preventDefault();
+        setSearchQuery("");
+        setSearchResultCount(null);
         setShowSearch(true);
         window.requestAnimationFrame(() => {
           searchInputRef.current?.focus();
@@ -76,7 +87,31 @@ export function SiteFrame({ children }: SiteFrameProps) {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [canOpenSearch]);
+
+  useEffect(() => {
+    const onSearchResult = (event: Event) => {
+      const detail = (event as CustomEvent<{ query: string; count: number }>).detail;
+      if (detail.query === searchQuery.trim()) {
+        setSearchResultCount(detail.count);
+      }
+    };
+    window.addEventListener("site:article-search-result", onSearchResult as EventListener);
+    return () => window.removeEventListener("site:article-search-result", onSearchResult as EventListener);
+  }, [searchQuery]);
+
+  const dispatchArticleSearch = (value: string) => {
+    const query = value.trim();
+    setSearchQuery(value);
+    if (!isWritingArticlePage) {
+      return;
+    }
+    window.dispatchEvent(
+      new CustomEvent("site:article-search", {
+        detail: { query },
+      }),
+    );
+  };
 
   if (isTerminalPage) {
     return <>{children}</>;
@@ -187,22 +222,26 @@ export function SiteFrame({ children }: SiteFrameProps) {
         </div>
       ) : null}
 
-      {showSearch ? (
+      {showSearch && canOpenSearch ? (
         <div
           className="fixed inset-0 z-50 flex items-start justify-center bg-black/20 px-4 pt-20"
           onClick={() => setShowSearch(false)}
         >
           <form
-            action="/writing"
-            method="get"
             className="w-full max-w-md rounded-md border border-gray-200 bg-white px-2.5 py-2 shadow-sm"
             onClick={(event) => event.stopPropagation()}
             onSubmit={(event) => {
               event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              const query = String(formData.get("q") ?? "").trim();
-              router.push(query ? `/writing?q=${encodeURIComponent(query)}` : "/writing");
-              setShowSearch(false);
+              const query = searchQuery.trim();
+              if (isWritingListPage || isProjectsPage) {
+                const nextPath = isProjectsPage ? "/projects" : "/writing";
+                router.push(query ? `${nextPath}?q=${encodeURIComponent(query)}` : nextPath);
+                setShowSearch(false);
+                return;
+              }
+              if (!query) {
+                setShowSearch(false);
+              }
             }}
           >
             <label htmlFor="site-search" className="sr-only">Search writing</label>
@@ -212,9 +251,18 @@ export function SiteFrame({ children }: SiteFrameProps) {
               name="q"
               type="search"
               data-site-search
-              placeholder="Search writing..."
+              value={searchQuery}
+              onChange={(event) => dispatchArticleSearch(event.target.value)}
+              placeholder={
+                isWritingArticlePage ? "Search in this article..." : "Search this page..."
+              }
               className="h-7 w-full bg-transparent px-0.5 text-sm text-gray-700 outline-none placeholder:text-gray-400"
             />
+            {isWritingArticlePage && searchQuery.trim().length > 0 && searchResultCount !== null ? (
+              <p className="mt-1 px-0.5 text-xs text-gray-500">
+                {searchResultCount > 0 ? `${searchResultCount} matches` : "No matches in this article"}
+              </p>
+            ) : null}
           </form>
         </div>
       ) : null}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ProjectsTreeTimeline, type ProjectEntry } from "@/components/projects/projects-tree-timeline";
 import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
@@ -285,7 +286,64 @@ sequenceDiagram
 
 ];
 
-export default function ProjectsPage() {
+type ProjectsPageProps = {
+  searchParams: Promise<{ q?: string | string[] }>;
+};
+
+export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const rawQuery = resolvedSearchParams.q;
+  const queryValue = Array.isArray(rawQuery) ? rawQuery[0] : rawQuery;
+  const query = (queryValue ?? "").trim();
+  const normalizedQuery = query.toLowerCase();
+  const buildSnippet = (project: ProjectEntry, raw: string) => {
+    if (!raw) {
+      return project.summary;
+    }
+    const source = [
+      project.summary,
+      ...project.highlights,
+      project.challenges,
+      ...project.nextSteps,
+      ...project.stack.map((item) => item.name),
+    ]
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+    const lower = source.toLowerCase();
+    const index = lower.indexOf(raw);
+    if (index < 0) {
+      return project.summary;
+    }
+    const start = Math.max(0, index - 68);
+    const end = Math.min(source.length, index + raw.length + 92);
+    const snippet = source.slice(start, end).trim();
+    const prefix = start > 0 ? "... " : "";
+    const suffix = end < source.length ? " ..." : "";
+    return `${prefix}${snippet}${suffix}`;
+  };
+
+  const visibleProjects = normalizedQuery
+    ? projectEntries
+      .filter((project) => {
+        const haystack = [
+          project.name,
+          project.summary,
+          ...project.highlights,
+          ...project.nextSteps,
+          project.challenges,
+          ...project.stack.map((item) => item.name),
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(normalizedQuery);
+      })
+      .map((project) => ({
+        ...project,
+        summary: buildSnippet(project, normalizedQuery),
+      }))
+    : projectEntries;
+
   return (
     <>
       <section>
@@ -296,9 +354,28 @@ export default function ProjectsPage() {
           Project work aligned with my current resume, with architecture notes
           and implementation details from public repositories.
         </p>
+        {query ? (
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
+            <p>
+              Search: <span className="font-medium text-gray-700">{query}</span>
+            </p>
+            <Link href="/projects" className="ui-link ui-underline">
+              Clear search
+            </Link>
+          </div>
+        ) : null}
       </section>
 
-      <ProjectsTreeTimeline projects={projectEntries} />
+      {visibleProjects.length === 0 ? (
+        <section className="mt-12 ui-item border-t border-gray-200 pt-4">
+          <h2 className="text-lg font-semibold text-gray-900">No results</h2>
+          <p className="mt-3 text-gray-600">
+            No projects matched <span className="font-medium">{query}</span>.
+          </p>
+        </section>
+      ) : (
+        <ProjectsTreeTimeline projects={visibleProjects} searchQuery={query} />
+      )}
     </>
   );
 }

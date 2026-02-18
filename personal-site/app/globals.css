@@ -852,6 +852,18 @@ p {
   }
 }
 
+@keyframes buildDotPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+}
+
 .terminal-caret {
   display: inline-block;
   width: 0.52rem;
@@ -860,12 +872,29 @@ p {
   vertical-align: -0.08em;
   animation: terminalCaretBlink 1s steps(1, end) infinite;
 }
+
+.build-status-dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: #16a34a;
+  box-shadow: 0 0 0 4px color-mix(in srgb, #16a34a 20%, transparent);
+  animation: buildDotPulse 1.6s ease-in-out infinite;
+}
+
 .mdx-prose > p {
   margin-bottom: 0.5rem;
 }
 
 .mdx-prose > p:last-child {
   margin-bottom: 0;
+}
+
+mark.article-search-hit {
+  background: color-mix(in srgb, #facc15 42%, transparent);
+  color: inherit;
+  border-radius: 0.12rem;
+  padding: 0 0.05rem;
 }
 
 .sidenote {
@@ -913,7 +942,8 @@ p {
   .home-load-enter,
   .home-hero::after,
   .home-hero-sweep::before,
-  .terminal-caret {
+  .terminal-caret,
+  .build-status-dot {
     transition: none;
     animation: none;
   }

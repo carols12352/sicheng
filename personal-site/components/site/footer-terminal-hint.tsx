@@ -17,6 +17,11 @@ function formatLastLogin(date: Date): string {
 export function FooterTerminalHint() {
   const lastLogin = formatLastLogin(new Date());
   const [showCursor, setShowCursor] = useState(false);
+  const commitSha = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? process.env.NEXT_PUBLIC_GIT_COMMIT_SHA ?? "";
+  const shortSha = commitSha ? commitSha.slice(0, 7) : "local";
+  const commitHref = commitSha
+    ? `https://github.com/carols12352/sicheng/commit/${commitSha}`
+    : "https://github.com/carols12352/sicheng/commits";
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,6 +47,12 @@ export function FooterTerminalHint() {
         Tip: press <span className="text-gray-600">?</span> for Vim-style navigation (
         <span className="text-gray-600">j</span>/<span className="text-gray-600">k</span>,{" "}
         <span className="text-gray-600">/</span>)
+      </p>
+      <p className="mt-2 flex items-center gap-2 font-mono text-[11px] text-gray-500">
+        <span className="build-status-dot" aria-hidden />
+        <a href={commitHref} target="_blank" rel="noreferrer" className="ui-link ui-underline">
+          build {shortSha}
+        </a>
       </p>
     </>
   );

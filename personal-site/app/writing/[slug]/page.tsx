@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { Prose } from "@/components/mdx/prose";
+import { ArticleSearchBridge } from "@/components/writing/article-search-bridge";
 import { ArticleToc } from "@/components/writing/article-toc";
 import { SITE_AUTHOR, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 import { getAllPosts, getPostBySlug } from "@/lib/writing";
@@ -73,6 +74,7 @@ export default async function WritingArticlePage({ params }: PageProps) {
   return (
     <article data-writing-article>
       <ArticleToc />
+      <ArticleSearchBridge />
       <header className="mx-auto max-w-[42.5rem] pt-12 sm:pt-16">
         <nav aria-label="Breadcrumb" className="mb-5 text-xs text-gray-500">
           <ol className="m-0 flex items-center gap-2 p-0">

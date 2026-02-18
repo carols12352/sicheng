@@ -119,6 +119,26 @@ export async function getAllPosts(): Promise<PostMeta[]> {
   return posts.sort(sortByDateDesc);
 }
 
+export async function getAllPostsWithContent(): Promise<Post[]> {
+  const files = await getContentFiles();
+
+  const posts = await Promise.all(
+    files.map(async (fileName) => {
+      const slug = fileName.replace(/\.(md|mdx)$/i, "");
+      const filePath = path.join(CONTENT_DIR, fileName);
+      const raw = await fs.readFile(filePath, "utf8");
+      const { data, content } = matter(raw);
+
+      return {
+        meta: toPostMeta(slug, data as Frontmatter, content),
+        content,
+      };
+    }),
+  );
+
+  return posts.sort((a, b) => sortByDateDesc(a.meta, b.meta));
+}
+
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const extensions = ["mdx", "md"];
 

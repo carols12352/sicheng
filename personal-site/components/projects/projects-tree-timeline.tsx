@@ -24,10 +24,12 @@ export type ProjectEntry = {
 
 type ProjectsTreeTimelineProps = {
   projects: ProjectEntry[];
+  searchQuery?: string;
 };
 
-export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
+export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTreeTimelineProps) {
   const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
+  const normalizedQuery = searchQuery.trim().toLowerCase();
 
   const orderedProjects = useMemo(
     () =>
@@ -59,6 +61,22 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
   }, [activeProject]);
 
   const cardTransition = { type: "tween", duration: 0.36, ease: [0.22, 1, 0.36, 1] as const };
+  const highlightText = (text: string) => {
+    if (!normalizedQuery) {
+      return text;
+    }
+    const escaped = normalizedQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const parts = text.split(new RegExp(`(${escaped})`, "ig"));
+    return parts.map((part, index) =>
+      part.toLowerCase() === normalizedQuery ? (
+        <mark key={`${part}-${index}`} className="article-search-hit">
+          {part}
+        </mark>
+      ) : (
+        <span key={`${part}-${index}`}>{part}</span>
+      ),
+    );
+  };
 
   return (
     <LayoutGroup id="projects-window">
@@ -83,8 +101,8 @@ export function ProjectsTreeTimeline({ projects }: ProjectsTreeTimelineProps) {
                         <p className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">
                           {project.period}
                         </p>
-                        <h2 className="mt-3 text-xl font-semibold tracking-tight text-gray-900 sm:text-2xl">{project.name}</h2>
-                        <p className="mt-3 text-sm text-gray-600">{project.summary}</p>
+                        <h2 className="mt-3 text-xl font-semibold tracking-tight text-gray-900 sm:text-2xl">{highlightText(project.name)}</h2>
+                        <p className="mt-3 text-sm text-gray-600">{highlightText(project.summary)}</p>
                       </div>
                       <span className="mt-1 flex items-center gap-2 text-xs text-gray-500">
                         open
