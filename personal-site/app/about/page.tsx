@@ -66,7 +66,7 @@ export default function AboutPage() {
             Besides all of the coding, I am also a big fan of going to the gym and play tennis, FPS games are also a fun way for me to relax and connect with friends. I also enjoy traveling and exploring new places, especially if there are good food around!
           </p>
         </section>
-        <section className="mt-12 rounded-xl border border-gray-200 bg-gray-50/60 p-5">
+        <section className="about-note-card mt-12 rounded-xl border border-gray-200 p-5">
         <h2 className="text-lg font-semibold">Note</h2>
         <p className="mt-3">
           Thank you for reading all of this! If you&apos;ve comed this far into the website, maybe try the terminal puzzle I built up on the &gt;_ section, there are three different animations in it and I put many effort in making it.

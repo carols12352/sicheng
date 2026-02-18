@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { PageTransition } from "@/components/motion/page-transition";
+import { MotionToggle } from "@/components/navigation/motion-toggle";
 import { NavLink } from "@/components/navigation/nav-link";
 import { ThemeToggle } from "@/components/navigation/theme-toggle";
 import { FooterTerminalHint } from "@/components/site/footer-terminal-hint";
@@ -31,6 +32,7 @@ export function SiteFrame({ children }: SiteFrameProps) {
   const isWritingArticlePage = /^\/writing\/[^/]+$/.test(pathname);
   const canOpenSearch = isWritingArticlePage || isWritingListPage || isProjectsPage;
   const [showShortcutHelp, setShowShortcutHelp] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResultCount, setSearchResultCount] = useState<number | null>(null);
@@ -125,7 +127,7 @@ export function SiteFrame({ children }: SiteFrameProps) {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-10 sm:py-12">
       <header>
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3">
           <Link href="/" className="site-brand ui-link" aria-label="Sicheng Ouyang Home">
             <Image
               src="/favicon-light.png"
@@ -143,13 +145,38 @@ export function SiteFrame({ children }: SiteFrameProps) {
             />
             <span className="text-sm font-semibold text-gray-900">Sicheng Ouyang</span>
           </Link>
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-            {navItems.map((item) => (
-              <NavLink key={item.href} href={item.href} label={item.label} />
-            ))}
-          </nav>
-          <ThemeToggle />
+          <div className="hidden items-center gap-2 md:flex">
+            <MotionToggle />
+            <ThemeToggle />
+          </div>
+          <button
+            type="button"
+            className="mobile-nav-btn md:hidden"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-site-nav"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+          >
+            {mobileMenuOpen ? "Close" : "Menu"}
+          </button>
         </div>
+        <nav className="mt-4 hidden flex-wrap gap-x-6 gap-y-2 text-sm md:flex">
+          {navItems.map((item) => (
+            <NavLink key={item.href} href={item.href} label={item.label} />
+          ))}
+        </nav>
+        {mobileMenuOpen ? (
+          <div id="mobile-site-nav" className="mobile-nav-sheet md:hidden">
+            <nav className="flex flex-col gap-3 text-sm" onClick={() => setMobileMenuOpen(false)}>
+              {navItems.map((item) => (
+                <NavLink key={item.href} href={item.href} label={item.label} />
+              ))}
+            </nav>
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <MotionToggle />
+              <ThemeToggle />
+            </div>
+          </div>
+        ) : null}
       </header>
 
       <main className="mt-12 flex-1">

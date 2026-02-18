@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ResumeImageFallback } from "@/components/resume/resume-image-fallback";
 import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -57,9 +58,16 @@ export default function ResumePage() {
       </header>
 
       <div className="mt-6 border border-gray-200 bg-gray-50 p-3 sm:p-5">
+        <div className="mb-4 rounded-md border border-gray-200 bg-white px-3 py-2 text-xs text-gray-600">
+          Compatibility mode: some browsers/extensions (forced dark mode, PDF plugins) may render embedded PDF as blank or too dark.
+          If that happens, use <span className="font-medium text-gray-700">Open in New Tab</span> or the fallback image below.
+        </div>
         <div className="mx-auto aspect-[8.5/11] w-full max-w-4xl overflow-hidden bg-white ring-1 ring-gray-200">
           <object data={RESUME_PATH} type="application/pdf" className="h-full w-full">
-            <iframe src={RESUME_PATH} title="Resume Preview" className="h-full w-full" />
+            <iframe src={RESUME_PATH} title="Resume Preview" className="h-full w-full">
+              <ResumeImageFallback pdfPath={RESUME_PATH} />
+            </iframe>
+            <ResumeImageFallback pdfPath={RESUME_PATH} />
           </object>
         </div>
       </div>

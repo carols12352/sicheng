@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 type ThemeMode = "light" | "dark" | "system";
 
@@ -21,16 +21,34 @@ function applyTheme(mode: ThemeMode) {
 }
 
 export function ThemeToggle() {
-  const [mode, setMode] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") {
-      return "system";
-    }
+  const mode = useSyncExternalStore<ThemeMode>(
+    (callback) => {
+      window.addEventListener("storage", callback);
+      window.addEventListener("site:theme-pref-changed", callback);
+      return () => {
+        window.removeEventListener("storage", callback);
+        window.removeEventListener("site:theme-pref-changed", callback);
+      };
+    },
+    (): ThemeMode => {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      return saved === "light" || saved === "dark" || saved === "system"
+        ? saved
+        : "system";
+    },
+    (): ThemeMode => "system",
+  );
 
+  useEffect(() => {
+    const initialSaved = window.localStorage.getItem(STORAGE_KEY);
+    if (!(initialSaved === "light" || initialSaved === "dark" || initialSaved === "system")) {
+      window.localStorage.setItem(STORAGE_KEY, "system");
+    }
     const saved = window.localStorage.getItem(STORAGE_KEY);
-    return saved === "light" || saved === "dark" || saved === "system"
-      ? saved
-      : "system";
-  });
+    const normalized: ThemeMode =
+      saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
+    applyTheme(normalized);
+  }, []);
 
   useEffect(() => {
     applyTheme(mode);
@@ -50,8 +68,8 @@ export function ThemeToggle() {
   }, [mode]);
 
   const handleSelect = (nextMode: ThemeMode) => {
-    setMode(nextMode);
     window.localStorage.setItem(STORAGE_KEY, nextMode);
+    window.dispatchEvent(new Event("site:theme-pref-changed"));
     applyTheme(nextMode);
   };
 

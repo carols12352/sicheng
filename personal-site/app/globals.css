@@ -71,6 +71,7 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 h1,
@@ -271,6 +272,35 @@ p {
   margin-inline: calc(50% - 50vw);
   position: relative;
   isolation: isolate;
+  overflow-x: clip;
+}
+
+.motion-toggle {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.34rem 0.62rem;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.mobile-nav-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.34rem 0.6rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.mobile-nav-sheet {
+  margin-top: 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: color-mix(in srgb, var(--surface) 96%, transparent);
 }
 
 .home-load-enter {
@@ -549,7 +579,7 @@ p {
 
 .work-link:hover {
   border-top-color: var(--line-strong);
-  padding-left: 0.95rem;
+  padding-left: 0.85rem;
 }
 
 .work-link:hover::before {
@@ -580,7 +610,7 @@ p {
 }
 
 .work-side .work-link:hover {
-  padding-left: 0.8rem;
+  padding-left: 0.7rem;
 }
 
 .work-meta {
@@ -914,6 +944,23 @@ mark.article-search-hit {
   color: var(--text-muted);
 }
 
+.about-note-card {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+
+:root[data-theme="dark"] .about-note-card {
+  background: color-mix(in srgb, var(--surface) 52%, transparent);
+  border-color: var(--line-strong) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .about-note-card,
+  :root[data-theme="system"] .about-note-card {
+    background: color-mix(in srgb, var(--surface) 52%, transparent);
+    border-color: var(--line-strong) !important;
+  }
+}
+
 @media (min-width: 1100px) {
   .mdx-prose .sidenote {
     float: right;
@@ -947,4 +994,26 @@ mark.article-search-hit {
     transition: none;
     animation: none;
   }
+}
+
+:root[data-reduce-motion="true"] .ui-link,
+:root[data-reduce-motion="true"] .ui-link:hover,
+:root[data-reduce-motion="true"] .ui-item,
+:root[data-reduce-motion="true"] .ui-item:hover,
+:root[data-reduce-motion="true"] .ui-nav-link,
+:root[data-reduce-motion="true"] .ui-underline,
+:root[data-reduce-motion="true"] .ui-underline:hover,
+:root[data-reduce-motion="true"] .work-link,
+:root[data-reduce-motion="true"] .work-link::before,
+:root[data-reduce-motion="true"] .home-btn,
+:root[data-reduce-motion="true"] .home-btn-primary:hover,
+:root[data-reduce-motion="true"] .home-btn-ghost:hover,
+:root[data-reduce-motion="true"] .growth-line-track,
+:root[data-reduce-motion="true"] .home-load-enter,
+:root[data-reduce-motion="true"] .home-hero::after,
+:root[data-reduce-motion="true"] .home-hero-sweep::before,
+:root[data-reduce-motion="true"] .terminal-caret,
+:root[data-reduce-motion="true"] .build-status-dot {
+  transition: none !important;
+  animation: none !important;
 }

@@ -104,7 +104,7 @@ export default function Home() {
     <div className="home-canvas home-load-enter">
       <RevealSection
         tone="hero"
-        className="home-band home-hero home-hero-sweep flex min-h-[calc(100svh-8.5rem)] items-center px-6 py-10 sm:px-10 sm:py-14 lg:px-14"
+        className="home-band home-hero home-hero-sweep flex min-h-0 items-center px-6 py-8 sm:min-h-[calc(100svh-8.5rem)] sm:px-10 sm:py-14 lg:px-14"
       >
         <div className="home-hero-grid mx-auto w-full max-w-6xl">
           <div>
@@ -124,15 +124,15 @@ export default function Home() {
               Sicheng Ouyang
             </h1>
             <span aria-hidden className="mt-5 block h-px w-20 bg-gray-300" />
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-gray-600">
+            <p className="mt-5 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg sm:leading-8">
               Software Engineering student at UWaterloo focused on reliable backend systems, practical ML workflows, and product delivery.
             </p>
 
-            <div className="home-hero-actions mt-8">
-              <Link href="/projects" className="home-btn home-btn-primary">
+            <div className="home-hero-actions mt-8 flex-col sm:flex-row">
+              <Link href="/projects" className="home-btn home-btn-primary w-full sm:w-auto">
                 View Projects
               </Link>
-              <Link href="/writing" className="home-btn home-btn-ghost">
+              <Link href="/writing" className="home-btn home-btn-ghost w-full sm:w-auto">
                 Read Writing
               </Link>
             </div>
@@ -156,7 +156,7 @@ export default function Home() {
           <RevealStagger className="capability-rail">
             {focusItems.map((item, index) => (
               <RevealItem key={item.title} className="capability-row ui-item">
-                <HoverCard className="flex gap-4">
+                <div className="flex gap-4">
                   <p className="capability-index">0{index + 1}</p>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-900">
@@ -166,7 +166,7 @@ export default function Home() {
                       {item.description}
                     </p>
                   </div>
-                </HoverCard>
+                </div>
               </RevealItem>
             ))}
           </RevealStagger>

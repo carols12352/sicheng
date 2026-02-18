@@ -20,10 +20,12 @@ const THEME_INIT_SCRIPT = `
     const storageKey = "site-theme-mode";
     const saved = window.localStorage.getItem(storageKey);
     const mode = saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
+    const reduceMotion = window.localStorage.getItem("site-reduce-motion") === "true";
     const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const resolved = mode === "system" ? (systemDark ? "dark" : "light") : mode;
     const root = document.documentElement;
     root.dataset.theme = mode;
+    root.dataset.reduceMotion = reduceMotion ? "true" : "false";
     root.style.colorScheme = resolved;
   } catch {}
 })();

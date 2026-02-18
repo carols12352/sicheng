@@ -31,14 +31,24 @@ Personal portfolio site built with Next.js (App Router), focused on clean UX, pr
   - `j` / `k` for smooth scroll
   - `?` for shortcuts panel
   - `/` for search (enabled on `/writing`, `/projects`, `/writing/[slug]`)
+- Responsive navigation:
+  - desktop: inline nav
+  - mobile: minimal hamburger menu
 - Search behavior by page:
   - `/writing`: filters posts and shows title + content snippet matches
   - `/projects`: filters project cards and shows matched snippets
   - `/writing/[slug]`: in-article text search with live highlight + match count
+- Accessibility / motion controls:
+  - global `Motion: Full / Reduced` toggle in header
+  - persisted in localStorage and merged with system `prefers-reduced-motion`
 - MDX enhancements:
   - custom paragraph spacing
   - `Sidenote` support
   - fluid image zoom for article images
+- Resume page UX:
+  - compatibility note for dark-mode PDF/rendering plugins
+  - embedded PDF preview with image fallback support
+  - optional fallback image path: `public/resume-preview.jpg`
 - Footer terminal hint upgrades:
   - animated green status dot
   - clickable build version (`build <sha>`) linking to GitHub commit page
