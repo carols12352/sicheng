@@ -15,6 +15,22 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+function buildArticleDescription(summary: string, content: string): string {
+  if (summary.trim()) {
+    return summary.trim();
+  }
+
+  const plain = content
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[#>*_\-\[\]\(\)]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return plain.slice(0, 160) || "Technical article from Sicheng Ouyang.";
+}
+
 export async function generateStaticParams() {
   const posts = await getAllPosts();
   return posts.map((post) => ({ slug: post.slug }));
@@ -29,10 +45,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const articleUrl = `${SITE_URL}/writing/${slug}`;
+  const articleImageUrl = `${SITE_URL}/writing/${slug}/opengraph-image`;
+  const description = buildArticleDescription(post.meta.summary, post.content);
+  const published = post.meta.date || undefined;
 
   return {
     title: post.meta.title,
-    description: post.meta.summary,
+    description,
     authors: [{ name: SITE_AUTHOR, url: SITE_URL }],
     keywords: post.meta.tags,
     alternates: {
@@ -42,14 +61,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "article",
       url: articleUrl,
       title: post.meta.title,
-      description: post.meta.summary,
+      description,
       siteName: SITE_NAME,
-      publishedTime: post.meta.date || undefined,
+      publishedTime: published,
+      modifiedTime: published,
       authors: [SITE_AUTHOR],
       tags: post.meta.tags,
       images: [
         {
-          url: SITE_OG_IMAGE,
+          url: articleImageUrl,
           width: 1200,
           height: 630,
           alt: `${post.meta.title} cover image`,
@@ -59,8 +79,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     twitter: {
       card: "summary_large_image",
       title: post.meta.title,
-      description: post.meta.summary,
-      images: [SITE_OG_IMAGE],
+      description,
+      images: [articleImageUrl || SITE_OG_IMAGE],
     },
   };
 }
@@ -73,8 +93,69 @@ export default async function WritingArticlePage({ params }: PageProps) {
     notFound();
   }
 
+  const articleUrl = `${SITE_URL}/writing/${slug}`;
+  const articleImageUrl = `${SITE_URL}/writing/${slug}/opengraph-image`;
+  const description = buildArticleDescription(post.meta.summary, post.content);
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.meta.title,
+    description,
+    author: {
+      "@type": "Person",
+      name: SITE_AUTHOR,
+      url: SITE_URL,
+    },
+    publisher: {
+      "@type": "Person",
+      name: SITE_AUTHOR,
+      url: SITE_URL,
+    },
+    mainEntityOfPage: articleUrl,
+    datePublished: post.meta.date || undefined,
+    dateModified: post.meta.date || undefined,
+    image: [articleImageUrl],
+    keywords: post.meta.tags.join(", "),
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Writing",
+        item: `${SITE_URL}/writing`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.meta.title,
+        item: articleUrl,
+      },
+    ],
+  };
+
   return (
     <article data-writing-article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleJsonLd),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd),
+        }}
+      />
       <ArticleToc />
       <ArticleSearchBridge />
       <header className="mx-auto max-w-[42.5rem] pt-12 sm:pt-16">
