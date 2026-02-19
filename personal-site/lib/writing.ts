@@ -98,7 +98,12 @@ function sortByDateDesc(a: PostMeta, b: PostMeta): number {
 async function getContentFiles(): Promise<string[]> {
   const entries = await fs.readdir(CONTENT_DIR, { withFileTypes: true });
   return entries
-    .filter((entry) => entry.isFile() && /\.(md|mdx)$/i.test(entry.name))
+    .filter(
+      (entry) =>
+        entry.isFile() &&
+        /\.(md|mdx)$/i.test(entry.name) &&
+        !/^readme\.(md|mdx)$/i.test(entry.name),
+    )
     .map((entry) => entry.name);
 }
 

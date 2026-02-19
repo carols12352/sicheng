@@ -122,8 +122,8 @@ export function ArticleToc() {
       <p className="mb-3 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">On This Page</p>
       <nav>
         <ol className="m-0 space-y-2 p-0">
-          {headings.map((heading) => (
-            <li key={heading.id} className={heading.level === 3 ? "pl-3" : ""}>
+          {headings.map((heading, index) => (
+            <li key={`${heading.id}-${index}`} className={heading.level === 3 ? "pl-3" : ""}>
               <Link
                 href={`#${heading.id}`}
                 className={`text-xs transition-colors ${

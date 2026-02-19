@@ -12,6 +12,7 @@ import {
   SITE_TITLE,
   SITE_URL,
 } from "@/lib/seo";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 const THEME_INIT_SCRIPT = `
