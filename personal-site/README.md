@@ -44,7 +44,14 @@ Personal portfolio site built with Next.js (App Router), focused on clean UX, pr
 - MDX enhancements:
   - custom paragraph spacing
   - `Sidenote` support
+  - auto-numbered sidenote markers (`[1]`, `[2]`, ...)
+  - desktop sidenote collapse/expand behavior for long notes
   - fluid image zoom for article images
+  - Mermaid diagrams with click-to-zoom preview (Medium-style transition)
+  - zoom animations automatically respect global/system reduced-motion preferences
+  - interactive token probability demo component (`TokenPredictionDemo`)
+  - reusable MDX copyright component (`<Copyright />`)
+  - KaTeX math rendering (`remark-math` + `rehype-katex`)
 - Resume page UX:
   - compatibility note for dark-mode PDF/rendering plugins
   - embedded PDF preview with image fallback support
@@ -71,6 +78,11 @@ npm run lint
 npm run build
 npm run start
 ```
+
+## Writing Authoring
+
+- Writing docs: `content/writing/README.md`
+- Core MDX component registry: `components/mdx/mdx-components.tsx`
 
 ## SEO
 

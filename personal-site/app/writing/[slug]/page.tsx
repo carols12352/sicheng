@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { Prose } from "@/components/mdx/prose";
 import { ArticleSearchBridge } from "@/components/writing/article-search-bridge";
@@ -114,7 +116,16 @@ export default async function WritingArticlePage({ params }: PageProps) {
 
       <section className="mt-0">
         <Prose>
-          <MDXRemote source={post.content} components={mdxComponents} />
+          <MDXRemote
+            source={post.content}
+            components={mdxComponents}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkMath],
+                rehypePlugins: [rehypeKatex],
+              },
+            }}
+          />
         </Prose>
       </section>
     </article>

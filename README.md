@@ -20,6 +20,12 @@ npm run dev
 - Interactive `/terminal` easter-egg route with command simulation
 - Custom `404` page with embedded Dino game
 - SEO setup with metadata, robots, and sitemap generation
+- MDX writing system with custom React components, Mermaid diagrams, sidenotes, and KaTeX math
+
+## Docs
+
+- Project docs: `personal-site/README.md`
+- Writing component docs: `personal-site/content/writing/README.md`
 
 ## Build & Lint
 

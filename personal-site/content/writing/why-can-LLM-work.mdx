@@ -1,0 +1,225 @@
+---
+title: If LLMs Only Predict the Next Token, Why Do They Work?
+date: 2026-02-18
+summary: Discussing why LLMs work and the reasoning behind their behavior.
+tags:
+  - LLM
+  - Transformer
+  - Attention
+  - Optimization
+  - Emergence
+---
+## The question
+If you’ve learned some basics about large language models like I did, you quickly realize something slightly disappointing at first: AI is, in essence, a massive system of pattern matching and statistical inference<Sidenote label="statistical-inference">
+Statistical inference means learning patterns by estimating probability distributions from data, rather than encoding explicit symbolic rules or logic by hand.
+</Sidenote>, it is not some really cool or super awesome manipulated system that can think like humans do, but rather a bunch of algorithms.
+
+At its core, a model like ChatGPT is trained to predict the next token given the previous ones<Sidenote label="autoregressive-modeling">
+Autoregressive modeling predicts each token conditioned only on previous tokens in the sequence.  
+Formally, it factorizes a sequence probability as  
+$P(x_1, x_2, \ldots, x_n) = \prod_t P(x_t \mid x_{<t})$.
+</Sidenote>. It doesn’t really know facts the way humans do, it doesn’t hold beliefs, it doesn’t have intentions. It just predicts the next word based on the given input.
+
+But here’s the part that feels strange, to me, at least. 
+
+When I type a question into ChatGPT or other LLMs, the response I get is often coherent, logically structured, and surprisingly accurate (there are still occasional false references, but error frequency has dropped a lot since 3.5). It explains physics concepts correctly, writes working code, and summarizes research papers, almost like talking to someone who happens to know your random question really well.
+If this is just statistical next-word prediction, how does it produce something that looks so much like understanding? Or, why doesn't my keyboard produce the same output if I just randomly typed in my question and start spamming the first output it gives me?
+
+This is what wonders me the most: on one side, we have a relatively straightforward training objective: minimize prediction error<Sidenote label="cross-entropy">
+Cross-entropy loss measures how different the predicted probability distribution is from the true distribution (where the correct token has probability 1).  
+Lower cross-entropy means the model assigns higher probability to the correct next token.
+</Sidenote> over trillions of tokens. On the other side, we somehow observe behaviors that resemble reasoning, abstraction, and even creativity. 
+
+This is what made me think: How does pattern matching turn into something that feels intelligent?
+
+## Local Prediction, Global Structure
+To answer this, we need to look more carefully at what pattern matching really means in this context, because predicting the next token is not the same as randomly choosing a word that looks similar.
+
+Formally, the model is trying to approximate<Sidenote label="conditional-probability">
+$P(x_t \mid x_{<t})$ represents the probability of the next token given all previous tokens.  
+This is the core objective LLMs are trained to approximate.
+</Sidenote>:
+$$
+P(x_t \mid x_{<t})
+$$
+
+Given everything that has been said so far, what is the probability of the next token?
+
+That sounds pretty simple, just one word at a time, just like your normal keyboard. However, if you know some context about LLMs, you know that the probability of the next token depends on the entire previous context.
+
+So basically, if the context is a mathematical proof, the next token must follow logical consistency, if the context is a Python function, the next token must obey syntax rules, and if the context is a physics explanation, the next sentence must preserve causal relationships.
+
+So if we look at prediction as if it were a local process, it would be a simple task. But correctness is global, and minimizing prediction error across trillions of examples forces the model to represent patterns that maintain global consistency.
+
+Now, consider a simple example, if the model sees input:
+`Let f(x) = x^2 + 3x. Then f'(x) =`
+<TokenPredictionDemo />
+The correct continuation is not determined by word frequency, it is constrained by calculus, to predict the right next token, the model must approximate patterns that behave like the derivative rule. As over many examples, failing to capture these regularities would increase prediction error.
+
+The same applies to code. If the model generates:
+```python
+def add(a, b):
+    return
+```
+The next token is constrained by function semantics, not by surface similarity, in other words, accurate prediction requires internal representations that capture regularities consistent with domain-specific rules.
+
+And this is the key: the training objective does not explicitly tell the model to learn logic, syntax, or physics, but failing to represent these structures increases loss<Sidenote label="loss-function">
+The loss function is the numerical objective minimized during training.  
+It quantifies how far the model’s predictions are from the true next token.
+</Sidenote>, so structure or rule is not programmed into the model, it is selected for by optimization, and as you can see, what we call “rules” may simply be highly stable statistical regularities in data, which is what LLMs or statisical models are good at.
+
+## Attention as a Mechanism for Context Modeling
+Recall that the model is trying to approximate
+$$
+P(x_t \mid x_{<t})
+$$
+This means that, at time step t, the representation of the current token must encode all relevant information from previous tokens, from an engineering perspective, this is a context aggregation problem, as the model must answer:
+
+> Which parts of the previous sequence matter for predicting the next token?
+
+A simple feedforward network cannot do this properly, as it treats inputs independently once embedded<Sidenote label="embedding">
+An embedding is a learned high-dimensional vector representation of a token.  
+Instead of processing words as symbols, the model processes these continuous vectors.
+</Sidenote>.
+
+That said, even early sequence models like RNNs struggle, because information must flow sequentially through a fixed-size hidden state. Long-range dependencies get compressed and eventually diluted, attention<Sidenote label="attention-weights">
+Attention weights determine how strongly one token influences another.  
+They are computed using dot products and softmax, and are learned during training through gradient updates.
+</Sidenote>, however, solves this differently: instead of compressing all past information into a single vector, it allows each token to directly look at every other token.
+
+If you haven't watched [3Blue1Brown's Transformer video](https://www.3blue1brown.com/lessons/attention) yet, this is a perfect visual companion for this section.
+
+## Loss as a Structure Selector
+But attention by itself is just a mechanism, the more important question is:
+
+> How does this mechanism become aligned with the prediction objective?
+
+During training, the model computes a loss based on how well it predicts the next token, gradients<Sidenote label="gradients">
+A gradient is the derivative of the loss with respect to a model parameter.  
+It indicates how much and in which direction the parameter should change to reduce prediction error.
+</Sidenote> from that loss flow backward through the entire network using backpropagation<Sidenote label="backpropagation">
+Backpropagation is the algorithm used to compute gradients efficiently through the network by applying the chain rule layer by layer.
+</Sidenote>, including the attention weights, so, if attending to certain tokens helps reduce prediction error, the corresponding attention weights are strengthened, and if those connections increase error, they are weakened. And over billions of updates, attention becomes a learned routing system shaped directly by optimization.
+
+This parameter update process is optimized via gradient descent<Sidenote label="gradient-descent">
+Gradient descent is an optimization algorithm that updates model parameters in the direction that reduces loss.  
+Each parameter is adjusted using the gradient (partial derivative) of the loss with respect to that parameter.
+</Sidenote>, and the loss signal is propagated through all layers<Sidenote label="loss-backprop">
+After computing loss, gradients are propagated backward through the network using backpropagation.  
+This process updates embeddings, attention projections, and output layers.
+</Sidenote>.
+
+In other words:
+- Loss shapes attention.
+- Attention shapes representation.
+- Representation shapes prediction.
+
+And prediction is the only thing the model is explicitly trained to do.
+<MermaidDiagram title="Why LLM Outputs Look Intelligent">
+flowchart LR
+    Tokens --> Embedding
+    Embedding --> SelfAttention
+    SelfAttention --> ContextualRepresentation
+    ContextualRepresentation --> LinearLayer
+    LinearLayer --> Softmax
+    Softmax --> Loss
+    Loss --> Backpropagation
+    Backpropagation --> SelfAttention
+</MermaidDiagram>
+
+## Emergence from Scale
+Up to this point, nothing we described sounds magical.
+
+- We have a conditional probability objective.
+- We have a mechanism for modeling context.
+- We have gradient-based optimization shaping internal representations.
+
+Everything sounds reasonable, so far, but where exactly does the apparent intelligence come from? Why does a small model often still produce gibberish?
+
+The missing piece is scale.
+
+Large transformers are extremely high-capacity function approximators. With billions of parameters and trillions of tokens, they are not just learning surface word correlations, but approximating a highly complex conditional distribution over language.
+
+And language at scale is not random text, it contains:
+- Structured reasoning
+- Step-by-step derivations
+- Code with functional dependencies
+- Mathematical proofs
+- Causal explanations
+- Argumentative essays
+- Problem-solving traces
+
+When a model minimizes next-token prediction error across such data, it is forced to internalize the statistical structure of those patterns.
+
+If reasoning traces exist in the data, then predicting the next token correctly often requires modeling the reasoning process that generated them.
+
+
+In other words, the model is not explicitly trained to learn reasoning algorithms, but it is trained to predict outputs that are generated by reasoning processes, and if those outputs are statistically learnable, then the model will approximate them.
+
+Hence, below a certain model capacity, the network cannot represent these patterns well. It may capture local syntax but fail at long logical chains.
+
+As scale increases, however, the model can represent more complex functions, and suddenly:
+- Attention layers can maintain longer dependencies.
+- Representations become more expressive.
+- Multiple abstraction levels can coexist.
+- Complex token interactions become learnable.
+
+At some threshold<Sidenote label="emergence-threshold">
+Emergence does not imply magic; it usually refers to capability shifts that become visible only after scaling model size, data, and optimization budget.
+</Sidenote>, the model becomes capable of modeling patterns that resemble multi-step reasoning, and this is what we call emergence.
+
+<MermaidDiagram title="Scale Amplifies Capability">
+flowchart TD
+    Small[Small model + limited data] --> Local[Mostly local patterns]
+    Local --> Fragile[Fragile reasoning]
+    Large[Large model + massive data] --> Rich[Hierarchical representations]
+    Rich --> Stable[More stable multi-step reasoning]
+</MermaidDiagram>
+
+## Language as Compressed Reasoning
+
+Another way to see this is to recognize that language itself is a compressed record of human thought. When humans write explanations, code, or proofs, we externalize internal reasoning into token sequences, and training a model to predict the next token over massive corpora is equivalent to learning how these reasoning traces unfold statistically.
+
+So basically, the model does not simulate a mind; it approximates the distribution of reasoning outputs.
+
+But if the distribution encodes structured cognition, then approximating that distribution inevitably produces outputs that resemble structured cognition.
+
+## Why It Feels Like Understanding
+
+The final question is kind of psychological.
+
+> Why does this feel like understanding?
+
+Because from the outside, we judge intelligence by output behavior.
+
+So, if a system:
+- Produces coherent arguments
+- Writes syntactically correct and functional code
+- Follows logical constraints
+- Maintains consistency over long contexts
+
+We somewhat naturally attribute intelligence to it, but all of those properties are observable in text, and if those properties are statistically learnable from data, then a sufficiently large model trained to minimize prediction error can reproduce them.
+
+Understanding, in this operational sense<Sidenote label="operational-intelligence">
+This is a behavioral definition: if outputs consistently satisfy reasoning constraints, the system appears intelligent from an external evaluator’s perspective.
+</Sidenote>, becomes indistinguishable from high-quality predictive modeling over structured data.
+
+The model simply does not have what we call "self-consciousness" or "beliefs", but it has learned to produce outputs that are consistent with the patterns of human reasoning, and that is what we perceive as intelligence.
+
+## Closing Thought
+
+So, back to the question: 
+> If LLMs only predict the next token, why do they work?
+
+I think the equation is pretty clear now:
+- Prediction forces structure.
+- Optimization selects consistency.
+- Attention routes information.
+- Scale unlocks capacity.
+- Data contains reasoning.
+
+So, at the end of the day, the more practical framing is not "LLMs replace everything," but "LLMs reallocate work" <Sidenote label="augmentation-over-automation">
+In practice, many teams see a shift toward augmentation: routine drafting, summarization, and scaffolding are automated first, while human effort moves toward judgment, verification, and high-level design.
+</Sidenote>. They are strongest as force multipliers for repetitive cognitive tasks, which gives us more room to focus on creative direction, problem framing, and decision-making.
+
+<Copyright />
