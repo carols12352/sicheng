@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 type SidenoteProps = {
@@ -12,6 +12,7 @@ type SidenoteProps = {
 const DESKTOP_COLLAPSED_HEIGHT_REM = 3.35;
 
 export function Sidenote({ children, label = "Note" }: SidenoteProps) {
+  const titleId = useId();
   const [open, setOpen] = useState(false);
   const [desktopExpanded, setDesktopExpanded] = useState(false);
   const [desktopOverflow, setDesktopOverflow] = useState(false);
@@ -88,6 +89,7 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
             onClick={handleMarkerClick}
             aria-haspopup="dialog"
             aria-expanded={open || desktopExpanded}
+            aria-label={`Open note: ${label}`}
           />
         </span>
 
@@ -128,13 +130,14 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
           <div className="sidenote-overlay" onClick={() => setOpen(false)}>
             <aside
               className="sidenote-sheet"
-              role="note"
-              aria-label={label}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={titleId}
               onClick={(event) => event.stopPropagation()}
             >
               <div className="sidenote-sheet-head">
-                <p className="sidenote-label">{label}</p>
-                <button type="button" onClick={() => setOpen(false)} className="sidenote-close">
+                <p id={titleId} className="sidenote-label">{label}</p>
+                <button type="button" onClick={() => setOpen(false)} className="sidenote-close" aria-label={`Close note: ${label}`}>
                   Close
                 </button>
               </div>

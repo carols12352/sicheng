@@ -9,7 +9,6 @@ function formatLastLogin(date: Date): string {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit",
     hour12: false,
   });
 }
@@ -36,24 +35,25 @@ export function FooterTerminalHint() {
   }, []);
 
   return (
-    <>
-      <p className="mt-4 font-mono text-[11px] text-gray-500">
+    <div className="footer-terminal mt-4 border-t border-gray-200 pt-3">
+      <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] text-gray-500">
         <a href="/terminal" className="ui-link ui-underline">
           Last login: <span suppressHydrationWarning>{lastLogin}</span> on ttys001
         </a>
-        {showCursor ? <span className="terminal-caret ml-1" aria-hidden /> : null}
+        {showCursor ? <span className="terminal-caret" aria-hidden /> : null}
+        <span className="text-gray-400">·</span>
+        <span className="inline-flex items-center gap-2">
+          <span className="build-status-dot" aria-hidden />
+          <a href={commitHref} target="_blank" rel="noreferrer" className="ui-link ui-underline">
+            build {shortSha}
+          </a>
+        </span>
       </p>
-      <p className="mt-2 font-mono text-[11px] text-gray-500">
+      <p className="mt-1.5 font-mono text-[11px] text-gray-500">
         Tip: <span className="text-gray-600">?</span> shortcuts,{" "}
         <span className="text-gray-600">j</span>/<span className="text-gray-600">k</span> scroll,{" "}
-        <span className="text-gray-600">/</span> search (Writing/Projects/Article)
+        <span className="text-gray-600">/</span> search
       </p>
-      <p className="mt-2 flex items-center gap-2 font-mono text-[11px] text-gray-500">
-        <span className="build-status-dot" aria-hidden />
-        <a href={commitHref} target="_blank" rel="noreferrer" className="ui-link ui-underline">
-          build {shortSha}
-        </a>
-      </p>
-    </>
+    </div>
   );
 }

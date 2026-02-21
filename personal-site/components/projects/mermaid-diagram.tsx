@@ -198,6 +198,7 @@ export function MermaidDiagram({ chart, title = "Diagram", children }: MermaidDi
               <div className="mermaid-zoom-header">
                 <p className="mermaid-zoom-title">{title}</p>
                 <button type="button" className="mermaid-zoom-close" onClick={() => setZoomOpen(false)}>
+                  <span className="sr-only">Close zoomed diagram</span>
                   Close
                 </button>
               </div>

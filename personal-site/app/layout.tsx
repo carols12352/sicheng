@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteFrame } from "@/components/site/site-frame";
-import { Analytics } from "@vercel/analytics/next"
+import { AnalyticsConsentGate } from "@/components/analytics/analytics-consent-gate";
+import { CookieConsentBanner } from "@/components/compliance/cookie-consent-banner";
 import {
   SITE_AUTHOR,
   buildSeoTitle,
@@ -163,8 +164,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <SiteFrame>{children}</SiteFrame>
+        <CookieConsentBanner />
         <SpeedInsights />
-        <Analytics />
+        <AnalyticsConsentGate />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
