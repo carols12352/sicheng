@@ -3,10 +3,10 @@ import Link from "next/link";
 import { AutoGrowthLine } from "@/components/home/auto-growth-line";
 import { HoverCard } from "@/components/motion/hover-card";
 import { RevealItem, RevealSection, RevealStagger } from "@/components/motion/reveal";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { buildSeoTitle, SITE_DESCRIPTION, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: buildSeoTitle("Software Engineering Portfolio"),
   description: SITE_DESCRIPTION,
   alternates: {
     canonical: "/",
@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: SITE_URL,
-    title: SITE_NAME,
+    title: buildSeoTitle("Software Engineering Portfolio"),
     siteName: SITE_NAME,
     description: SITE_DESCRIPTION,
     images: [SITE_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
+    title: buildSeoTitle("Software Engineering Portfolio"),
     description: SITE_DESCRIPTION,
     images: [SITE_OG_IMAGE],
   },

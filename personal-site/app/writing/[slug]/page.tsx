@@ -8,7 +8,7 @@ import { getMdxComponents } from "@/components/mdx/mdx-components";
 import { Prose } from "@/components/mdx/prose";
 import { ArticleSearchBridge } from "@/components/writing/article-search-bridge";
 import { ArticleToc } from "@/components/writing/article-toc";
-import { SITE_AUTHOR, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { buildSeoTitle, SITE_AUTHOR, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { getAllPosts, getPostBySlug } from "@/lib/writing";
 
 type PageProps = {
@@ -47,10 +47,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const articleUrl = `${SITE_URL}/writing/${slug}`;
   const articleImageUrl = `${SITE_URL}/writing/${slug}/opengraph-image`;
   const description = buildArticleDescription(post.meta.summary, post.content);
+  const seoTitle = buildSeoTitle(post.meta.seoTitle || post.meta.title);
   const published = post.meta.date || undefined;
 
   return {
-    title: post.meta.title,
+    title: seoTitle,
     description,
     authors: [{ name: SITE_AUTHOR, url: SITE_URL }],
     keywords: post.meta.tags,
@@ -60,7 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       type: "article",
       url: articleUrl,
-      title: post.meta.title,
+      title: seoTitle,
       description,
       siteName: SITE_NAME,
       publishedTime: published,
@@ -78,7 +79,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: post.meta.title,
+      title: seoTitle,
       description,
       images: [articleImageUrl],
     },

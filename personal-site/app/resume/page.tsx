@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { ResumeImageFallback } from "@/components/resume/resume-image-fallback";
-import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { buildSeoTitle, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Resume",
+  title: buildSeoTitle("Resume and Professional Experience"),
   description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
   alternates: {
     canonical: "/resume",
@@ -11,14 +11,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "profile",
     url: `${SITE_URL}/resume`,
-    title: `Resume | ${SITE_NAME}`,
+    title: buildSeoTitle("Resume and Professional Experience"),
     siteName: SITE_NAME,
     description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
     images: [SITE_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: `Resume | ${SITE_NAME}`,
+    title: buildSeoTitle("Resume and Professional Experience"),
     description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
     images: [SITE_OG_IMAGE],
   },

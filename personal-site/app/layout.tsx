@@ -4,6 +4,7 @@ import { SiteFrame } from "@/components/site/site-frame";
 import { Analytics } from "@vercel/analytics/next"
 import {
   SITE_AUTHOR,
+  buildSeoTitle,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
   SITE_LOCALE,
@@ -40,8 +41,8 @@ const THEME_INIT_SCRIPT = `
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: SITE_TITLE,
-    template: `%s | ${SITE_NAME}`,
+    default: buildSeoTitle(SITE_TITLE, { includeSiteName: false }),
+    template: "%s",
   },
   description: SITE_DESCRIPTION,
   keywords: SITE_KEYWORDS,

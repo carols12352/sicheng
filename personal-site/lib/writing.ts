@@ -6,6 +6,7 @@ const CONTENT_DIR = path.join(process.cwd(), "content", "writing");
 
 type Frontmatter = {
   title?: unknown;
+  seoTitle?: unknown;
   date?: unknown;
   summary?: unknown;
   tags?: unknown;
@@ -14,6 +15,7 @@ type Frontmatter = {
 export type PostMeta = {
   slug: string;
   title: string;
+  seoTitle: string;
   date: string;
   summary: string;
   tags: string[];
@@ -70,6 +72,10 @@ function toPostMeta(slug: string, frontmatter: Frontmatter, content: string): Po
     typeof frontmatter.title === "string" && frontmatter.title.trim()
       ? frontmatter.title.trim()
       : slug;
+  const seoTitle =
+    typeof frontmatter.seoTitle === "string" && frontmatter.seoTitle.trim()
+      ? frontmatter.seoTitle.trim()
+      : "";
 
   const summary =
     typeof frontmatter.summary === "string" ? frontmatter.summary.trim() : "";
@@ -77,6 +83,7 @@ function toPostMeta(slug: string, frontmatter: Frontmatter, content: string): Po
   return {
     slug,
     title,
+    seoTitle,
     date: normalizeDate(frontmatter.date),
     summary,
     tags: normalizeTags(frontmatter.tags),

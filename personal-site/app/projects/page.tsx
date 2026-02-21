@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProjectsTreeTimeline, type ProjectEntry } from "@/components/projects/projects-tree-timeline";
-import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { buildSeoTitle, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Projects",
+  title: buildSeoTitle("Projects and Engineering Case Studies"),
   description: "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
   alternates: {
     canonical: "/projects",
@@ -12,14 +12,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: `${SITE_URL}/projects`,
-    title: `Projects | ${SITE_NAME}`,
+    title: buildSeoTitle("Projects and Engineering Case Studies"),
     siteName: SITE_NAME,
     description: "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
     images: [SITE_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: `Projects | ${SITE_NAME}`,
+    title: buildSeoTitle("Projects and Engineering Case Studies"),
     description: "Selected software projects by Sicheng Ouyang, including backend architecture, full-stack applications, and practical ML tooling.",
     images: [SITE_OG_IMAGE],
   },

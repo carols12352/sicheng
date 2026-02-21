@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { buildSeoTitle, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: buildSeoTitle("About Sicheng Ouyang and Engineering Background"),
   description: "About Sicheng Ouyang: background, engineering approach, experience highlights, and technical skill set.",
   alternates: {
     canonical: "/about",
@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: `${SITE_URL}/about`,
-    title: `About | ${SITE_NAME}`,
+    title: buildSeoTitle("About Sicheng Ouyang and Engineering Background"),
     siteName: SITE_NAME,
     description: "About Sicheng Ouyang: background, engineering approach, experience highlights, and technical skill set.",
     images: [SITE_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: `About | ${SITE_NAME}`,
+    title: buildSeoTitle("About Sicheng Ouyang and Engineering Background"),
     description: "About Sicheng Ouyang: background, engineering approach, experience highlights, and technical skill set.",
     images: [SITE_OG_IMAGE],
   },
