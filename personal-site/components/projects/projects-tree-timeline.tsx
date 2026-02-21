@@ -30,6 +30,7 @@ type ProjectsTreeTimelineProps = {
 
 export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTreeTimelineProps) {
   const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const reduceMotion = useAppReducedMotion();
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -62,25 +63,11 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
     window.history.replaceState(null, "", window.location.pathname);
   }, []);
 
-  const openFromHash = useCallback(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    const anchor = decodeURIComponent(window.location.hash.replace(/^#/, "")).trim();
-    if (!anchor) {
-      return;
-    }
-    const match = orderedProjects.find((project) => project.anchor === anchor);
-    if (match) {
-      setActiveProject(match);
-    }
-  }, [orderedProjects]);
-
-  useEffect(() => {
-    openFromHash();
-    window.addEventListener("hashchange", openFromHash);
-    return () => window.removeEventListener("hashchange", openFromHash);
-  }, [openFromHash]);
+  const closeProject = useCallback(() => {
+    setIsFullscreen(false);
+    setActiveProject(null);
+    clearHash();
+  }, [clearHash]);
 
   useEffect(() => {
     if (!activeProject) {
@@ -92,7 +79,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setActiveProject(null);
+        closeProject();
       }
     };
 
@@ -101,7 +88,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeProject]);
+  }, [activeProject, closeProject]);
 
   const cardTransition = {
     type: "tween",
@@ -145,6 +132,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                   <button
                     type="button"
                     onClick={() => {
+                      setIsFullscreen(false);
                       setActiveProject(project);
                       setHash(project.anchor);
                     }}
@@ -206,18 +194,14 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
               animate={{ opacity: 1 }}
               exit={reduceMotion ? undefined : { opacity: 0 }}
               transition={{ duration: reduceMotion ? 0 : 0.2, ease: "easeOut" }}
-              onClick={() => {
-                setActiveProject(null);
-                clearHash();
-              }}
+              onClick={closeProject}
             />
 
             <div
               className="fixed inset-0 z-50 overflow-y-auto px-4 py-8 sm:px-10 sm:py-14"
               onClick={(event) => {
                 if (event.target === event.currentTarget) {
-                  setActiveProject(null);
-                  clearHash();
+                  closeProject();
                 }
               }}
             >
@@ -227,24 +211,39 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                 role="dialog"
                 aria-modal="true"
                 aria-label={activeProject.name}
-                className="project-card-surface project-modal-surface mx-auto w-full max-w-5xl rounded-2xl border border-gray-300 bg-white p-7 text-left sm:p-12"
+                className={`project-card-surface project-modal-surface mx-auto w-full rounded-2xl border border-gray-300 bg-white text-left ${
+                  isFullscreen
+                    ? "max-w-none min-h-[calc(100dvh-4rem)] p-6 sm:min-h-[calc(100dvh-6rem)] sm:p-8"
+                    : "max-w-5xl p-7 sm:p-12"
+                }`}
               >
                 <div className="mb-6 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-red-300" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
+                    <button
+                      type="button"
+                      aria-label="Close project window"
+                      onClick={closeProject}
+                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#ff5f57] text-[9px] text-black/60"
+                    >
+                      <span aria-hidden>×</span>
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Minimize project window"
+                      onClick={closeProject}
+                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#febc2e] text-[9px] text-black/60"
+                    >
+                      <span aria-hidden>−</span>
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={isFullscreen ? "Restore project window size" : "Expand project window"}
+                      onClick={() => setIsFullscreen((prev) => !prev)}
+                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#28c840] text-[8px] text-black/60"
+                    >
+                      <span aria-hidden>{isFullscreen ? "↙" : "↗"}</span>
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveProject(null);
-                      clearHash();
-                    }}
-                    className="rounded-md border border-gray-200 px-2.5 py-1 text-xs text-gray-600 transition-colors hover:border-gray-300"
-                  >
-                    close
-                  </button>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-3">
