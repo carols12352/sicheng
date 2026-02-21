@@ -134,11 +134,11 @@ export default function Home() {
                 ·
               </span>
               {buildHref ? (
-                <a href={buildHref} target="_blank" rel="noreferrer" className="home-build-tag ui-link ui-underline">
+                <a href={buildHref} target="_blank" rel="noreferrer" className="home-build-tag home-build-live ui-link ui-underline">
                   {buildLabel}
                 </a>
               ) : (
-                <span className="home-build-tag">{buildLabel}</span>
+                <span className="home-build-tag home-build-live">{buildLabel}</span>
               )}
             </div>
 

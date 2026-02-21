@@ -38,7 +38,7 @@ const HELP_LINES = [
 
 const FILES: Record<string, string> = {
   "about.txt": "Sicheng Ouyang | Software Engineering @ UWaterloo | Backend systems + practical ML.",
-  "contact.txt": "email: sicheng.ouyang@uwaterloo.ca | github: github.com/carols12352",
+  "contact.txt": "email: support@sicheng.dev | github: github.com/carols12352",
   "notes.md": "Build small, ship fast, keep interfaces clear. Ops note: if sudo asks questions, check ops-key.txt.",
   "ops-key.txt": "sudo password: thankyouforplaying",
   "projects/readme.txt": "Use `ls` then `open <project-name>` to jump to project details.",

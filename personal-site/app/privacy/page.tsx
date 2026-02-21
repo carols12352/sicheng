@@ -89,7 +89,7 @@ export default function PrivacyPolicyPage() {
           <p className="mt-2">
             You may stop using this site at any time. If you have privacy questions or requests related to direct communications, contact:
             {" "}
-            <a className="ui-link ui-underline" href="mailto:sicheng.ouyang@uwaterloo.ca">sicheng.ouyang@uwaterloo.ca</a>.
+            <a className="ui-link ui-underline" href="mailto:support@sicheng.dev">support@sicheng.dev</a>.
           </p>
           <p className="mt-2">
             You may also use browser-level controls such as cookie settings, do-not-track preferences, tracker blocking, and private browsing.

@@ -86,7 +86,7 @@ export default function TermsOfServicePage() {
           <h2 className="text-lg font-semibold">Contact</h2>
           <p className="mt-2">
             Questions about these terms can be sent to{" "}
-            <a className="ui-link ui-underline" href="mailto:sicheng.ouyang@uwaterloo.ca">sicheng.ouyang@uwaterloo.ca</a>.
+            <a className="ui-link ui-underline" href="mailto:support@sicheng.dev">support@sicheng.dev</a>.
           </p>
         </section>
       </div>
