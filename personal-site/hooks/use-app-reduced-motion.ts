@@ -5,7 +5,7 @@ import { useReducedMotion } from "framer-motion";
 
 export function useAppReducedMotion(): boolean {
   const systemReducedMotion = useReducedMotion() ?? false;
-  const appReducedMotion = useSyncExternalStore(
+  const appMotionMode = useSyncExternalStore<"full" | "reduced" | "none">(
     (callback) => {
       window.addEventListener("site:motion-pref-changed", callback);
       window.addEventListener("storage", callback);
@@ -14,9 +14,15 @@ export function useAppReducedMotion(): boolean {
         window.removeEventListener("storage", callback);
       };
     },
-    () => document.documentElement.dataset.reduceMotion === "true",
-    () => false,
+    () => {
+      const value = document.documentElement.dataset.motion;
+      if (value === "none" || value === "reduced" || value === "full") {
+        return value;
+      }
+      return document.documentElement.dataset.reduceMotion === "true" ? "reduced" : "full";
+    },
+    () => "full",
   );
 
-  return systemReducedMotion || appReducedMotion;
+  return appMotionMode === "none" || systemReducedMotion;
 }

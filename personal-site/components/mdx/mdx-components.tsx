@@ -6,6 +6,11 @@ import { CodeHighlighter } from "@/components/mdx/code-highlighter";
 import { CodeBlock } from "@/components/mdx/code-block";
 import { Copyright } from "@/components/mdx/copyright";
 import { Figure } from "@/components/mdx/figure";
+import {
+  HallucinationConfidenceTruthDemo,
+  HallucinationFrameSwitcherDemo,
+  HallucinationGroundingToggleDemo,
+} from "@/components/mdx/hallucination-demos";
 import { Sidenote } from "@/components/mdx/sidenote";
 import { TokenPredictionDemo } from "@/components/mdx/token-prediction-demo";
 import { ZoomableImage } from "@/components/mdx/zoomable-image";
@@ -16,6 +21,7 @@ type HeadingProps = React.ComponentPropsWithoutRef<"h2">;
 type AnchorHeadingProps = HeadingProps & {
   as: "h2" | "h3";
   className: string;
+  resolveHeadingId: (text: string, explicitId?: string) => string | undefined;
 };
 
 const BLOCK_HTML_TAGS = new Set([
@@ -39,6 +45,9 @@ const BLOCK_COMPONENT_NAMES = new Set([
   "Copyright",
   "MermaidDiagram",
   "TokenPredictionDemo",
+  "HallucinationFrameSwitcherDemo",
+  "HallucinationConfidenceTruthDemo",
+  "HallucinationGroundingToggleDemo",
 ]);
 
 function slugify(value: string): string {
@@ -161,9 +170,9 @@ function findCodeElement(node: ReactNode): ReactElement<{ className?: string; ch
   return null;
 }
 
-function AnchorHeading({ as, className, id, children, ...props }: AnchorHeadingProps) {
+function AnchorHeading({ as, className, id, children, resolveHeadingId, ...props }: AnchorHeadingProps) {
   const text = extractText(children);
-  const headingId = id ?? (text ? slugify(text) : undefined);
+  const headingId = resolveHeadingId(text, id);
 
   if (as === "h2") {
     return (
@@ -178,6 +187,21 @@ function AnchorHeading({ as, className, id, children, ...props }: AnchorHeadingP
       {children}
     </h3>
   );
+}
+
+function createHeadingIdResolver() {
+  const usedIds = new Map<string, number>();
+
+  return (text: string, explicitId?: string): string | undefined => {
+    const base = (explicitId ?? (text ? slugify(text) : "")).trim();
+    if (!base) {
+      return undefined;
+    }
+
+    const count = usedIds.get(base) ?? 0;
+    usedIds.set(base, count + 1);
+    return count === 0 ? base : `${base}-${count + 1}`;
+  };
 }
 
 const InternalLink = ({ href, children, ...props }: React.ComponentPropsWithoutRef<"a">) => {
@@ -210,21 +234,26 @@ const InternalLink = ({ href, children, ...props }: React.ComponentPropsWithoutR
   );
 };
 
-export const mdxComponents = {
-  h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
-    <AnchorHeading
-      as="h2"
-      className="mt-12 mb-0 scroll-mt-24 text-[1.7rem] font-semibold tracking-tight text-gray-900 first:mt-0"
-      {...props}
-    />
-  ),
-  h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
-    <AnchorHeading
-      as="h3"
-      className="mt-10 mb-0 scroll-mt-24 text-[1.35rem] font-semibold tracking-tight text-gray-900 first:mt-0"
-      {...props}
-    />
-  ),
+export function getMdxComponents() {
+  const resolveHeadingId = createHeadingIdResolver();
+
+  return {
+    h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
+      <AnchorHeading
+        as="h2"
+        className="mt-12 mb-0 scroll-mt-24 text-[1.7rem] font-semibold tracking-tight text-gray-900 first:mt-0"
+        resolveHeadingId={resolveHeadingId}
+        {...props}
+      />
+    ),
+    h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
+      <AnchorHeading
+        as="h3"
+        className="mt-10 mb-0 scroll-mt-24 text-[1.35rem] font-semibold tracking-tight text-gray-900 first:mt-0"
+        resolveHeadingId={resolveHeadingId}
+        {...props}
+      />
+    ),
   p: ({ children, ...props }: React.ComponentPropsWithoutRef<"p">) => {
     if (containsBlockNode(children)) {
       return (
@@ -314,5 +343,9 @@ export const mdxComponents = {
   CodeBlock,
   Sidenote,
   TokenPredictionDemo,
-  MermaidDiagram,
-};
+  HallucinationFrameSwitcherDemo,
+  HallucinationConfidenceTruthDemo,
+  HallucinationGroundingToggleDemo,
+    MermaidDiagram,
+  };
+}

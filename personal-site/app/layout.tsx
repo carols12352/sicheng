@@ -21,12 +21,17 @@ const THEME_INIT_SCRIPT = `
     const storageKey = "site-theme-mode";
     const saved = window.localStorage.getItem(storageKey);
     const mode = saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
-    const reduceMotion = window.localStorage.getItem("site-reduce-motion") === "true";
+    const motionSaved = window.localStorage.getItem("site-motion-mode");
+    const reduceMotionLegacy = window.localStorage.getItem("site-reduce-motion") === "true";
+    const motion = motionSaved === "none" || motionSaved === "reduced" || motionSaved === "full"
+      ? motionSaved
+      : (reduceMotionLegacy ? "reduced" : "full");
     const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const resolved = mode === "system" ? (systemDark ? "dark" : "light") : mode;
     const root = document.documentElement;
     root.dataset.theme = mode;
-    root.dataset.reduceMotion = reduceMotion ? "true" : "false";
+    root.dataset.motion = motion;
+    root.dataset.reduceMotion = motion === "none" ? "true" : "false";
     root.style.colorScheme = resolved;
   } catch {}
 })();
@@ -49,6 +54,9 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": "/rss.xml",
+    },
   },
   bookmarks: [SITE_URL, `${SITE_URL}/projects`, `${SITE_URL}/writing`],
   archives: [`${SITE_URL}/resume`],

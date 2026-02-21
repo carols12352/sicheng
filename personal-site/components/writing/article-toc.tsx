@@ -56,11 +56,21 @@ export function ArticleToc() {
       const next = collectHeadings();
       setHeadings(next);
     };
+    let rafThrottle = 0;
+    const throttledUpdate = () => {
+      if (rafThrottle) {
+        return;
+      }
+      rafThrottle = window.requestAnimationFrame(() => {
+        rafThrottle = 0;
+        update();
+      });
+    };
 
     const rafId = window.requestAnimationFrame(update);
     const article = document.querySelector<HTMLElement>("article[data-writing-article]");
     const observer = article
-      ? new MutationObserver(() => update())
+      ? new MutationObserver(() => throttledUpdate())
       : null;
     if (article && observer) {
       observer.observe(article, { childList: true, subtree: true });
@@ -68,6 +78,9 @@ export function ArticleToc() {
 
     return () => {
       window.cancelAnimationFrame(rafId);
+      if (rafThrottle) {
+        window.cancelAnimationFrame(rafThrottle);
+      }
       observer?.disconnect();
     };
   }, [desktopReady, isClient, pathname]);
@@ -76,31 +89,54 @@ export function ArticleToc() {
     if (!headings.length) {
       return;
     }
+
     const nodes = headings
       .map((heading) => document.getElementById(heading.id))
       .filter((node): node is HTMLElement => Boolean(node));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-
-        if (visible.length > 0) {
-          setActiveId((visible[0].target as HTMLElement).id);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-22% 0px -65% 0px",
-        threshold: [0, 1],
-      },
-    );
-
-    for (const node of nodes) {
-      observer.observe(node);
+    if (nodes.length === 0) {
+      return;
     }
 
-    return () => observer.disconnect();
+    const activeLine = 136;
+    let rafId = 0;
+
+    const updateActiveHeading = () => {
+      let candidate: HTMLElement | null = null;
+
+      for (const node of nodes) {
+        const top = node.getBoundingClientRect().top;
+        if (top <= activeLine) {
+          candidate = node;
+          continue;
+        }
+        break;
+      }
+
+      const fallback = candidate ?? nodes[0];
+      setActiveId(fallback.id);
+    };
+
+    const onScrollOrResize = () => {
+      if (rafId) {
+        return;
+      }
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0;
+        updateActiveHeading();
+      });
+    };
+
+    updateActiveHeading();
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+
+    return () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
   }, [headings]);
 
   if (!isClient || !desktopReady || headings.length === 0 || typeof document === "undefined") {
@@ -108,6 +144,23 @@ export function ArticleToc() {
   }
 
   const highlightedId = activeId || headings[0].id;
+  const handleTocClick = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
+    const target = document.getElementById(id);
+    if (!target) {
+      return;
+    }
+
+    const reduceMotion =
+      document.documentElement.dataset.motion === "none" ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    target.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+    window.history.replaceState(null, "", `#${id}`);
+  };
 
   return createPortal(
     <aside
@@ -126,6 +179,7 @@ export function ArticleToc() {
             <li key={`${heading.id}-${index}`} className={heading.level === 3 ? "pl-3" : ""}>
               <Link
                 href={`#${heading.id}`}
+                onClick={(event) => handleTocClick(event, heading.id)}
                 className={`text-xs transition-colors ${
                   highlightedId === heading.id ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
                 }`}

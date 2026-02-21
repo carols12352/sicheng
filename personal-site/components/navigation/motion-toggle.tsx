@@ -2,16 +2,29 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "site-reduce-motion";
+const STORAGE_KEY = "site-motion-mode";
+type MotionMode = "full" | "reduced" | "none";
 
-function applyReduceMotion(enabled: boolean) {
+function normalizeMode(value: string | null): MotionMode {
+  if (value === "none" || value === "reduced" || value === "full") {
+    return value;
+  }
+  // Backward compatibility with previous boolean key.
+  if (window.localStorage.getItem("site-reduce-motion") === "true") {
+    return "reduced";
+  }
+  return "full";
+}
+
+function applyMotionMode(mode: MotionMode) {
   const root = document.documentElement;
-  root.dataset.reduceMotion = enabled ? "true" : "false";
+  root.dataset.motion = mode;
+  root.dataset.reduceMotion = mode === "none" ? "true" : "false";
   window.dispatchEvent(new Event("site:motion-pref-changed"));
 }
 
 export function MotionToggle() {
-  const enabled = useSyncExternalStore(
+  const mode = useSyncExternalStore<MotionMode>(
     (callback) => {
       window.addEventListener("storage", callback);
       window.addEventListener("site:motion-pref-changed", callback);
@@ -20,31 +33,31 @@ export function MotionToggle() {
         window.removeEventListener("site:motion-pref-changed", callback);
       };
     },
-    () => window.localStorage.getItem(STORAGE_KEY) === "true",
-    () => false,
+    () => normalizeMode(window.localStorage.getItem(STORAGE_KEY)),
+    () => "full",
   );
 
   useEffect(() => {
-    applyReduceMotion(enabled);
-  }, [enabled]);
+    applyMotionMode(mode);
+  }, [mode]);
 
   const onToggle = () => {
-    const next = !enabled;
-    window.localStorage.setItem(STORAGE_KEY, next ? "true" : "false");
-    window.dispatchEvent(new Event("site:motion-pref-changed"));
-    applyReduceMotion(next);
+    const next: MotionMode = mode === "full" ? "reduced" : mode === "reduced" ? "none" : "full";
+    window.localStorage.setItem(STORAGE_KEY, next);
+    applyMotionMode(next);
   };
+
+  const label = mode === "full" ? "Full" : mode === "reduced" ? "Reduced" : "None";
 
   return (
     <button
       type="button"
       onClick={onToggle}
       className="motion-toggle ui-link"
-      aria-pressed={enabled}
-      aria-label={enabled ? "Enable full motion" : "Reduce motion"}
-      title={enabled ? "Reduce motion: On" : "Reduce motion: Off"}
+      aria-label={`Cycle motion mode. Current: ${label}`}
+      title={`Motion: ${label}`}
     >
-      Motion: {enabled ? "Reduced" : "Full"}
+      Motion: {label}
     </button>
   );
 }

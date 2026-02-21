@@ -4,11 +4,11 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
-import { mdxComponents } from "@/components/mdx/mdx-components";
+import { getMdxComponents } from "@/components/mdx/mdx-components";
 import { Prose } from "@/components/mdx/prose";
 import { ArticleSearchBridge } from "@/components/writing/article-search-bridge";
 import { ArticleToc } from "@/components/writing/article-toc";
-import { SITE_AUTHOR, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { SITE_AUTHOR, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { getAllPosts, getPostBySlug } from "@/lib/writing";
 
 type PageProps = {
@@ -80,7 +80,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       title: post.meta.title,
       description,
-      images: [articleImageUrl || SITE_OG_IMAGE],
+      images: [articleImageUrl],
     },
   };
 }
@@ -141,6 +141,7 @@ export default async function WritingArticlePage({ params }: PageProps) {
       },
     ],
   };
+  const mdxComponents = getMdxComponents();
 
   return (
     <article data-writing-article>

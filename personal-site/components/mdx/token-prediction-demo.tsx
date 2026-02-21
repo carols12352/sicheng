@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 
 type DemoStage = {
   id: string;
@@ -48,6 +49,7 @@ const STAGES: DemoStage[] = [
 
 export function TokenPredictionDemo() {
   const [stageIndex, setStageIndex] = useState(0);
+  const reduceMotion = useAppReducedMotion();
   const stage = STAGES[stageIndex];
   const max = useMemo(
     () => Math.max(...stage.candidates.map((item) => item.prob), 0.01),
@@ -87,8 +89,9 @@ export function TokenPredictionDemo() {
               <div className="h-2 overflow-hidden rounded bg-gray-100">
                 <motion.div
                   className="h-2 rounded bg-gray-400"
-                  animate={{ width: `${(item.prob / max) * 100}%` }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  style={reduceMotion ? { width: `${(item.prob / max) * 100}%` } : undefined}
+                  animate={reduceMotion ? undefined : { width: `${(item.prob / max) * 100}%` }}
+                  transition={{ duration: reduceMotion ? 0 : 0.35, ease: "easeOut" }}
                 />
               </div>
             </li>
@@ -98,4 +101,3 @@ export function TokenPredictionDemo() {
     </figure>
   );
 }
-

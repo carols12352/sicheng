@@ -1,0 +1,125 @@
+---
+title: Why Do LLMs Hallucinate?
+date: 2026-02-20
+summary: Discover the reasons behind hallucinations in Large Language Models (LLMs) and explore the underlying mechanisms that contribute to this phenomenon.
+tags:
+  - AI
+  - LLM
+  - Hallucination
+  - Machine Learning
+---
+## The Strange Confidence of Being Wrong
+Today, when I asked ChatGPT about a very common topic on Chinese social media, the question was:
+> If you were to wash your car, and the store is just about 50 meters away, would you walk or drive?
+
+From a human perspective, the answer feels obvious: how could you wash your car without driving it to the store?
+
+But ChatGPT said (in exact words):
+> If it’s only about **50 meters away**, I’d walk — no question.  
+>  
+> - 🚶 It’s probably a 30–45 second walk.  
+> - 🚗 Driving would take longer once you factor in getting in, starting the car, maneuvering, and parking.  
+> - ⛽ Saves fuel (even if tiny).  
+> - 🧠 It just feels unnecessary to move a 1–2 ton machine for that distance.  
+>  
+> The only reasons I’d drive:  
+> - It’s pouring rain and I need to carry heavy items back.  
+> - I have mobility issues.  
+> - Safety concerns (dark, unsafe area, etc.).  
+>  
+> Otherwise, walking wins.
+
+Hmm, this is weird, isn't it? In the [last article](https://sicheng.dev/writing/why-can-LLM-work), we discussed how LLMs can generate content that feels like "intelligence." But how did it fail on such a simple question?
+
+This brings up the topic of this article: **Hallucination**<Sidenote label="hallucination-in-llms">In the context of LLMs, hallucination refers to outputs that are not sufficiently supported by evidence or reality, even if they sound plausible.</Sidenote>.
+## Completing, Not Understanding
+
+When LLMs generate text, they do not really simulate real-world situations. Instead, they recognize and extend patterns in the text they were trained on.
+
+In this case, the phrase **“50 meters away”** likely activated patterns such as:
+
+- short distance  
+- walking is efficient  
+- unnecessary to drive  
+
+These are statistically common continuations in everyday conversations.
+
+But the real constraint in the question was not distance, but the action itself: **washing your car**. The key point is simple: you cannot wash your car without bringing the car to the store.
+
+This mismatch reveals that LLMs do not really understand the context. The model activates patterns to complete the sequence, and in this case it treated the question as a distance-optimization problem rather than a physical-constraint problem.
+
+Now, let’s connect this to what we discussed in the [previous article](https://sicheng.dev/writing/why-can-LLM-work).
+
+Previously, we discussed how LLMs approximate the conditional probability<Sidenote label="conditional probability">$P(x_t \mid x_{<t})$ represents the probability of the next token given all previous tokens. This autoregressive formulation is the core training objective of most modern LLMs.</Sidenote>:
+
+$$
+P(x_t \mid x_{<t})
+$$
+
+At every step, the model chooses the next token that is most probable given the previous context, but notice what is missing from this objective: there is no explicit term for physical consistency<Sidenote label="physical consistency">Physical consistency means the output should obey constraints in the real world, such as causality or object-level feasibility, not just look linguistically plausible.</Sidenote> or logical validity<Sidenote label="logical validity">Logical validity means conclusions should follow from premises without contradiction. LLM next-token training does not explicitly enforce formal logic constraints.</Sidenote> or real-world feasibility.
+
+This is because, at the beginning of training, it is optimized to minimize prediction error<Sidenote label="cross entropy loss">In practice, prediction error is measured using cross-entropy loss, which penalizes the model when it assigns low probability to the correct next token.</Sidenote>, not to verify factual or physical validity. As long as a continuation is statistically likely given the context, it receives a lower loss.
+
+And in many situations, discussions involving short distances do lead to walking-versus-driving tradeoffs, so the model just followed the distribution.
+
+To make this failure mode concrete, here is a frame-switching demo:
+
+<HallucinationFrameSwitcherDemo />
+
+## Why Hallucinate?
+This is where the field is actively researching. Hallucination is a well-known issue. While it can be reduced, it cannot be completely eliminated. Most mitigation strategies fall into a few broader categories rather than isolated tricks.
+
+
+### 1. External Grounding
+
+One major direction is grounding generation<Sidenote label="grounding">Grounding means tying model outputs to external evidence or executable tools so answers are constrained by something beyond token statistics.</Sidenote> in external sources rather than relying purely on internal token statistics. For example, **Retrieval-Augmented Generation (RAG)**<Sidenote label="rag">Retrieval-Augmented Generation combines a language model with an external document retrieval system. Instead of generating purely from internal parameters, the model conditions on retrieved documents at inference time.</Sidenote> augments generation with retrieved documents. Similarly, **tool use**<Sidenote label="tool-use">Tool use lets the model call external systems (search, calculator, code runtime, database) so answers are grounded in verifiable computation or fresh retrieval instead of pure token continuation.</Sidenote> allows models to call search engines, calculators, or code runtimes to replace guessing with verifiable source information. In both cases, the core idea is to introduce constraints from outside the language distribution.
+
+<HallucinationGroundingToggleDemo />
+
+### 2. Inference-Time Self-Checking
+
+Another direction strengthens reliability during generation itself. Methods like **multi-path reasoning and aggregation**<Sidenote label="self-consistency">[*Self-Consistency Improves Chain-of-Thought Reasoning* (Wang et al., 2022)](https://arxiv.org/abs/2203.11171).</Sidenote> sample multiple reasoning trajectories and aggregate answers. Likewise, **self-refinement**<Sidenote label="self-refine">[*Self-Refine: Iterative Refinement with Self-Feedback* (Madaan et al., 2023)](https://arxiv.org/abs/2303.17651).</Sidenote> lets the model critique and revise its own output before finalizing. These approaches, however, do not change training objectives, but aim to reduce error by introducing redundancy or internal verification loops.
+
+### 3. Uncertainty Modeling
+
+The third category addresses overconfidence directly. Methods like **uncertainty-aware generation and calibration**<Sidenote label="calibration">[*Calibration of Pretrained Transformers* (Desai and Durrett, 2020)](https://arxiv.org/abs/2003.07892).</Sidenote> encourage abstention when confidence is low rather than confident guessing. Similarly, **RLHF**<Sidenote label="rlhf">RLHF fine-tunes models using human preference signals, encouraging helpfulness, safety, and reduced fabrication compared to base pretrained models.</Sidenote> shifts the reward structure to favor admitting uncertainty over fabricating plausible answers. These methods basically attempt to reshape the incentive mechanism.
+
+<HallucinationConfidenceTruthDemo />
+
+### 4. Structural and Pipeline-Level Control
+
+More recent work (2025–2026) focuses on modeling hallucination risk within the generation pipeline itself.
+
+For example, **attribution-based mitigation**<Sidenote label="attribution-rag">[*Attribution Techniques for Mitigating Hallucinated Text in RAG Systems* (2026)](https://arxiv.org/abs/2601.19927).</Sidenote> traces where hallucinations originate inside retrieval systems and enforces evidence to align.
+
+**Causal reasoning–enhanced mitigation**<Sidenote label="causal-hallucination">[*Mitigating Hallucinations in Large Language Models via Causal Reasoning* (2025)](https://arxiv.org/abs/2508.12495).</Sidenote> introduces explicit structural constraints in reasoning flows.
+
+Other work studies **decoding-level probability control**<Sidenote label="decoding-control">[*Hallucination Detection and Mitigation in Large Language Models* (2026)](https://arxiv.org/abs/2601.09929).</Sidenote> and **hybrid retrieval mechanisms**<Sidenote label="hybrid-retrieval">[*Hybrid Retrieval for Hallucination Mitigation in LLMs* (2025)](https://arxiv.org/abs/2504.05324).</Sidenote> to reduce risk at the sampling and retrieval layers.
+
+---
+
+Altogether, we realize that while there are many promising directions, none of them can guarantee a complete solution to LLM hallucinations. Most of them are about constraining, detecting, or reducing hallucination rather than eliminating it.
+
+As of today, there is no decisive architectural breakthrough that completely solves hallucination. Most progress comes from better grounding, better verification, better calibration, and better control. In the near future, new training objectives or hybrid world-grounded architectures may shift this landscape. But for now, hallucination often looks less like a random bug and more like a structural byproduct of optimizing likelihood over language.
+
+## What Does This Mean for Us?
+Wow, what a bummer. Does this mean there is nothing we can do? As users, do we just have to live with it?
+
+Not exactly.
+
+If hallucination is structural, then the real adjustment is to update our expectations.
+
+We should be aware that LLMs are not fact databases or truth engines, but rather powerful statistical pattern matchers. At the end of the day, language itself is an imperfect proxy for reality, so some level of error is expected from a system trained on language alone.
+
+However, I do believe there are some useful takeaways for users:
+
+- Double-check factual claims.  
+- Treat confident answers with calibrated skepticism<Sidenote label="calibrated-skepticism">Calibrated skepticism means neither blind trust nor blanket rejection: verify high-impact claims, especially when the model sounds certain.</Sidenote>.  
+- Use them for reasoning scaffolds, drafting, brainstorming, and exploration, rather than final correctness checks.
+- Ask for sources, then verify those sources yourself.
+
+In other words, we should use them as force multipliers for thinking and not replacements for judgment.
+
+Hallucination does not mean the system is useless. It means we need to be informed and careful users. I do hope future architectures integrate stronger grounding, world models, or hybrid reasoning systems, but until then, the safest approach is neither blind trust nor complete rejection, but calibrated collaboration.
+
+<Copyright />

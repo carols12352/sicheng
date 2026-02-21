@@ -32,7 +32,7 @@ export default function AboutPage() {
         </h1>
         <p className="mt-4 max-w-2xl">
           Hi there! I&apos;m Sicheng Ouyang, a Software Engineering student at the University of Waterloo (Sep 2025 - 2030).
-          I like building full stack web apps and exploring practical ML applications. I have experience in backend systems, ML workflows, and product delivery from my own projects and serveral internships. And I&apos;m passionate about learning from production data and iterating quickly in real environments.
+          I like building full stack web apps and exploring practical ML applications. I have experience in backend systems, ML workflows, and product delivery from my own projects and several internships. And I&apos;m passionate about learning from production data and iterating quickly in real environments.
         </p>
         <p className="mt-4 max-w-2xl">
           I&apos;m especially interested in bridging robust backend architecture with clean, minimal user experience, and I care a lot about reliability and clear system behavior as products scale.

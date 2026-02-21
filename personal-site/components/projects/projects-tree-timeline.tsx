@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 import { MermaidDiagram } from "@/components/projects/mermaid-diagram";
 import { TerminalDemo } from "@/components/projects/terminal-demo";
 
@@ -29,6 +30,7 @@ type ProjectsTreeTimelineProps = {
 
 export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTreeTimelineProps) {
   const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
+  const reduceMotion = useAppReducedMotion();
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
   const orderedProjects = useMemo(
@@ -38,6 +40,47 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
       ),
     [projects],
   );
+
+  const setHash = useCallback((anchor: string) => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const next = `#${anchor}`;
+    if (window.location.hash === next) {
+      return;
+    }
+    window.history.replaceState(null, "", `${window.location.pathname}${next}`);
+  }, []);
+
+  const clearHash = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    if (!window.location.hash) {
+      return;
+    }
+    window.history.replaceState(null, "", window.location.pathname);
+  }, []);
+
+  const openFromHash = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const anchor = decodeURIComponent(window.location.hash.replace(/^#/, "")).trim();
+    if (!anchor) {
+      return;
+    }
+    const match = orderedProjects.find((project) => project.anchor === anchor);
+    if (match) {
+      setActiveProject(match);
+    }
+  }, [orderedProjects]);
+
+  useEffect(() => {
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    return () => window.removeEventListener("hashchange", openFromHash);
+  }, [openFromHash]);
 
   useEffect(() => {
     if (!activeProject) {
@@ -60,7 +103,11 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
     };
   }, [activeProject]);
 
-  const cardTransition = { type: "tween", duration: 0.36, ease: [0.22, 1, 0.36, 1] as const };
+  const cardTransition = {
+    type: "tween",
+    duration: reduceMotion ? 0 : 0.36,
+    ease: [0.22, 1, 0.36, 1] as const,
+  };
   const highlightText = (text: string) => {
     if (!normalizedQuery) {
       return text;
@@ -89,13 +136,20 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
               <article key={project.anchor} id={project.anchor} className="relative pl-12">
                 <span className="project-timeline-node absolute left-2 top-3 h-[0.95rem] w-[0.95rem] rounded-full border border-gray-300 bg-white" />
                 <motion.div
-                  layoutId={`project-card-${project.anchor}`}
+                  layoutId={reduceMotion ? undefined : `project-card-${project.anchor}`}
                   transition={cardTransition}
                   className={`project-card-surface w-full rounded-xl border bg-white/95 p-5 text-left transition-colors ${
                     isActive ? "border-gray-300 project-card-active-shadow" : "border-gray-200 shadow-sm hover:border-gray-300"
                   }`}
                 >
-                  <button type="button" onClick={() => setActiveProject(project)} className="w-full text-left">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveProject(project);
+                      setHash(project.anchor);
+                    }}
+                    className="w-full text-left"
+                  >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <p className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">
@@ -141,18 +195,21 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
         </div>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence initial={!reduceMotion}>
         {activeProject ? (
           <>
             <motion.button
               type="button"
               aria-label="Close project window"
               className="project-modal-backdrop fixed inset-0 z-40 backdrop-blur-[1px]"
-              initial={{ opacity: 0 }}
+              initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              onClick={() => setActiveProject(null)}
+              exit={reduceMotion ? undefined : { opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2, ease: "easeOut" }}
+              onClick={() => {
+                setActiveProject(null);
+                clearHash();
+              }}
             />
 
             <div
@@ -160,11 +217,12 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
               onClick={(event) => {
                 if (event.target === event.currentTarget) {
                   setActiveProject(null);
+                  clearHash();
                 }
               }}
             >
               <motion.section
-                layoutId={`project-card-${activeProject.anchor}`}
+                layoutId={reduceMotion ? undefined : `project-card-${activeProject.anchor}`}
                 transition={cardTransition}
                 role="dialog"
                 aria-modal="true"
@@ -179,7 +237,10 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                   </div>
                   <button
                     type="button"
-                    onClick={() => setActiveProject(null)}
+                    onClick={() => {
+                      setActiveProject(null);
+                      clearHash();
+                    }}
                     className="rounded-md border border-gray-200 px-2.5 py-1 text-xs text-gray-600 transition-colors hover:border-gray-300"
                   >
                     close

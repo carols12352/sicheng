@@ -2,11 +2,13 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useId, useState } from "react";
+import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 
 type ZoomableImageProps = React.ComponentPropsWithoutRef<"img">;
 
 export function ZoomableImage({ alt = "", className, ...props }: ZoomableImageProps) {
   const [open, setOpen] = useState(false);
+  const reduceMotion = useAppReducedMotion();
   const layoutId = useId();
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export function ZoomableImage({ alt = "", className, ...props }: ZoomableImagePr
         aria-label={`Zoom image${alt ? `: ${alt}` : ""}`}
       >
         <motion.div
-          layoutId={layoutId}
+          layoutId={reduceMotion ? undefined : layoutId}
           className={`mx-auto overflow-hidden rounded-md border border-gray-200 ${className ?? ""}`}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -50,18 +52,18 @@ export function ZoomableImage({ alt = "", className, ...props }: ZoomableImagePr
         </motion.div>
       </button>
 
-      <AnimatePresence>
+      <AnimatePresence initial={!reduceMotion}>
         {open ? (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-4"
-            initial={{ opacity: 0 }}
+            initial={reduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            exit={reduceMotion ? undefined : { opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.2 }}
             onClick={() => setOpen(false)}
           >
             <motion.div
-              layoutId={layoutId}
+              layoutId={reduceMotion ? undefined : layoutId}
               className="max-h-[88vh] max-w-[92vw] overflow-hidden rounded-md shadow-2xl"
               onClick={(event) => event.stopPropagation()}
             >

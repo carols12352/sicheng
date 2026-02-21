@@ -9,6 +9,8 @@ type SidenoteProps = {
   label?: string;
 };
 
+const DESKTOP_COLLAPSED_HEIGHT_REM = 3.35;
+
 export function Sidenote({ children, label = "Note" }: SidenoteProps) {
   const [open, setOpen] = useState(false);
   const [desktopExpanded, setDesktopExpanded] = useState(false);
@@ -19,16 +21,24 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
     () => true,
     () => false,
   );
-  const canCollapseDesktop = desktopOverflow || desktopExpanded;
+  const canCollapseDesktop = desktopOverflow;
 
   useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia("(min-width: 1100px)").matches) {
+      return;
+    }
+
     const node = desktopContentRef.current;
     if (!node) {
       return;
     }
 
     const updateOverflow = () => {
-      setDesktopOverflow(node.scrollHeight - node.clientHeight > 1);
+      const rootFontSize = Number.parseFloat(
+        window.getComputedStyle(document.documentElement).fontSize || "16",
+      );
+      const collapsedMaxHeight = DESKTOP_COLLAPSED_HEIGHT_REM * rootFontSize;
+      setDesktopOverflow(node.scrollHeight - collapsedMaxHeight > 1);
     };
 
     updateOverflow();
@@ -59,6 +69,9 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
 
   const handleMarkerClick = () => {
     if (typeof window !== "undefined" && window.matchMedia("(min-width: 1100px)").matches) {
+      if (!desktopOverflow) {
+        return;
+      }
       setDesktopExpanded((value) => !value);
       return;
     }
@@ -82,7 +95,9 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
           <span className="sidenote-desktop-label">{label}</span>
           <span
             ref={desktopContentRef}
-            className={`sidenote-desktop-content${!desktopExpanded ? " sidenote-desktop-content-collapsed" : ""}`}
+            className={`sidenote-desktop-content${
+              !desktopExpanded && desktopOverflow ? " sidenote-desktop-content-collapsed" : ""
+            }`}
           >
             {children}
           </span>
