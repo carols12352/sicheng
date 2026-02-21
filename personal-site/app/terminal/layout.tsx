@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { buildSeoTitle } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: buildSeoTitle("Terminal Easter Egg and Command Puzzle"),
+  title: "Terminal",
   description: "Interactive terminal easter egg.",
   robots: {
     index: false,

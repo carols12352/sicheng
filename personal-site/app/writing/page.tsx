@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { buildSeoTitle, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
 import { getAllPostsWithContent } from "@/lib/writing";
 
 type WritingPageProps = {
@@ -8,7 +8,7 @@ type WritingPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: buildSeoTitle("Technical Writing on LLMs and Software Systems"),
+  title: `Technical Writing | ${SITE_NAME}`,
   description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
   alternates: {
     canonical: "/writing",
@@ -16,14 +16,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: `${SITE_URL}/writing`,
-    title: buildSeoTitle("Technical Writing on LLMs and Software Systems"),
+    title: `Technical Writing | ${SITE_NAME}`,
     siteName: SITE_NAME,
     description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
     images: [SITE_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: buildSeoTitle("Technical Writing on LLMs and Software Systems"),
+    title: `Technical Writing | ${SITE_NAME}`,
     description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
     images: [SITE_OG_IMAGE],
   },
