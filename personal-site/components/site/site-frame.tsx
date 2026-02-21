@@ -42,12 +42,15 @@ export function SiteFrame({ children }: SiteFrameProps) {
   const searchDialogRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    try {
-      const dismissed = window.localStorage.getItem(shortcutNudgeKey) === "true";
-      setShowShortcutNudge(!dismissed);
-    } catch {
-      setShowShortcutNudge(true);
-    }
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        const dismissed = window.localStorage.getItem(shortcutNudgeKey) === "true";
+        setShowShortcutNudge(!dismissed);
+      } catch {
+        setShowShortcutNudge(true);
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {

@@ -100,6 +100,16 @@ const growthTimeline = [
 ];
 
 export default function Home() {
+  const commitSha =
+    process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ??
+    process.env.NEXT_PUBLIC_GIT_COMMIT_SHA ??
+    "";
+  const shortSha = commitSha ? commitSha.slice(0, 7) : "";
+  const buildLabel = shortSha ? `build ${shortSha}` : "local build";
+  const buildHref = commitSha
+    ? `https://github.com/carols12352/sicheng/commit/${commitSha}`
+    : "";
+
   return (
     <div className="home-canvas home-load-enter">
       <RevealSection
@@ -108,7 +118,8 @@ export default function Home() {
       >
         <div className="home-hero-grid mx-auto w-full max-w-6xl">
           <div>
-            <p className="text-sm text-gray-500">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500">
+              <p>
               Software Engineering @{" "}
               <a
                 href="https://uwaterloo.ca/future-students/programs/software-engineering"
@@ -118,7 +129,18 @@ export default function Home() {
               >
                 UWaterloo
               </a>
-            </p>
+              </p>
+              <span className="text-gray-400" aria-hidden>
+                ·
+              </span>
+              {buildHref ? (
+                <a href={buildHref} target="_blank" rel="noreferrer" className="home-build-tag ui-link ui-underline">
+                  {buildLabel}
+                </a>
+              ) : (
+                <span className="home-build-tag">{buildLabel}</span>
+              )}
+            </div>
 
             <h1 className="home-hero-title mt-4 text-gray-900">
               Sicheng Ouyang

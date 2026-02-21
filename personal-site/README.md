@@ -25,7 +25,7 @@ Personal portfolio site built with Next.js (App Router), focused on clean UX, pr
 ## Features
 
 - Project cards with minimal `repo` links and optional `demo` links
-- Home `Selected Work` cards deep-link to `/projects#anchor` and auto-open project detail
+- Home `Selected Work` cards deep-link to `/projects#anchor`
 - Writing article breadcrumb navigation
 - Desktop article TOC (`On This Page`) with active-section highlight
 - Hidden Vim-style keyboard UX:
@@ -66,9 +66,7 @@ Personal portfolio site built with Next.js (App Router), focused on clean UX, pr
   - compatibility note for dark-mode PDF/rendering plugins
   - embedded PDF preview with image fallback support
   - optional fallback image path: `public/resume-preview.jpg`
-- Footer terminal hint upgrades:
-  - animated green status dot
-  - clickable build version (`build <sha>`) linking to GitHub commit page
+- Home hero shows build label (`build <sha>` in production, `local build` in local/dev)
 
 ## Getting Started
 
@@ -123,7 +121,7 @@ Deploy on Vercel. Set production env vars:
 NEXT_PUBLIC_SITE_URL=your-url
 ```
 
-Build SHA in footer is mapped automatically in `next.config.ts`:
+Build SHA is mapped automatically in `next.config.ts`:
 
 ```ts
 NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA = process.env.VERCEL_GIT_COMMIT_SHA ?? ""

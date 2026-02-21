@@ -34,8 +34,11 @@ export function CookieConsentBanner() {
   const [consent, setConsent] = useState<ConsentValue | null>(null);
 
   useEffect(() => {
-    setConsent(readConsent());
-    setHydrated(true);
+    const frame = window.requestAnimationFrame(() => {
+      setConsent(readConsent());
+      setHydrated(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
