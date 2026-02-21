@@ -24,7 +24,7 @@ export function NavLink({ href, label }: NavLinkProps) {
     <Link
       href={href}
       className={`ui-nav-link relative pb-1 ${active ? "ui-nav-link-active text-black" : "text-gray-600"}`}
-      aria-current={active ? "page" : undefined}
+     
     >
       {label}
     </Link>

@@ -46,6 +46,7 @@ export function HallucinationFrameSwitcherDemo() {
           <button
             type="button"
             onClick={() => setFrame("distance")}
+           
             className={`hallucination-demo-pill rounded-full border px-2.5 py-1 text-xs ${
               frame === "distance" ? "hallucination-demo-pill-active" : ""
             }`}
@@ -55,6 +56,7 @@ export function HallucinationFrameSwitcherDemo() {
           <button
             type="button"
             onClick={() => setFrame("physical")}
+           
             className={`hallucination-demo-pill rounded-full border px-2.5 py-1 text-xs ${
               frame === "physical" ? "hallucination-demo-pill-active" : ""
             }`}
@@ -101,7 +103,7 @@ export function HallucinationConfidenceTruthDemo() {
             value={confidence}
             onChange={(event) => setConfidence(Number(event.currentTarget.value))}
             className="w-full accent-gray-500"
-            aria-label="Confidence level"
+           
           />
         </div>
         <div className="hallucination-demo-card mt-4 rounded-md border px-3 py-2">
@@ -140,6 +142,7 @@ export function HallucinationGroundingToggleDemo() {
           <button
             type="button"
             onClick={() => setGrounded((value) => !value)}
+           
             className="hallucination-demo-pill rounded-full border px-2.5 py-1 text-xs"
           >
             {grounded ? "With tools" : "No tools"}

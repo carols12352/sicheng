@@ -161,21 +161,21 @@ export default async function WritingArticlePage({ params }: PageProps) {
       <ArticleToc />
       <ArticleSearchBridge />
       <header className="mx-auto max-w-[42.5rem] pt-12 sm:pt-16">
-        <nav aria-label="Breadcrumb" className="mb-5 text-xs text-gray-500">
+        <nav className="mb-5 text-xs text-gray-500">
           <ol className="m-0 flex items-center gap-2 p-0">
             <li>
               <Link href="/" className="ui-link ui-underline">
                 Home
               </Link>
             </li>
-            <li aria-hidden>/</li>
+            <li>/</li>
             <li>
               <Link href="/writing" className="ui-link ui-underline">
                 Writing
               </Link>
             </li>
-            <li aria-hidden>/</li>
-            <li aria-current="page" className="text-gray-600">
+            <li>/</li>
+            <li className="text-gray-600">
               {post.meta.title}
             </li>
           </ol>

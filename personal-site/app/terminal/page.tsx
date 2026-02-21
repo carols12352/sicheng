@@ -389,7 +389,14 @@ export default function TerminalPage() {
         </div>
 
         <div className="rounded-xl border border-green-900/80 bg-black/80">
-          <div ref={scrollRef} className="h-[72vh] overflow-auto px-4 py-4 font-mono text-sm leading-6">
+          <div
+            ref={scrollRef}
+            className="h-[72vh] overflow-auto px-4 py-4 font-mono text-sm leading-6"
+           
+           
+           
+           
+          >
             {lines.map((line) => (
               <p
                 key={line.id}
@@ -406,13 +413,11 @@ export default function TerminalPage() {
             ))}
           </div>
           <form onSubmit={onSubmit} className="border-t border-green-900/80 px-4 py-3">
-            <label htmlFor="terminal-input" className="sr-only">
-              terminal input
-            </label>
             <div className="flex items-center gap-2 font-mono text-sm">
               <span className="text-green-300">{prompt}</span>
               <input
                 id="terminal-input"
+                type="text"
                 value={input}
                 onChange={(event) => {
                   setInput(event.target.value);
@@ -425,6 +430,7 @@ export default function TerminalPage() {
                 autoFocus
                 autoComplete="off"
                 spellCheck={false}
+               
               />
             </div>
           </form>
@@ -435,6 +441,10 @@ export default function TerminalPage() {
         {booting ? (
           <motion.div
             className="fixed inset-0 z-40 bg-black"
+           
+           
+           
+           
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
@@ -447,7 +457,7 @@ export default function TerminalPage() {
                 transition={{ duration: 1.2, ease: "easeInOut" }}
               />
               <div className="w-full max-w-2xl rounded-xl border border-green-900/70 bg-black/85 p-6 font-mono text-sm">
-                <p className="mb-3 text-green-300">TERMINAL BOOT SEQUENCE</p>
+                <p id="terminal-boot-title" className="mb-3 text-green-300">TERMINAL BOOT SEQUENCE</p>
                 {BOOT_LINES.map((line, index) => (
                   <motion.p
                     key={line}
@@ -460,6 +470,7 @@ export default function TerminalPage() {
                   </motion.p>
                 ))}
                 <motion.p
+                  id="terminal-boot-description"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0.3, 1, 0.3] }}
                   transition={{ duration: 0.9, repeat: Infinity }}
@@ -474,7 +485,11 @@ export default function TerminalPage() {
 
         {crashVariant === "kernel" ? (
           <motion.div
-                className="fixed inset-0 z-50 bg-black px-4 py-8 font-mono text-sm text-gray-100"
+            className="fixed inset-0 z-50 bg-black px-4 py-8 font-mono text-sm text-gray-100"
+           
+           
+           
+           
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.95, 1] }}
             exit={{ opacity: 0 }}
@@ -486,10 +501,10 @@ export default function TerminalPage() {
             }}
           >
             <div className="mx-auto max-w-4xl space-y-2">
-              <p>[  0.001234] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000</p>
+              <p id="terminal-kernel-title">[  0.001234] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000</p>
               <p>[  0.002567] rm: cannot remove &apos;/&apos;: Permission denied (Nice try, kid.)</p>
               <p>[  1.042069] System halted. Please refresh to restore reality.</p>
-              <p className="mt-6 text-green-300">Press any key to rollback.</p>
+              <p id="terminal-kernel-description" className="mt-6 text-green-300">Press any key to rollback.</p>
             </div>
           </motion.div>
         ) : null}
@@ -497,6 +512,10 @@ export default function TerminalPage() {
         {crashVariant === "humor" ? (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-6"
+           
+           
+           
+           
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -512,7 +531,7 @@ export default function TerminalPage() {
               className="w-full max-w-2xl rounded-xl border border-red-500 bg-red-950/70 p-6 font-mono"
               onClick={(event) => event.stopPropagation()}
             >
-              <p className="text-lg font-semibold text-red-300">[ERROR] UNAUTHORIZED DESTRUCTIVE COMMAND</p>
+              <p id="terminal-humor-title" className="text-lg font-semibold text-red-300">[ERROR] UNAUTHORIZED DESTRUCTIVE COMMAND</p>
               <p className="mt-3 text-sm text-red-100">
                 sudo: guest is not in the sudoers file. This incident will be reported.
               </p>
@@ -542,7 +561,7 @@ export default function TerminalPage() {
                   buymeacoffee.com/ouyang12352
                 </a>
               </p>
-              <p className="mt-6 text-sm text-red-100">Press any key to rollback.</p>
+              <p id="terminal-humor-description" className="mt-6 text-sm text-red-100">Press any key to rollback.</p>
             </motion.div>
           </motion.div>
         ) : null}
@@ -550,6 +569,10 @@ export default function TerminalPage() {
         {crashVariant === "minimal" ? (
           <motion.div
             className="fixed inset-0 z-50 overflow-hidden bg-black/88"
+           
+           
+           
+           
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -573,9 +596,9 @@ export default function TerminalPage() {
             ))}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-4 text-center font-mono text-sm text-gray-100 sm:text-base">
               <div className="pointer-events-auto" onClick={(event) => event.stopPropagation()}>
-                <p>Deleting your boredom... [100%]</p>
+                <p id="terminal-minimal-title">Deleting your boredom... [100%]</p>
                 <p className="mt-1">Error: Reality.exe cannot be deleted.</p>
-                <p className="mt-4 text-green-300">Press any key to rollback.</p>
+                <p id="terminal-minimal-description" className="mt-4 text-green-300">Press any key to rollback.</p>
               </div>
             </div>
           </motion.div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 import { MermaidDiagram } from "@/components/projects/mermaid-diagram";
 import { TerminalDemo } from "@/components/projects/terminal-demo";
@@ -31,6 +31,7 @@ type ProjectsTreeTimelineProps = {
 export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTreeTimelineProps) {
   const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const dialogRef = useRef<HTMLElement>(null);
   const reduceMotion = useAppReducedMotion();
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -75,11 +76,42 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
     }
 
     const previousOverflow = document.body.style.overflow;
+    const previousFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const dialogNode = dialogRef.current;
     document.body.style.overflow = "hidden";
+
+    window.requestAnimationFrame(() => {
+      const target = dialogNode?.querySelector<HTMLElement>("button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+      (target ?? dialogNode)?.focus();
+    });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeProject();
+        return;
+      }
+      if (event.key !== "Tab" || !dialogNode) {
+        return;
+      }
+
+      const focusable = Array.from(
+        dialogNode.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])",
+        ),
+      );
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialogNode.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
@@ -87,6 +119,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
+      previousFocused?.focus();
     };
   }, [activeProject, closeProject]);
 
@@ -159,10 +192,9 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
-                        aria-label={`${project.name} demo`}
                       >
                         demo
-                        <span aria-hidden>↗</span>
+                        <span>↗</span>
                       </a>
                     ) : null}
                     <a
@@ -170,10 +202,9 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
-                      aria-label={`${project.name} repository`}
                     >
                       repo
-                      <span aria-hidden>↗</span>
+                      <span>↗</span>
                     </a>
                   </div>
                 </motion.div>
@@ -188,7 +219,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
           <>
             <motion.button
               type="button"
-              aria-label="Close project window"
+             
               className="project-modal-backdrop fixed inset-0 z-40 backdrop-blur-[1px]"
               initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -206,11 +237,9 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
               }}
             >
               <motion.section
+                ref={dialogRef}
                 layoutId={reduceMotion ? undefined : `project-card-${activeProject.anchor}`}
                 transition={cardTransition}
-                role="dialog"
-                aria-modal="true"
-                aria-label={activeProject.name}
                 className={`project-card-surface project-modal-surface mx-auto w-full rounded-2xl border border-gray-300 bg-white text-left ${
                   isFullscreen
                     ? "max-w-none min-h-[calc(100dvh-4rem)] p-6 sm:min-h-[calc(100dvh-6rem)] sm:p-8"
@@ -221,27 +250,24 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                   <div className="flex items-center gap-1.5">
                     <button
                       type="button"
-                      aria-label="Close project window"
                       onClick={closeProject}
                       className="flex h-3 w-3 items-center justify-center rounded-full bg-[#ff5f57] text-[9px] text-black/60"
                     >
-                      <span aria-hidden>×</span>
+                      <span>×</span>
                     </button>
                     <button
                       type="button"
-                      aria-label="Minimize project window"
                       onClick={closeProject}
                       className="flex h-3 w-3 items-center justify-center rounded-full bg-[#febc2e] text-[9px] text-black/60"
                     >
-                      <span aria-hidden>−</span>
+                      <span>−</span>
                     </button>
                     <button
                       type="button"
-                      aria-label={isFullscreen ? "Restore project window size" : "Expand project window"}
                       onClick={() => setIsFullscreen((prev) => !prev)}
                       className="flex h-3 w-3 items-center justify-center rounded-full bg-[#28c840] text-[8px] text-black/60"
                     >
-                      <span aria-hidden>{isFullscreen ? "↙" : "↗"}</span>
+                      <span>{isFullscreen ? "↙" : "↗"}</span>
                     </button>
                   </div>
                 </div>
@@ -258,7 +284,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                         rel="noreferrer"
                         className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
                       >
-                        <span aria-hidden>↗</span>
+                        <span>↗</span>
                         Live Demo
                       </a>
                     ) : null}
@@ -268,13 +294,13 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                       rel="noreferrer"
                       className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
                     >
-                      <span aria-hidden>↗</span>
+                      <span>↗</span>
                       GitHub Repo
                     </a>
                   </div>
                 </div>
-                <h2 className="mt-6 text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">{activeProject.name}</h2>
-                <p className="mt-6 max-w-3xl text-sm leading-7 text-gray-600 sm:text-base">{activeProject.summary}</p>
+                <h2 id={`project-dialog-title-${activeProject.anchor}`} className="mt-6 text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">{activeProject.name}</h2>
+                <p id={`project-dialog-summary-${activeProject.anchor}`} className="mt-6 max-w-3xl text-sm leading-7 text-gray-600 sm:text-base">{activeProject.summary}</p>
 
                 <div className="mt-12 border-t border-gray-200 pt-0">
                   <section>
@@ -293,7 +319,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                             {item.name}
                           </a>
                           {index < activeProject.stack.length - 1 ? (
-                            <span aria-hidden className="mx-2 text-gray-400">|</span>
+                            <span className="mx-2 text-gray-400">|</span>
                           ) : null}
                         </li>
                       ))}

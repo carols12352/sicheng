@@ -32,6 +32,7 @@ function readConsent(): ConsentValue | null {
 export function CookieConsentBanner() {
   const [hydrated, setHydrated] = useState(false);
   const [consent, setConsent] = useState<ConsentValue | null>(null);
+  const bannerDescriptionId = "cookie-consent-description";
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -69,8 +70,8 @@ export function CookieConsentBanner() {
   }
 
   return (
-    <aside className="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
-      <p className="cookie-banner-text">
+    <aside className="cookie-banner">
+      <p id={bannerDescriptionId} className="cookie-banner-text">
         This site uses cookies and analytics tools (including Google Analytics) to improve performance.
         See{" "}
         <Link href="/privacy" className="ui-link ui-underline">

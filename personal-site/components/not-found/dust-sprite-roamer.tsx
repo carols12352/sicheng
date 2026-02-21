@@ -229,7 +229,7 @@ export function DustSpriteRoamer() {
   }, [clearTimers, fleeFrom, startRoaming, stopAnimation]);
 
   return (
-    <div className="dust-sprite-roamer-layer" aria-hidden>
+    <div className="dust-sprite-roamer-layer">
       <span
         className={`dust-sprite${startled ? " dust-sprite-startled" : ""}${escaping ? " dust-sprite-escaping" : ""}${hidden ? " dust-sprite-hidden" : ""}`}
         style={{

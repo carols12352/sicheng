@@ -229,7 +229,9 @@ const InternalLink = ({ href, children, ...props }: React.ComponentPropsWithoutR
       rel="noreferrer"
       {...props}
     >
-      {children}
+      <>
+        {children}
+      </>
     </a>
   );
 };

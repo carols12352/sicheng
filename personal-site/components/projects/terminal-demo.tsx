@@ -7,7 +7,7 @@ export function TerminalDemo({ title, lines }: TerminalDemoProps) {
   return (
     <figure className="terminal-demo">
       <figcaption className="terminal-demo-head">{title}</figcaption>
-      <pre className="terminal-demo-body" aria-label={title}>
+      <pre className="terminal-demo-body">
         <code>
           {lines.join("\n")}
         </code>

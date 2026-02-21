@@ -17,6 +17,7 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
   const [desktopExpanded, setDesktopExpanded] = useState(false);
   const [desktopOverflow, setDesktopOverflow] = useState(false);
   const desktopContentRef = useRef<HTMLSpanElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const isClient = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -63,9 +64,17 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
         setOpen(false);
       }
     };
+    const previousFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    window.requestAnimationFrame(() => {
+      closeButtonRef.current?.focus();
+    });
 
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      previousFocused?.focus();
+    };
   }, [open]);
 
   const handleMarkerClick = () => {
@@ -87,13 +96,10 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
             type="button"
             className="sidenote-trigger"
             onClick={handleMarkerClick}
-            aria-haspopup="dialog"
-            aria-expanded={open || desktopExpanded}
-            aria-label={`Open note: ${label}`}
           />
         </span>
 
-        <span className="sidenote-desktop" role="note" aria-label={label}>
+        <span className="sidenote-desktop">
           <span className="sidenote-desktop-label">{label}</span>
           <span
             ref={desktopContentRef}
@@ -108,7 +114,6 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
               type="button"
               className="sidenote-desktop-toggle"
               onClick={() => setDesktopExpanded((value) => !value)}
-              aria-expanded={desktopExpanded}
             >
               {desktopExpanded ? "Collapse" : "Expand"}
             </button>
@@ -119,9 +124,6 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
           type="button"
           className="sidenote-desktop-marker"
           onClick={handleMarkerClick}
-          aria-haspopup="dialog"
-          aria-expanded={open || desktopExpanded}
-          aria-label={`Open note: ${label}`}
         />
       </span>
 
@@ -130,14 +132,11 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
           <div className="sidenote-overlay" onClick={() => setOpen(false)}>
             <aside
               className="sidenote-sheet"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby={titleId}
               onClick={(event) => event.stopPropagation()}
             >
               <div className="sidenote-sheet-head">
                 <p id={titleId} className="sidenote-label">{label}</p>
-                <button type="button" onClick={() => setOpen(false)} className="sidenote-close" aria-label={`Close note: ${label}`}>
+                <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="sidenote-close">
                   Close
                 </button>
               </div>

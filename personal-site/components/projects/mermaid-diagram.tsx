@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { ReactElement, ReactNode } from "react";
 import { isValidElement } from "react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 
 type MermaidRuntime = {
@@ -66,6 +66,8 @@ export function MermaidDiagram({ chart, title = "Diagram", children }: MermaidDi
   const reactId = useId();
   const diagramId = `mermaid-${reactId.replace(/:/g, "")}`;
   const layoutId = `mermaid-layout-${reactId.replace(/:/g, "")}`;
+  const zoomTitleId = `mermaid-zoom-title-${reactId.replace(/:/g, "")}`;
+  const zoomDialogRef = useRef<HTMLDivElement>(null);
   const chartSource = typeof chart === "string" && chart.length > 0 ? chart : textFromChildren(children);
 
   useEffect(() => {
@@ -132,6 +134,11 @@ export function MermaidDiagram({ chart, title = "Diagram", children }: MermaidDi
     const onScroll = () => setZoomOpen(false);
 
     document.body.style.overflow = "hidden";
+    const previousFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    window.requestAnimationFrame(() => {
+      const target = zoomDialogRef.current?.querySelector<HTMLElement>("button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+      (target ?? zoomDialogRef.current)?.focus();
+    });
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("scroll", onScroll, { passive: true });
 
@@ -139,6 +146,7 @@ export function MermaidDiagram({ chart, title = "Diagram", children }: MermaidDi
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("scroll", onScroll);
+      previousFocused?.focus();
     };
   }, [zoomOpen]);
 
@@ -152,18 +160,15 @@ export function MermaidDiagram({ chart, title = "Diagram", children }: MermaidDi
               type="button"
               className="mermaid-diagram-trigger"
               onClick={() => setZoomOpen(true)}
-              aria-label={`Zoom diagram: ${title}`}
             >
               <motion.div
                 layoutId={reduceMotion ? undefined : layoutId}
                 className="mermaid-diagram-svg"
-                role="img"
-                aria-label={title}
                 dangerouslySetInnerHTML={{ __html: svg }}
               />
             </button>
           ) : (
-            <pre className="terminal-demo-body" aria-label={title}>
+            <pre className="terminal-demo-body">
               <code>{chartSource}</code>
             </pre>
           )}
@@ -190,22 +195,17 @@ export function MermaidDiagram({ chart, title = "Diagram", children }: MermaidDi
               layoutId={reduceMotion ? undefined : layoutId}
               className="mermaid-zoom-panel"
               onClick={(event) => event.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-label={`Zoomed diagram: ${title}`}
+              ref={zoomDialogRef}
               transition={{ duration: reduceMotion ? 0 : 0.24 }}
             >
               <div className="mermaid-zoom-header">
-                <p className="mermaid-zoom-title">{title}</p>
+                <p id={zoomTitleId} className="mermaid-zoom-title">{title}</p>
                 <button type="button" className="mermaid-zoom-close" onClick={() => setZoomOpen(false)}>
-                  <span className="sr-only">Close zoomed diagram</span>
                   Close
                 </button>
               </div>
               <div
                 className="mermaid-zoom-svg"
-                role="img"
-                aria-label={title}
                 dangerouslySetInnerHTML={{ __html: svg }}
               />
             </motion.div>

@@ -39,11 +39,11 @@ Personal portfolio site built with Next.js (App Router), focused on clean UX, pr
   - `/writing`: filters posts and shows title + content snippet matches
   - `/projects`: filters project cards and shows matched snippets
   - `/writing/[slug]`: in-article text search with live highlight + match count
-- Accessibility / motion controls:
+- Motion controls:
   - global `Motion: Full / Reduced / None` toggle in header
   - `Reduced`: disables continuous/decorative motion
   - `None`: strict no-motion mode (global animation/transition off)
-  - persisted in localStorage and merged with system `prefers-reduced-motion`
+  - persisted in localStorage
 - MDX enhancements:
   - custom paragraph spacing
   - `Sidenote` support

@@ -54,7 +54,6 @@ export function MotionToggle() {
       type="button"
       onClick={onToggle}
       className="motion-toggle ui-link"
-      aria-label={`Cycle motion mode. Current: ${label}`}
       title={`Motion: ${label}`}
     >
       Motion: {label}

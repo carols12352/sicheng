@@ -70,7 +70,7 @@ export function AutoGrowthLine({ items }: AutoGrowthLineProps) {
   }, []);
 
   const renderList = (duplicate = false) => (
-    <ol className="growth-line" aria-hidden={duplicate}>
+    <ol className="growth-line">
       {items.map((item, index) => (
         <li
           key={`${item.phase}-${item.period}-${index}-${duplicate ? "dup" : "base"}`}

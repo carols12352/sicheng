@@ -62,13 +62,14 @@ export function TokenPredictionDemo() {
       <div className="px-4 py-4">
         <div className="flex flex-wrap gap-2">
           {STAGES.map((item, index) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setStageIndex(index)}
-              className={`rounded-full border px-2.5 py-1 text-xs transition-colors ${
-                stageIndex === index
-                  ? "border-gray-400 text-gray-900"
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setStageIndex(index)}
+               
+                className={`rounded-full border px-2.5 py-1 text-xs transition-colors ${
+                  stageIndex === index
+                    ? "border-gray-400 text-gray-900"
                   : "border-gray-200 text-gray-500 hover:text-gray-700"
               }`}
             >

@@ -11,7 +11,7 @@ function SkeletonPost() {
 
 export default function WritingLoading() {
   return (
-    <section className="mt-12 space-y-8" aria-label="Loading posts">
+    <section className="mt-12 space-y-8">
       <SkeletonPost />
       <SkeletonPost />
       <SkeletonPost />

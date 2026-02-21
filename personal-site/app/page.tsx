@@ -130,7 +130,7 @@ export default function Home() {
                 UWaterloo
               </a>
               </p>
-              <span className="text-gray-400" aria-hidden>
+              <span className="text-gray-400">
                 ·
               </span>
               {buildHref ? (
@@ -145,7 +145,7 @@ export default function Home() {
             <h1 className="home-hero-title mt-4 text-gray-900">
               Sicheng Ouyang
             </h1>
-            <span aria-hidden className="mt-5 block h-px w-20 bg-gray-300" />
+            <span className="mt-5 block h-px w-20 bg-gray-300" />
             <p className="mt-5 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg sm:leading-8">
               Software Engineering student at UWaterloo focused on reliable backend systems, practical ML workflows, and product delivery.
             </p>

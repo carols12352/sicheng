@@ -21,6 +21,7 @@ function applyTheme(mode: ThemeMode) {
 }
 
 export function ThemeToggle() {
+  const modes = ["light", "dark", "system"] as const;
   const mode = useSyncExternalStore<ThemeMode>(
     (callback) => {
       window.addEventListener("storage", callback);
@@ -74,8 +75,8 @@ export function ThemeToggle() {
   };
 
   return (
-    <div className="theme-toggle" role="group" aria-label="Theme selector">
-      {(["light", "dark", "system"] as const).map((item) => (
+    <div className="theme-toggle">
+      {modes.map((item) => (
         <button
           key={item}
           type="button"
