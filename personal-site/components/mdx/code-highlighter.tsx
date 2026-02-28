@@ -28,13 +28,14 @@ function normalizeLanguage(language: string): string {
 function getRegex(language: string): RegExp {
   const normalized = normalizeLanguage(language);
   const keywords = KEYWORDS[normalized] ?? [];
-  const keywordPattern = keywords.length > 0 ? `\\b(?:${keywords.join("|")})\\b` : "$^";
+  const noMatchPattern = "(?!)";
+  const keywordPattern = keywords.length > 0 ? `\\b(?:${keywords.join("|")})\\b` : noMatchPattern;
   const commentPattern = normalized === "py" || normalized === "python" || normalized === "sh" || normalized === "bash"
     ? "#[^\\n]*"
     : "\\/\\/[^\\n]*";
   const stringPattern = "`(?:\\\\.|[^`\\\\])*`|\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'";
   const numberPattern = "\\b\\d+(?:\\.\\d+)?\\b";
-  const jsonKeyPattern = normalized === "json" ? "\"(?:\\\\.|[^\"\\\\])*\"(?=\\s*:)" : "$^";
+  const jsonKeyPattern = normalized === "json" ? "\"(?:\\\\.|[^\"\\\\])*\"(?=\\s*:)" : noMatchPattern;
 
   return new RegExp(`(${commentPattern})|(${stringPattern})|(${jsonKeyPattern})|(${numberPattern})|(${keywordPattern})`, "gm");
 }
@@ -57,6 +58,10 @@ export function CodeHighlighter({ code, language }: CodeHighlighterProps) {
 
   while ((match = regex.exec(code)) !== null) {
     const token = match[0];
+    if (!token) {
+      regex.lastIndex += 1;
+      continue;
+    }
     const start = match.index;
     if (start > lastIndex) {
       nodes.push(<span key={`t-${key++}`}>{code.slice(lastIndex, start)}</span>);

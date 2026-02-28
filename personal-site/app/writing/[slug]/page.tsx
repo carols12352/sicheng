@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import rehypeKatex from "rehype-katex";
+import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { getMdxComponents } from "@/components/mdx/mdx-components";
 import { Prose } from "@/components/mdx/prose";
@@ -204,7 +205,7 @@ export default async function WritingArticlePage({ params }: PageProps) {
             components={mdxComponents}
             options={{
               mdxOptions: {
-                remarkPlugins: [remarkMath],
+                remarkPlugins: [remarkGfm, remarkMath],
                 rehypePlugins: [rehypeKatex],
               },
             }}
