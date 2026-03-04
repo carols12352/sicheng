@@ -18,7 +18,7 @@ npm run dev
 
 - Home, Projects, Writing, Resume, About pages
 - Interactive `/terminal` easter-egg route with command simulation
-- Custom `404` page with embedded Dino game
+- Custom `404` page with dust spirit
 - SEO setup with metadata, robots, and sitemap generation
 - MDX writing system with custom React components, Mermaid diagrams, sidenotes, and KaTeX math
 
