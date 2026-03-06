@@ -329,6 +329,10 @@ export function SiteFrame({ children }: SiteFrameProps) {
           <span className="text-gray-400">·</span>
           <Link href="/disclaimer" className="ui-link ui-underline">Disclaimer</Link>
           <span className="text-gray-400">·</span>
+          <a href="https://se-webring.xyz" target="_blank" rel="noreferrer" className="ui-link ui-underline">
+            Part of the SE Webring
+          </a>
+          <span className="text-gray-400">·</span>
           <button
             type="button"
             className="footer-shortcut-link ui-link ui-underline"
