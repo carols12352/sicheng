@@ -276,6 +276,140 @@ p {
   min-width: 0;
 }
 
+.footer-webring-rail {
+  display: flex;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 8rem;
+}
+
+.footer-webring-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.2rem 0.35rem 0.1rem;
+  user-select: none;
+}
+
+.footer-webring-widget-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.footer-webring-widget-arrow {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--text) 88%, var(--text-muted));
+  font-size: 1.55rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    color var(--motion-micro) var(--motion-ease),
+    transform var(--motion-micro) var(--motion-ease);
+}
+
+.footer-webring-widget-arrow:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.footer-webring-widget-home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 0.85rem;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+  color: var(--text-strong);
+  text-decoration: none;
+  transition:
+    background-color var(--motion-micro) var(--motion-ease),
+    transform var(--motion-micro) var(--motion-ease);
+}
+
+.footer-webring-widget-home:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  transform: translateY(-1px);
+}
+
+.footer-webring-widget-icon {
+  display: block;
+  max-width: 3rem;
+  max-height: 3rem;
+  width: auto;
+  height: auto;
+}
+
+.footer-webring-widget-se .footer-webring-widget-icon {
+  max-width: 2.2rem;
+  max-height: 2.2rem;
+}
+
+.footer-webring-widget-se30 .footer-webring-widget-icon {
+  max-width: 2.05rem;
+  max-height: 2.05rem;
+}
+
+.footer-webring-widget-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.footer-webring-dotset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.footer-webring-dot {
+  appearance: none;
+  width: 0.68rem;
+  height: 0.68rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-muted) 38%, transparent);
+  padding: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-micro) var(--motion-ease),
+    transform var(--motion-micro) var(--motion-ease);
+}
+
+.footer-webring-dot:hover {
+  transform: translateY(-1px);
+}
+
+.footer-webring-dot-active {
+  background: var(--accent);
+}
+
+.footer-webring-widget-label {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--text) 90%, var(--text-muted));
+  text-align: center;
+}
+
+:root[data-motion="reduced"] .footer-webring-widget-arrow:hover,
+:root[data-motion="reduced"] .footer-webring-dot:hover,
+:root[data-motion="reduced"] .footer-webring-widget-home:hover {
+  transform: none;
+}
+
+.footer-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
 .footer-links {
   max-width: 30rem;
 }

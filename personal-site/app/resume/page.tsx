@@ -64,11 +64,11 @@ export default function ResumePage() {
         </div>
         <div className="mx-auto aspect-[8.5/11] w-full max-w-4xl overflow-hidden bg-white ring-1 ring-gray-200">
           <object data={RESUME_PATH} type="application/pdf" className="h-full w-full">
-            <iframe src={RESUME_PATH} title="Resume Preview" className="h-full w-full">
-              <ResumeImageFallback pdfPath={RESUME_PATH} />
-            </iframe>
-            <ResumeImageFallback pdfPath={RESUME_PATH} />
+            <iframe src={RESUME_PATH} title="Resume Preview" className="h-full w-full" />
           </object>
+        </div>
+        <div className="mx-auto mt-4 aspect-[8.5/11] w-full max-w-4xl overflow-hidden bg-white ring-1 ring-gray-200">
+          <ResumeImageFallback pdfPath={RESUME_PATH} />
         </div>
       </div>
 

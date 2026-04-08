@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { PageTransition } from "@/components/motion/page-transition";
 import { MotionToggle } from "@/components/navigation/motion-toggle";
 import { NavLink } from "@/components/navigation/nav-link";
@@ -37,9 +37,30 @@ export function SiteFrame({ children }: SiteFrameProps) {
   const [showShortcutNudge, setShowShortcutNudge] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResultCount, setSearchResultCount] = useState<number | null>(null);
+  const [currentUrl, setCurrentUrl] = useState("");
+  const [activeWebring, setActiveWebring] = useState<"se" | "se30">("se");
+  const motionMode = useSyncExternalStore<"full" | "reduced" | "none">(
+    (callback) => {
+      window.addEventListener("site:motion-pref-changed", callback);
+      window.addEventListener("storage", callback);
+      return () => {
+        window.removeEventListener("site:motion-pref-changed", callback);
+        window.removeEventListener("storage", callback);
+      };
+    },
+    () => {
+      const value = document.documentElement.dataset.motion;
+      if (value === "none" || value === "reduced" || value === "full") {
+        return value;
+      }
+      return "full";
+    },
+    () => "full",
+  );
   const searchInputRef = useRef<HTMLInputElement>(null);
   const shortcutsDialogRef = useRef<HTMLDivElement>(null);
   const searchDialogRef = useRef<HTMLFormElement>(null);
+  const webringTouchStartXRef = useRef<number | null>(null);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -52,6 +73,23 @@ export function SiteFrame({ children }: SiteFrameProps) {
     });
     return () => window.cancelAnimationFrame(frame);
   }, []);
+
+  useEffect(() => {
+    setCurrentUrl(window.location.href);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (motionMode === "none") {
+      return;
+    }
+
+    const delay = motionMode === "reduced" ? 9000 : 5200;
+    const intervalId = window.setInterval(() => {
+      setActiveWebring((value) => (value === "se" ? "se30" : "se"));
+    }, delay);
+
+    return () => window.clearInterval(intervalId);
+  }, [motionMode]);
 
   useEffect(() => {
     const isTypingTarget = (target: EventTarget | null) => {
@@ -202,6 +240,43 @@ export function SiteFrame({ children }: SiteFrameProps) {
     return <>{children}</>;
   }
 
+  const se30PrevHref = currentUrl
+    ? `https://se30webring.com?from=${encodeURIComponent(currentUrl)}&dir=prev`
+    : "https://se30webring.com";
+  const se30NextHref = currentUrl
+    ? `https://se30webring.com?from=${encodeURIComponent(currentUrl)}&dir=next`
+    : "https://se30webring.com";
+  const sePrevHref = "https://ariobarin.com/";
+  const seNextHref = "https://tanmayshah.xyz";
+  const activeWebringConfig = activeWebring === "se"
+    ? {
+      key: "se",
+      prevHref: sePrevHref,
+      homeHref: "https://se-webring.xyz",
+      nextHref: seNextHref,
+      label: "SE Webring",
+      iconSrc: "https://raw.githubusercontent.com/simcard0000/se-webring/main/assets/logo/logo_bg_w.png",
+      iconAlt: "SE Webring icon",
+    }
+    : {
+      key: "se30",
+      prevHref: se30PrevHref,
+      homeHref: "https://se30webring.com",
+      nextHref: se30NextHref,
+      label: "SE ’30 Webring",
+      iconSrc: "https://se30webring.com/assets/icon-yellow.svg",
+      iconAlt: "SE '30 Webring icon",
+    };
+
+  const cycleWebring = (direction: "prev" | "next") => {
+    setActiveWebring((value) => {
+      if (direction === "prev") {
+        return value === "se" ? "se30" : "se";
+      }
+      return value === "se" ? "se30" : "se";
+    });
+  };
+
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-10 sm:py-12">
       <header>
@@ -288,38 +363,114 @@ export function SiteFrame({ children }: SiteFrameProps) {
             <p className="mt-1.5 text-xs text-gray-500">Software Engineering student. Backend systems, practical ML, product delivery.</p>
           </div>
 
-          <nav className="footer-links">
-            <ul className="m-0 p-0">
-              <li>
-                <a href="https://github.com/carols12352" target="_blank" rel="noreferrer" className="ui-link ui-underline">
-                  GitHub
+          <div
+            className="footer-webring-rail"
+            onTouchStart={(event) => {
+              webringTouchStartXRef.current = event.touches[0]?.clientX ?? null;
+            }}
+            onTouchEnd={(event) => {
+              const startX = webringTouchStartXRef.current;
+              const endX = event.changedTouches[0]?.clientX ?? null;
+              webringTouchStartXRef.current = null;
+              if (startX === null || endX === null) {
+                return;
+              }
+              const deltaX = endX - startX;
+              if (Math.abs(deltaX) < 36) {
+                return;
+              }
+              cycleWebring(deltaX > 0 ? "prev" : "next");
+            }}
+          >
+            <div className={`footer-webring-widget footer-webring-widget-${activeWebringConfig.key} text-xs`}>
+              <div className="footer-webring-widget-nav">
+                <a
+                  href={activeWebringConfig.prevHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Previous site in ${activeWebringConfig.label}`}
+                  className="footer-webring-widget-arrow"
+                >
+                  ←
                 </a>
-              </li>
-              <li>
-                <a href="https://www.linkedin.com/in/sicheng-ouyang/" target="_blank" rel="noreferrer" className="ui-link ui-underline">
-                  LinkedIn
+                <a
+                  href={activeWebringConfig.homeHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={activeWebringConfig.label}
+                  className="footer-webring-widget-home"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={activeWebringConfig.iconSrc}
+                    alt={activeWebringConfig.iconAlt}
+                    className="footer-webring-widget-icon"
+                  />
                 </a>
-              </li>
-              <li>
-                <a href="mailto:sicheng.ouyang@uwaterloo.ca" className="ui-link ui-underline">Contact</a>
-              </li>
-              <li>
-                <a href="https://www.buymeacoffee.com/ouyang12352" target="_blank" rel="noreferrer" className="ui-link ui-underline">
-                  Buy Me a Coffee
+                <a
+                  href={activeWebringConfig.nextHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Next site in ${activeWebringConfig.label}`}
+                  className="footer-webring-widget-arrow"
+                >
+                  →
                 </a>
-              </li>
-              <li>
-                <a href="/rss.xml" target="_blank" rel="noreferrer" className="ui-link ui-underline">
-                  rss.xml
-                </a>
-              </li>
-              <li>
-                <a href="/sitemap.xml" target="_blank" rel="noreferrer" className="ui-link ui-underline">
-                  sitemap.xml
-                </a>
-              </li>
-            </ul>
-          </nav>
+              </div>
+              <div className="footer-webring-widget-actions">
+                <span className="footer-webring-dotset" aria-label="Webring options">
+                  <button
+                    type="button"
+                    aria-label="Switch to SE Webring"
+                    className={`footer-webring-dot${activeWebring === "se" ? " footer-webring-dot-active" : ""}`}
+                    onClick={() => setActiveWebring("se")}
+                  />
+                  <button
+                    type="button"
+                    aria-label="Switch to SE '30 Webring"
+                    className={`footer-webring-dot${activeWebring === "se30" ? " footer-webring-dot-active" : ""}`}
+                    onClick={() => setActiveWebring("se30")}
+                  />
+                </span>
+              </div>
+              <p className="footer-webring-widget-label">{activeWebringConfig.label}</p>
+            </div>
+          </div>
+
+          <div className="footer-side">
+            <nav className="footer-links">
+              <ul className="m-0 p-0">
+                <li>
+                  <a href="https://github.com/carols12352" target="_blank" rel="noreferrer" className="ui-link ui-underline">
+                    GitHub
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/in/sicheng-ouyang/" target="_blank" rel="noreferrer" className="ui-link ui-underline">
+                    LinkedIn
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:sicheng.ouyang@uwaterloo.ca" className="ui-link ui-underline">Contact</a>
+                </li>
+                <li>
+                  <a href="https://www.buymeacoffee.com/ouyang12352" target="_blank" rel="noreferrer" className="ui-link ui-underline">
+                    Buy Me a Coffee
+                  </a>
+                </li>
+                <li>
+                  <a href="/rss.xml" target="_blank" rel="noreferrer" className="ui-link ui-underline">
+                    rss.xml
+                  </a>
+                </li>
+                <li>
+                  <a href="/sitemap.xml" target="_blank" rel="noreferrer" className="ui-link ui-underline">
+                    sitemap.xml
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
 
         <div className="footer-meta mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-xs">
@@ -328,10 +479,6 @@ export function SiteFrame({ children }: SiteFrameProps) {
           <Link href="/terms" className="ui-link ui-underline">Terms of Service</Link>
           <span className="text-gray-400">·</span>
           <Link href="/disclaimer" className="ui-link ui-underline">Disclaimer</Link>
-          <span className="text-gray-400">·</span>
-          <a href="https://se-webring.xyz" target="_blank" rel="noreferrer" className="ui-link ui-underline">
-            Part of the SE Webring
-          </a>
           <span className="text-gray-400">·</span>
           <button
             type="button"
