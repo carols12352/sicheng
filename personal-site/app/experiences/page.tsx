@@ -29,7 +29,7 @@ const experienceEntries: ExperienceEntry[] = [
   {
     anchor: "mui-scientific",
     period: "2026.04 - Present",
-    role: "Software Engineer Intern",
+    role: "Software Engineer",
     organization: "Mui Scientific",
     summary:
       "Building internal inventory tooling, refining standard operating procedures, and reshaping the public website for a growing medical device company.",
@@ -54,7 +54,7 @@ const experienceEntries: ExperienceEntry[] = [
   {
     anchor: "tencent-music",
     period: "2024.06 - 2024.08",
-    role: "Machine Learning Intern",
+    role: "Machine Learning Engineer",
     organization: "Tencent Music Entertainment",
     summary:
       "Evaluated speech synthesis models through repeated experiments and helped improve vocal consistency for generated audio.",
@@ -105,7 +105,7 @@ const experienceEntries: ExperienceEntry[] = [
   {
     anchor: "mobile-maps-and-data",
     period: "2023.06-2023.08",
-    role: "Software Engineer Intern",
+    role: "Software Engineer",
     organization: "Map Uncharted",
     summary:
       "Built a React Native map app with location visualization while also running handwriting recognition data experiments.",
@@ -130,7 +130,7 @@ const experienceEntries: ExperienceEntry[] = [
   {
     anchor: "Wuhan-University-of-Technology",
     period: "2023.06-2023.08",
-    role: "Software Engineer Intern",
+    role: "Software Engineer",
     organization: "Wuhan University of Technology",
     summary:
       "Deployed a local DeepSeek setup that was used by 20 researchers, focusing on practical access to local AI tooling.",
