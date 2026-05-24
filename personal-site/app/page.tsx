@@ -73,30 +73,36 @@ const selectedWork = [
 
 const growthTimeline = [
   {
-    phase: "2023",
+    phase: "2023.08",
     period: "Mobile + Data Foundations",
     detail: "Built a React Native maps app with storage/render optimizations and ran handwriting recognition experiments up to 96% accuracy.",
   },
   {
-    phase: "2024",
+    phase: "2024.06",
     period: "ML Internship (Tencent Music)",
     detail: "Evaluated 10 speech synthesis models with 20+ experiments and delivered a 20% gain in vocal consistency.",
   },
   {
-    phase: "2023-2025",
+    phase: "2023.08-2025.06",
     period: "Co-Founder Product Build",
     detail: "Built and operated an A-Level study platform (WordPress + MySQL + Tencent Cloud) with about 1,000 daily active users.",
   },
   {
-    phase: "2025",
+    phase: "2025.06",
     period: "Graduation",
     detail: "I graduated from High School! On to university and new adventures!",
   },
   {
-    phase: "Now",
+    phase: "2025.09-present",
     period: "Software Engineering @ UWaterloo",
-    detail: "Deepening systems, maths and algorithm foundations while continuing full-stack projects delivery and exploring other applications",
+    detail: "Deepening systems, maths and algorithm foundations while continuing to buildfull-stack projects and exploring other applications",
   },
+  {
+    phase: "2026.04-present",
+    period: "Software Engineer @ Mui Scientific",
+    detail: "Building new invetory system and refining standard operation procedures for a growing medical device company, while reshaping the company's website", 
+  }
+
 ];
 
 export default function Home() {

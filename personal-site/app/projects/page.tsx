@@ -27,6 +27,29 @@ export const metadata: Metadata = {
 
 const projectEntries: ProjectEntry[] = [
   {
+    anchor: "pitch-deck",
+    period: "2026.02-2026.04",
+    name: "Management Panel Pitch Deck",
+    summary:
+      "A pitch deck for a external company's internal panel, featuring company tracking, data insights, automatic research by websites and a pitch deck generator.",
+    stack: [
+      { name: "Next.js", href: "https://nextjs.org/" },
+      { name: "React", href: "https://react.dev/" },
+      { name: "TypeScript", href: "https://www.typescriptlang.org/" },
+      { name: "Tailwind CSS", href: "https://tailwindcss.com/" },
+    ],
+    highlights: [
+      "Designed a parsing and data processing pipeline featuring BOM parsing directly from PDF, excel files with , automaticly saves to database with company traceability.",
+      "Implemented a automated search pipeline that can search for company's information such as startup stage, possible pain points and leader contacts by scraping the website and searching the internet, achieving 90+% accuracy in testing.",
+      "Generated a pitch message generator based on company's pain points and auto sends emails, built a pipeline to prevent from emails entering spam box by optimizing message structure and mail box switching.",
+    ],
+    challenges:
+      "Build the system with high accuracy and reliability in a short time frame, and ensuring the parsing and data processing was robust to varioys files and formats.",
+    nextSteps: [
+      "I was sadly ditched by the company due to internal politics, but if I were to continue this project, I would focus on improving the accuracy of the parsing and data processing pipeline, and adding more features such as a dashboard for tracking the performance of the pitch deck generator and email campaign.",
+    ],
+  },
+  {
     anchor: "personal-site",
     period: "2026.01 - 2026.02",
     name: "Personal Site (This Website)",

@@ -12,6 +12,7 @@ import { ThemeToggle } from "@/components/navigation/theme-toggle";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/resume", label: "Resume" },
+  { href: "/experiences", label: "Experiences" },
   { href: "/projects", label: "Projects" },
   { href: "/writing", label: "Writing" },
   { href: "/about", label: "About" },
@@ -29,8 +30,9 @@ export function SiteFrame({ children }: SiteFrameProps) {
   const isTerminalPage = pathname === "/terminal";
   const isWritingListPage = pathname === "/writing";
   const isProjectsPage = pathname === "/projects";
+  const isExperiencesPage = pathname === "/experiences";
   const isWritingArticlePage = /^\/writing\/[^/]+$/.test(pathname);
-  const canOpenSearch = isWritingArticlePage || isWritingListPage || isProjectsPage;
+  const canOpenSearch = isWritingArticlePage || isWritingListPage || isProjectsPage || isExperiencesPage;
   const [showShortcutHelp, setShowShortcutHelp] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -527,7 +529,7 @@ export function SiteFrame({ children }: SiteFrameProps) {
             <ul className="mt-3 space-y-2 text-sm text-gray-600">
               <li><span className="font-mono">j</span> scroll down</li>
               <li><span className="font-mono">k</span> scroll up</li>
-              <li><span className="font-mono">/</span> search in Writing/Projects/Article</li>
+              <li><span className="font-mono">/</span> search in Writing/Projects/Experiences/Article</li>
               <li><span className="font-mono">?</span> toggle this panel</li>
               <li><span className="font-mono">Esc</span> close panel</li>
             </ul>
@@ -558,8 +560,8 @@ export function SiteFrame({ children }: SiteFrameProps) {
             onSubmit={(event) => {
               event.preventDefault();
               const query = searchQuery.trim();
-              if (isWritingListPage || isProjectsPage) {
-                const nextPath = isProjectsPage ? "/projects" : "/writing";
+              if (isWritingListPage || isProjectsPage || isExperiencesPage) {
+                const nextPath = isProjectsPage ? "/projects" : isExperiencesPage ? "/experiences" : "/writing";
                 router.push(query ? `${nextPath}?q=${encodeURIComponent(query)}` : nextPath);
                 setShowSearch(false);
                 return;
