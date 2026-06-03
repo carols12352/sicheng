@@ -173,7 +173,7 @@ export default function Home() {
         </div>
       </RevealSection>
 
-      <RevealSection className="home-band home-section px-6 py-[4.5rem] sm:px-10 sm:py-[5.5rem] lg:px-14">
+      <section className="home-band home-section px-6 py-[4.5rem] sm:px-10 sm:py-[5.5rem] lg:px-14">
         <div className="capability-layout mx-auto w-full max-w-6xl">
           <div>
             <h2 className="section-title">What I Do</h2>
@@ -183,7 +183,7 @@ export default function Home() {
           </div>
           <RevealStagger className="capability-rail">
             {focusItems.map((item, index) => (
-              <RevealItem key={item.title} className="capability-row ui-item">
+              <RevealItem key={item.title} className="capability-row ui-item" variant="capability">
                 <div className="flex gap-4">
                   <p className="capability-index">0{index + 1}</p>
                   <div>
@@ -199,7 +199,7 @@ export default function Home() {
             ))}
           </RevealStagger>
         </div>
-      </RevealSection>
+      </section>
 
       <RevealSection className="home-band home-section px-6 pb-[4.5rem] pt-[3.5rem] sm:px-10 sm:pb-[5.5rem] sm:pt-[4rem] lg:px-14">
         <div className="mx-auto w-full max-w-6xl">

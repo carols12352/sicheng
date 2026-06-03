@@ -838,9 +838,11 @@ p {
 }
 
 .capability-row {
+  position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.9rem;
+  overflow: hidden;
   border-top: 1px solid var(--line);
   padding: 0.9rem 0 1rem;
 }

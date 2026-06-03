@@ -94,4 +94,18 @@ export const variants = {
       },
     },
   },
+  capabilityItem: {
+    hidden: {
+      clipPath: "inset(0 0 100% 0)",
+      y: 8,
+    },
+    show: {
+      clipPath: "inset(0 0 0% 0)",
+      y: 0,
+      transition: {
+        duration: 0.68,
+        ease: MOTION.easeOut,
+      },
+    },
+  },
 };

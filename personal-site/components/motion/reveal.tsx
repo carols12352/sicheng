@@ -10,6 +10,10 @@ type Props = {
   children: React.ReactNode;
 };
 
+type RevealItemProps = Props & {
+  variant?: "default" | "capability";
+};
+
 type RevealSectionProps = Props & {
   tone?: "hero" | "section";
 };
@@ -97,15 +101,21 @@ export function RevealStagger({ className, children }: Props) {
   );
 }
 
-export function RevealItem({ className, children }: Props) {
+export function RevealItem({
+  className,
+  children,
+  variant = "default",
+}: RevealItemProps) {
   const reduceMotion = useAppReducedMotion();
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
   }
 
+  const itemVariant = variant === "capability" ? variants.capabilityItem : variants.item;
+
   return (
-    <motion.div className={className} variants={variants.item}>
+    <motion.div className={className} variants={itemVariant}>
       {children}
     </motion.div>
   );
