@@ -1,0 +1,29 @@
+---
+title: wattogo dev post
+seoTitle: wattogo dev post
+date: 2026-04-24
+summary: My development journey building wattogo, a web app that helps you find the nearest study spot with the help of LLMs, with all the technical trade-offs and thought processes.
+tags:
+  - Web Development
+  - OpenMaps
+  - Leaflet
+  - Personal Project
+---
+## My start
+To be clear, I was not one of the dudes who want to study outside, I'd rather prefer studying in my cozy bedroom with my desktop and laptop avaliable.
+
+But I have my friend Neng who is always struggling to find a place to study outside, and honestly I think this is a great opportunity to strethen my skills in webdev and solve some problems, and that is how wattogo is born.
+
+In this article, I'm going to track all of my thoughts when building the project and maybe revise along the way.
+
+## First steps
+For a project like this, the hardest part was always to choose my tech stack, as I am quite familiar with typescript, I'll just stick with it.
+
+For the map, I choose [OpenStreeetMap's](www.openstreetmap.org) [CARTO](https://carto.com/) version, as it is free to use and good looking.
+
+Then I used supabase as it is well known for its free tier, I think this is sufficient for now, but the original OSM pop up icon looks kinda plain, so I chose Google Material Icons for better look.
+
+## Marker realization
+This is where I would say affects the overall look the most, if the marker is too crowded it will degrade the map appearance greatly, so I choose the marker clustering method<Sidenote label="clustering method">A method that clusters pop ups to number of pop ups in the area and show specific one's when zoomed</Sidenote>
+
+

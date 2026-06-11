@@ -46,7 +46,8 @@ const projectEntries: ProjectEntry[] = [
     challenges:
       "Build the system with high accuracy and reliability in a short time frame, and ensuring the parsing and data processing was robust to varioys files and formats.",
     nextSteps: [
-      "I was sadly ditched by the company due to internal politics, but if I were to continue this project, I would focus on improving the accuracy of the parsing and data processing pipeline, and adding more features such as a dashboard for tracking the performance of the pitch deck generator and email campaign.",
+      "Status: Paused after the company stopped the collaboration for internal reasons.",
+      "If I were able to continue, I would improve the parsing and data-processing accuracy, then add a dashboard for tracking pitch generation performance and email campaign results.",
     ],
   },
   {
@@ -71,8 +72,8 @@ const projectEntries: ProjectEntry[] = [
     challenges:
       "Balancing playful interactions with production-quality performance and crawlability required careful routing and metadata boundaries.",
     nextSteps: [
-      "Add lightweight analytics dashboards for page and content engagement trends.",
-      "Introduce a small CMS or content pipeline to simplify long-term writing and project updates.",
+      "Status: Finished for the current portfolio version, with only maintenance updates planned.",
+      "If I were able to continue expanding it, I would add lightweight analytics for content engagement and a small content pipeline for writing and project updates.",
     ],
   },
   {
@@ -98,8 +99,8 @@ const projectEntries: ProjectEntry[] = [
     challenges:
       "Realtime delivery quality depends on keeping API consistency, sync semantics, and auth boundaries aligned under reconnect-heavy conditions.",
     nextSteps: [
-      "Introduce conversation-level delivery acknowledgements to improve replay precision.",
-      "Add load-testing scenarios for large group conversations and backpressure behavior.",
+      "Status: Paused after the demo reached a stable real-time messaging baseline.",
+      "If I were able to continue, I would add conversation-level delivery acknowledgements and load-test large group conversations with backpressure scenarios.",
     ],
     mermaidTitle: "Architecture Flow",
     mermaidChart: `
@@ -135,8 +136,8 @@ flowchart LR
     challenges:
       "Maintaining behavior parity between web and desktop clients requires strict API contracts and normalization of input parsing outputs.",
     nextSteps: [
-      "Add optimistic updates with conflict resolution for concurrent edits.",
-      "Improve parser confidence scoring and fallback prompts when intent is ambiguous.",
+      "Status: Paused after the core web, desktop, CRUD, and natural-language input workflows were completed.",
+      "If I were able to continue, I would add optimistic updates with conflict resolution and improve parser confidence scoring for ambiguous input.",
     ],
     mermaidTitle: "Web/Desktop System Flow",
     mermaidChart: `
@@ -168,8 +169,8 @@ flowchart TD
     challenges:
       "CLI usability depends on concise output formatting and predictable command behavior across additive and query operations.",
     nextSteps: [
-      "Add category-level analytics and monthly summary reports.",
-      "Support CSV import/export for easier migration and external analysis.",
+      "Status: Finished as a lightweight personal CLI tool.",
+      "If I were able to continue, I would add category-level analytics, monthly summary reports, and CSV import/export for external analysis.",
     ],
     terminalTitle: "CLI Interaction",
     terminalLines: [
@@ -205,8 +206,8 @@ flowchart TD
     challenges:
       "The hardest part was keeping training-state updates consistent between backend jobs and frontend visual state during frequent parameter changes.",
     nextSteps: [
-      "Add experiment versioning and comparison between multiple runs.",
-      "Introduce resumable training jobs with checkpoint-aware UI state.",
+      "Status: Paused after the team completed the local training playground and visualization loop.",
+      "If I were able to continue, I would add experiment versioning, run comparison, and resumable training jobs with checkpoint-aware UI state.",
     ],
     mermaidTitle: "Experiment Loop",
     mermaidChart: `
@@ -240,8 +241,8 @@ flowchart LR
     challenges:
       "LLM-based feedback quality depends on prompt structure, output schema consistency, and robust handling of incomplete resume inputs.",
     nextSteps: [
-      "Add scoring rubrics by role type (SWE, data, ML) for more context-aware feedback.",
-      "Store revision history to compare resume quality improvements over time.",
+      "Status: Finished as a focused resume feedback prototype.",
+      "If I were able to continue, I would add role-specific scoring rubrics and revision history for comparing resume improvements over time.",
     ],
     mermaidTitle: "Feedback Generation Sequence",
     mermaidChart: `
@@ -278,8 +279,8 @@ sequenceDiagram
     challenges:
       "Balancing visual polish with ATS readability required careful control of formatting commands and text semantics.",
     nextSteps: [
-      "Add alternate style presets for internship-focused and research-focused versions.",
-      "Provide bilingual content placeholders to simplify English/Chinese resume maintenance.",
+      "Status: Finished as a reusable LaTeX resume template.",
+      "If I were able to continue, I would add internship-focused and research-focused presets plus bilingual placeholders for English/Chinese resume maintenance.",
     ],
   },
   {
@@ -302,8 +303,8 @@ sequenceDiagram
     challenges:
       "Theme work required handling many edge UI states while keeping a coherent visual language across plugins and markdown content patterns.",
     nextSteps: [
-      "Add broader plugin-specific style coverage and maintain compatibility across app updates.",
-      "Ship accessibility-focused variants with stronger contrast presets.",
+      "Status: Paused after publishing the theme and reaching community adoption.",
+      "If I were able to continue, I would broaden plugin-specific style coverage, maintain compatibility across Obsidian updates, and ship stronger contrast variants.",
     ],
   },
 

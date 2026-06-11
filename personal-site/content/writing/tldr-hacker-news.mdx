@@ -1,0 +1,32 @@
+---
+title: TL;DR Hacker News
+seoTitle: TL;DR Hacker News:A new way to consume tech news
+date: 2026-03-17
+summary: My development journey building a TL;DR version of Hacker News with LLMs, with all the technical trade-offs and thought processes.
+tags:
+  - Web Development
+  - LLM
+  - Summarization
+  - User Experience
+  - Personal Project
+---
+
+## The Initiative
+When I first got my hands on to hacker news, I was hooked to the dicussions and the news, its just so clean and straightforward, though the UI was not optimal, but it does introduce the most cutting edge development of today's tech world.
+
+However, as I started to read more and more, I found myself spending too much time on the platform, more than I should, and, to be fair, most of them are not even tech news, maybe some personal stories or just some random discussions.
+
+It was fun to watch, of course, but it was surely not good for productivity and information consumption. That is when the idea of making a TL;DR version of hacker news came to my mind, so I implemented it, and this article is about my dev blog when building it, and some consideration and thought process whenever I make a decision.
+
+## The Tech Stack
+I know it is common and people will just say its just another GPT wrapper, but I wanted to clearify that I am just building it so I can slowly build my perception of a good system, as well as getting some practice for my typescript stack as I am not really that familiar with it.
+The tech stack is really simple, its just next.js + Tailwind CSS + TypeScript, and vercel for deployment and upstash for redis servers.
+
+## Redis or Not
+When I build this project, I am thinking about costs as well, this site might not have many visitors, but GPT generation its self is very money consuming, I cannot just generate a new summary whenever a user hops on to the website, it costs too much and will have inconsistancy in my generation, so redis seems to be the optimal way.
+### What is Redis
+It has came to me way earlier than I started to use it, Redis is short for **Remote Dictionary Server**, it is just what it is called, it stores data on RAM rather than SSD, which provides blazing fast read and write speed.
+
+And yes, it is actually a dictionary, which means it stores the data you need in keys, as we learnt in CS, a dictionary look up speed is O(1)<Sidenote label="O(1) time"> An algorithm or operation whose execution time usage is constant and does not increase with the size of the input data</Sidenote>, so it is clear that it is fast for sorting our data for this project.
+
+##
