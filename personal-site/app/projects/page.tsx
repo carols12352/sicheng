@@ -375,8 +375,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
           Projects
         </h1>
         <p className="mt-4 max-w-2xl">
-          Project work aligned with my current resume, with architecture notes
-          and implementation details from public repositories.
+          Project work with architecture notes and implementation details.
         </p>
         {query ? (
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
