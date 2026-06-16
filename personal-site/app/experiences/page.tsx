@@ -223,7 +223,7 @@ export default async function ExperiencesPage({ searchParams }: ExperiencesPageP
           Experiences
         </h1>
         <p className="mt-4 max-w-2xl">
-          Work and product experience organized as a timeline with implementation notes,
+          Work and product experience from my current resume, organized as a timeline with implementation notes,
           measurable outcomes, and the stack behind each role.
         </p>
         {query ? (
