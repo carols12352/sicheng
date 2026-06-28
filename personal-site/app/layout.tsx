@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   },
   bookmarks: [SITE_URL, `${SITE_URL}/projects`, `${SITE_URL}/writing`],
   archives: [`${SITE_URL}/resume`],
-  assets: [SITE_OG_IMAGE, `${SITE_URL}/resume_26.2.15.pdf`],
+  assets: [SITE_OG_IMAGE, `${SITE_URL}/resume_26.6.28_general.pdf`],
   formatDetection: {
     email: false,
     address: false,
