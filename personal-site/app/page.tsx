@@ -52,22 +52,35 @@ const focusItems = [
 
 const selectedWork = [
   {
-    title: "Chat WebSocket Demo",
+    title: "Management Panel Pitch Deck",
     description:
-      "FastAPI + WebSocket + PostgreSQL + Next.js with JWT auth, email verification, and incremental message sync.",
-    href: "/projects#chat-websocket-demo",
+      "Next.js management panel concept with company tracking, data insights, automated research, and pitch message generation.",
+    href: "/projects#pitch-deck",
   },
   {
-    title: "Todo List Web & Desktop App",
+    title: "Personal Site",
     description:
-      "React + Flask + MySQL task system with cross-platform tray app packaging for macOS and Windows, with a finetuned BERT model for natural language processing.",
-    href: "/projects#todo-list-web-desktop-app",
+      "Next.js App Router portfolio with technical writing, SEO metadata, dynamic sitemap generation, and interactive easter eggs.",
+    href: "/projects#personal-site",
+  },
+];
+
+const pastExperiences = [
+  {
+    role: "Software Engineer",
+    organization: "Mui Scientific",
+    period: "2026.04 - Present",
+    description:
+      "Building internal inventory tooling, refining standard operating procedures, and reshaping the public website for a growing medical device company.",
+    href: "/experiences#mui-scientific",
   },
   {
-    title: "Resume Analyzer",
+    role: "Machine Learning Engineer",
+    organization: "Tencent Music Entertainment",
+    period: "2024.06 - 2024.08",
     description:
-      "Flask + React tool integrated with OpenAI API for structured resume evaluation and actionable feedback.",
-    href: "/projects#resume-analyzer",
+      "Evaluated speech synthesis models through repeated experiments and helped improve vocal consistency for generated audio.",
+    href: "/experiences#tencent-music",
   },
 ];
 
@@ -201,7 +214,7 @@ export default function Home() {
         </div>
       </section>
 
-      <RevealSection className="home-band home-section px-6 pb-[4.5rem] pt-[3.5rem] sm:px-10 sm:pb-[5.5rem] sm:pt-[4rem] lg:px-14">
+      <RevealSection className="home-band home-section px-6 pb-8 pt-[3.5rem] sm:px-10 sm:pb-10 sm:pt-[4rem] lg:px-14">
         <div className="mx-auto w-full max-w-6xl">
           <div className="flex items-end justify-between gap-4">
             <h2 className="section-title">Selected Work</h2>
@@ -211,14 +224,41 @@ export default function Home() {
           </div>
           <RevealStagger className="work-layout mt-6">
             {selectedWork.map((item, index) => (
-              <RevealItem key={item.title} className={index === 0 ? "work-feature" : "work-side"}>
+              <RevealItem key={item.title} className="work-side">
                 <HoverCard>
                   <Link
                     href={item.href}
-                    className={`work-link ui-item block ${index === 0 ? "work-link-feature" : ""}`}
+                    className="work-link ui-item block"
                   >
                     <p className="work-meta">Project {index + 1}</p>
                     <h3 className="mt-2 text-base font-semibold text-gray-900">{item.title}</h3>
+                    <p className="mt-4 text-sm leading-6 text-gray-600">
+                      {item.description}
+                    </p>
+                  </Link>
+                </HoverCard>
+              </RevealItem>
+            ))}
+          </RevealStagger>
+        </div>
+      </RevealSection>
+
+      <RevealSection className="home-band home-section home-section-connected px-6 pb-[4.5rem] pt-4 sm:px-10 sm:pb-[5.5rem] sm:pt-5 lg:px-14">
+        <div className="mx-auto w-full max-w-6xl">
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="section-title">Past Experience</h2>
+            <Link href="/experiences" className="ui-link ui-underline text-sm">
+              View all experience
+            </Link>
+          </div>
+          <RevealStagger className="work-layout mt-6">
+            {pastExperiences.map((item) => (
+              <RevealItem key={`${item.organization}-${item.role}`} className="work-side">
+                <HoverCard>
+                  <Link href={item.href} className="work-link ui-item block">
+                    <p className="work-meta">{item.period}</p>
+                    <h3 className="mt-2 text-base font-semibold text-gray-900">{item.role}</h3>
+                    <p className="mt-1 text-sm text-gray-500">{item.organization}</p>
                     <p className="mt-4 text-sm leading-6 text-gray-600">
                       {item.description}
                     </p>
