@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { SITE_NAME } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Terms of Service | ${SITE_NAME}`,
+export const metadata: Metadata = buildPageMetadata({
+  title: "Terms of Service",
   description: "Terms of Service for Sicheng Ouyang's website.",
-  alternates: {
-    canonical: "/terms",
-  },
-};
+  path: "/terms",
+});
 
 export default function TermsOfServicePage() {
   return (

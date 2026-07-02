@@ -77,7 +77,10 @@ export function SiteFrame({ children }: SiteFrameProps) {
   }, []);
 
   useEffect(() => {
-    setCurrentUrl(window.location.href);
+    const frame = window.requestAnimationFrame(() => {
+      setCurrentUrl(window.location.href);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [pathname]);
 
   useEffect(() => {

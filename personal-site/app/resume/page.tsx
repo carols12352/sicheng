@@ -1,28 +1,13 @@
 import type { Metadata } from "next";
 import { ResumeImageFallback } from "@/components/resume/resume-image-fallback";
-import { buildSeoTitle, SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: buildSeoTitle("Resume and Professional Experience"),
+export const metadata: Metadata = buildPageMetadata({
+  title: "Resume and Professional Experience",
   description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
-  alternates: {
-    canonical: "/resume",
-  },
-  openGraph: {
-    type: "profile",
-    url: `${SITE_URL}/resume`,
-    title: buildSeoTitle("Resume and Professional Experience"),
-    siteName: SITE_NAME,
-    description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
-    images: [SITE_OG_IMAGE],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: buildSeoTitle("Resume and Professional Experience"),
-    description: "Resume of Sicheng Ouyang, Software Engineering student at the University of Waterloo.",
-    images: [SITE_OG_IMAGE],
-  },
-};
+  path: "/resume",
+  openGraphType: "profile",
+});
 
 const RESUME_PATH = "/resume_26.6.28_general.pdf";
 

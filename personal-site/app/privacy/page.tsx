@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Privacy Policy | ${SITE_NAME}`,
+export const metadata: Metadata = buildPageMetadata({
+  title: "Privacy Policy",
   description: "Privacy Policy for Sicheng Ouyang's website.",
-  alternates: {
-    canonical: "/privacy",
-  },
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPolicyPage() {
   return (

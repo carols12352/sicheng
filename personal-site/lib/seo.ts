@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") ??
   "https://sicheng.dev";
@@ -56,4 +58,43 @@ export function buildSeoTitle(rawTitle: string, options: BuildSeoTitleOptions = 
   }
 
   return result;
+}
+
+type BuildPageMetadataOptions = {
+  title: string;
+  description: string;
+  path: string;
+  openGraphType?: "website" | "profile";
+};
+
+export function buildPageMetadata({
+  title,
+  description,
+  path,
+  openGraphType = "website",
+}: BuildPageMetadataOptions): Metadata {
+  const seoTitle = buildSeoTitle(title);
+  const canonicalPath = path || "/";
+
+  return {
+    title: seoTitle,
+    description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      type: openGraphType,
+      url: canonicalPath === "/" ? SITE_URL : `${SITE_URL}${canonicalPath}`,
+      title: seoTitle,
+      siteName: SITE_NAME,
+      description,
+      images: [SITE_OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seoTitle,
+      description,
+      images: [SITE_OG_IMAGE],
+    },
+  };
 }

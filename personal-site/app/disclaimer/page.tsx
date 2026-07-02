@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { SITE_NAME } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Disclaimer | ${SITE_NAME}`,
+export const metadata: Metadata = buildPageMetadata({
+  title: "Disclaimer",
   description: "General disclaimer for Sicheng Ouyang's website.",
-  alternates: {
-    canonical: "/disclaimer",
-  },
-};
+  path: "/disclaimer",
+});
 
 export default function DisclaimerPage() {
   return (

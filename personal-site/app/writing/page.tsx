@@ -1,39 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
+import { resolveSearchQuery, type SearchPageParams } from "@/lib/search";
 import { getAllPostsWithContent } from "@/lib/writing";
 
 type WritingPageProps = {
-  searchParams: Promise<{ q?: string | string[] }>;
+  searchParams: SearchPageParams;
 };
 
-export const metadata: Metadata = {
-  title: `Technical Writing | ${SITE_NAME}`,
+export const metadata: Metadata = buildPageMetadata({
+  title: "Technical Writing",
   description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
-  alternates: {
-    canonical: "/writing",
-  },
-  openGraph: {
-    type: "website",
-    url: `${SITE_URL}/writing`,
-    title: `Technical Writing | ${SITE_NAME}`,
-    siteName: SITE_NAME,
-    description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
-    images: [SITE_OG_IMAGE],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `Technical Writing | ${SITE_NAME}`,
-    description: "Technical notes by Sicheng Ouyang on backend systems, practical ML, developer tooling, and project delivery.",
-    images: [SITE_OG_IMAGE],
-  },
-};
+  path: "/writing",
+});
 
 export default async function WritingPage({ searchParams }: WritingPageProps) {
-  const resolvedSearchParams = await searchParams;
-  const rawQuery = resolvedSearchParams.q;
-  const queryValue = Array.isArray(rawQuery) ? rawQuery[0] : rawQuery;
-  const query = (queryValue ?? "").trim();
+  const query = await resolveSearchQuery(searchParams);
   const posts = await getAllPostsWithContent();
   const normalizedQuery = query.toLowerCase();
   const normalizeForSearch = (text: string) =>

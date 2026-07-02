@@ -1,28 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { SITE_NAME, SITE_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `About Sicheng Ouyang | ${SITE_NAME}`,
+export const metadata: Metadata = buildPageMetadata({
+  title: "About Sicheng Ouyang",
   description: "About Sicheng Ouyang: software engineering background, current technical focus, experience highlights, and working style.",
-  alternates: {
-    canonical: "/about",
-  },
-  openGraph: {
-    type: "website",
-    url: `${SITE_URL}/about`,
-    title: `About Sicheng Ouyang | ${SITE_NAME}`,
-    siteName: SITE_NAME,
-    description: "About Sicheng Ouyang: software engineering background, current technical focus, experience highlights, and working style.",
-    images: [SITE_OG_IMAGE],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `About Sicheng Ouyang | ${SITE_NAME}`,
-    description: "About Sicheng Ouyang: software engineering background, current technical focus, experience highlights, and working style.",
-    images: [SITE_OG_IMAGE],
-  },
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (
