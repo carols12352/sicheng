@@ -15,6 +15,7 @@ Personal portfolio site built with Next.js (App Router), focused on clean UX, pr
 
 - `/` Home
 - `/projects`
+- `/experiences`
 - `/writing`
 - `/writing/[slug]`
 - `/resume`
@@ -25,19 +26,21 @@ Personal portfolio site built with Next.js (App Router), focused on clean UX, pr
 ## Features
 
 - Project cards with minimal `repo` links and optional `demo` links
-- Home `Selected Work` cards deep-link to `/projects#anchor`
+- Experience cards with timeline details, stack links, highlights, and outcomes
+- Home `Selected Work` and `Past Experience` cards deep-link to `/projects#anchor` and `/experiences#anchor`
 - Writing article breadcrumb navigation
 - Desktop article TOC (`On This Page`) with active-section highlight
 - Hidden Vim-style keyboard UX:
   - `j` / `k` for smooth scroll
   - `?` for shortcuts panel
-  - `/` for search (enabled on `/writing`, `/projects`, `/writing/[slug]`)
+  - `/` for search (enabled on `/writing`, `/projects`, `/experiences`, `/writing/[slug]`)
 - Responsive navigation:
   - desktop: inline nav
   - mobile: minimal hamburger menu
 - Search behavior by page:
   - `/writing`: filters posts and shows title + content snippet matches
   - `/projects`: filters project cards and shows matched snippets
+  - `/experiences`: filters experience cards and shows matched snippets
   - `/writing/[slug]`: in-article text search with live highlight + match count
 - Motion controls:
   - global `Motion: Full / Reduced / None` toggle in header
@@ -73,6 +76,7 @@ Personal portfolio site built with Next.js (App Router), focused on clean UX, pr
 Run locally:
 
 ```bash
+npm install
 npm run dev
 ```
 
@@ -85,20 +89,33 @@ npm run dev
 npm run lint
 npm run build
 npm run start
+npm run indexnow
 ```
+
+`dev` and `build` both use webpack (`next dev --webpack`, `next build --webpack`) to avoid current Turbopack instability in this project.
 
 ## Writing Authoring
 
 - Writing docs: `content/writing/README.md`
 - Core MDX component registry: `components/mdx/mdx-components.tsx`
 
+## Content Structure
+
+- Project data: `content/projects.ts`
+- Experience data: `content/experiences.ts`
+- Writing posts: `content/writing/*.mdx`
+- Shared search helpers: `lib/search.ts`
+- Shared page metadata helper: `lib/seo.ts`
+
 ## SEO
 
 - Global metadata in `app/layout.tsx`
+- Reusable page metadata builder in `lib/seo.ts`
 - Dynamic article metadata in `app/writing/[slug]/page.tsx`
 - `robots.txt` via `app/robots.ts`
 - `sitemap.xml` via `app/sitemap.ts`
 - IndexNow key files served from `public/*.txt`
+- IndexNow submission script: `npm run indexnow`
 
 ## Terminal Easter Egg
 
@@ -126,3 +143,5 @@ Build SHA is mapped automatically in `next.config.ts`:
 ```ts
 NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA = process.env.VERCEL_GIT_COMMIT_SHA ?? ""
 ```
+
+Note: Node 26 may print a `DEP0205` warning from Tailwind's `jiti` dependency during build. It does not affect the generated output; Node 22/24 LTS is quieter for local development.
