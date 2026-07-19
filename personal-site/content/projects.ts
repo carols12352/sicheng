@@ -2,6 +2,44 @@ import type { ProjectEntry } from "@/components/projects/projects-tree-timeline"
 
 export const projectEntries: ProjectEntry[] = [
   {
+    anchor: "the-cobalt-guide",
+    period: "2026.05 - Present",
+    name: "The Cobalt Guide",
+    repo: "https://github.com/carols12352/thecobaltguide",
+    summary:
+      "A Canada-wide rewards discovery platform with location-aware search, protected community reporting, and automated delivery checks.",
+    stack: [
+      { name: "Next.js", href: "https://nextjs.org/" },
+      { name: "TypeScript", href: "https://www.typescriptlang.org/" },
+      { name: "Supabase", href: "https://supabase.com/" },
+      { name: "PostGIS", href: "https://postgis.net/" },
+      { name: "MapLibre", href: "https://maplibre.org/" },
+      { name: "Redis", href: "https://redis.io/" },
+    ],
+    highlights: [
+      "Built a Canada-wide rewards discovery experience using Supabase PostGIS for geospatial data and MapLibre for interactive maps.",
+      "Secured API endpoints and community reporting workflows with Supabase Auth, row-level security, and Redis-backed rate limiting.",
+      "Implemented GitHub Actions CI/CD covering ESLint, Vitest unit tests, Playwright end-to-end tests, Supabase RLS tests, Vercel deployment, and comment-triggered performance evaluations.",
+    ],
+    challenges:
+      "The core engineering challenge is keeping location-aware discovery fast while enforcing consistent authorization and abuse protection across public and authenticated workflows.",
+    nextSteps: [
+      "Status: Active and currently in development, planning to release it soon.",
+      "Next, I plan to make it go live and gather feedback from early users, then iterate on the discovery and reporting features based on usage.",
+    ],
+    mermaidTitle: "Discovery and Delivery Flow",
+    mermaidChart: `
+flowchart LR
+  U[Next.js Client] --> M[MapLibre]
+  U --> A[Supabase Auth]
+  U --> API[Protected APIs]
+  API --> R[Redis Rate Limiting]
+  API --> DB[(Supabase PostGIS)]
+  CI[GitHub Actions] --> T[Unit + E2E + RLS Tests]
+  T --> V[Vercel Deployment]
+`,
+  },
+  {
     anchor: "pitch-deck",
     period: "2026.02-2026.04",
     name: "Management Panel Pitch Deck",
@@ -27,7 +65,7 @@ export const projectEntries: ProjectEntry[] = [
   },
   {
     anchor: "personal-site",
-    period: "2026.01 - 2026.02",
+    period: "2026.01 - Present",
     name: "Personal Site (This Website)",
     repo: "https://github.com/carols12352/sicheng",
     summary:
@@ -47,7 +85,7 @@ export const projectEntries: ProjectEntry[] = [
     challenges:
       "Balancing playful interactions with production-quality performance and crawlability required careful routing and metadata boundaries.",
     nextSteps: [
-      "Status: Finished for the current portfolio version, with only maintenance updates planned.",
+      "Status: Finished for the current portfolio version, with only maintenance and status updates planned.",
       "If I were able to continue expanding it, I would add lightweight analytics for content engagement and a small content pipeline for writing and project updates.",
     ],
   },

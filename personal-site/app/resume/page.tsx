@@ -9,7 +9,7 @@ export const metadata: Metadata = buildPageMetadata({
   openGraphType: "profile",
 });
 
-const RESUME_PATH = "/resume_26.6.28_general.pdf";
+const RESUME_PATH = "/resume_26.7.19.pdf";
 
 export default function ResumePage() {
   return (

@@ -36,10 +36,10 @@ const focusItems = [
 
 const selectedWork = [
   {
-    title: "Management Panel Pitch Deck",
+    title: "The Cobalt Guide",
     description:
-      "Next.js management panel concept with company tracking, data insights, automated research, and pitch message generation.",
-    href: "/projects#pitch-deck",
+      "Canada-wide rewards discovery platform with geospatial search, protected reporting workflows, and automated CI/CD checks.",
+    href: "/projects#the-cobalt-guide",
   },
   {
     title: "Personal Site",
