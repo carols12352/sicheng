@@ -5,6 +5,7 @@ export const projectEntries: ProjectEntry[] = [
     anchor: "the-cobalt-guide",
     period: "2026.05 - Present",
     name: "The Cobalt Guide",
+    demo: "https://thecobaltguide.vercel.app",
     repo: "https://github.com/carols12352/thecobaltguide",
     summary:
       "A Canada-wide rewards discovery platform with location-aware search, protected community reporting, and automated delivery checks.",
