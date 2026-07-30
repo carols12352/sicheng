@@ -88,7 +88,7 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
           Writing
         </h1>
         <p className="mt-4 max-w-2xl">
-          Notes based on my experiences and reflections about my work, as well as random knowledge I find interesting.
+          Notes on software, machine learning, and lessons from my work.
         </p>
         {query ? (
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">

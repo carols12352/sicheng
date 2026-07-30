@@ -16,7 +16,6 @@ export type ProjectEntry = {
   stack: Array<{ name: string; href: string }>;
   highlights: string[];
   challenges: string;
-  nextSteps: string[];
   mermaidTitle?: string;
   mermaidChart?: string;
   terminalTitle?: string;
@@ -362,16 +361,6 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                     </div>
                   </section>
 
-                  <section className="mt-10">
-                    <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-                      Next Iteration
-                    </p>
-                    <ul className="mt-5 m-0 list-disc pl-5 leading-7 [&>li]:m-0 [&>li+li]:mt-3">
-                      {activeProject.nextSteps.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </section>
                 </div>
               </motion.section>
             </div>

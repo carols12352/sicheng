@@ -22,11 +22,7 @@ export const projectEntries: ProjectEntry[] = [
       "Implemented GitHub Actions CI/CD covering ESLint, Vitest unit tests, Playwright end-to-end tests, Supabase RLS tests, Vercel deployment, and comment-triggered performance evaluations.",
     ],
     challenges:
-      "The core engineering challenge is keeping location-aware discovery fast while enforcing consistent authorization and abuse protection across public and authenticated workflows.",
-    nextSteps: [
-      "Status: Active and currently in development, planning to release it soon.",
-      "Next, I plan to make it go live and gather feedback from early users, then iterate on the discovery and reporting features based on usage.",
-    ],
+      "Keeping location search fast while applying the same authorization and abuse controls to public and signed-in users.",
     mermaidTitle: "Discovery and Delivery Flow",
     mermaidChart: `
 flowchart LR
@@ -44,7 +40,7 @@ flowchart LR
     period: "2026.02-2026.04",
     name: "Management Panel Pitch Deck",
     summary:
-      "A pitch deck for a external company's internal panel, featuring company tracking, data insights, automatic research by websites and a pitch deck generator.",
+      "An internal sales tool for company research, lead tracking, and personalized outreach.",
     stack: [
       { name: "Next.js", href: "https://nextjs.org/" },
       { name: "React", href: "https://react.dev/" },
@@ -52,16 +48,12 @@ flowchart LR
       { name: "Tailwind CSS", href: "https://tailwindcss.com/" },
     ],
     highlights: [
-      "Designed a parsing and data processing pipeline featuring BOM parsing directly from PDF, excel files with , automaticly saves to database with company traceability.",
-      "Implemented a automated search pipeline that can search for company's information such as startup stage, possible pain points and leader contacts by scraping the website and searching the internet, achieving 90+% accuracy in testing.",
-      "Generated a pitch message generator based on company's pain points and auto sends emails, built a pipeline to prevent from emails entering spam box by optimizing message structure and mail box switching.",
+      "Parsed bills of materials from PDFs and Excel files into traceable company records.",
+      "Built a research pipeline that identified company stage, likely pain points, and decision-maker contacts with over 90% test accuracy.",
+      "Generated personalized outreach from each company's pain points and improved deliverability through message and sender controls.",
     ],
     challenges:
-      "Build the system with high accuracy and reliability in a short time frame, and ensuring the parsing and data processing was robust to varioys files and formats.",
-    nextSteps: [
-      "Status: Paused after the company stopped the collaboration for internal reasons.",
-      "If I were able to continue, I would improve the parsing and data-processing accuracy, then add a dashboard for tracking pitch generation performance and email campaign results.",
-    ],
+      "Shipping quickly without sacrificing accuracy across inconsistent PDFs, spreadsheets, and website data.",
   },
   {
     anchor: "personal-site",
@@ -83,11 +75,7 @@ flowchart LR
       "Built interactive terminal and custom 404 experience to add personality without affecting core navigation.",
     ],
     challenges:
-      "Balancing playful interactions with production-quality performance and crawlability required careful routing and metadata boundaries.",
-    nextSteps: [
-      "Status: Finished for the current portfolio version, with only maintenance and status updates planned.",
-      "If I were able to continue expanding it, I would add lightweight analytics for content engagement and a small content pipeline for writing and project updates.",
-    ],
+      "Keeping playful interactions fast, accessible, and easy for search engines to index.",
   },
   {
     anchor: "chat-websocket-demo",
@@ -110,11 +98,7 @@ flowchart LR
       "Documented structured API error codes and applied rate limiting controls for safer traffic handling.",
     ],
     challenges:
-      "Realtime delivery quality depends on keeping API consistency, sync semantics, and auth boundaries aligned under reconnect-heavy conditions.",
-    nextSteps: [
-      "Status: Paused after the demo reached a stable real-time messaging baseline.",
-      "If I were able to continue, I would add conversation-level delivery acknowledgements and load-test large group conversations with backpressure scenarios.",
-    ],
+      "Keeping message history, authentication, and live updates consistent after reconnects.",
     mermaidTitle: "Architecture Flow",
     mermaidChart: `
 flowchart LR
@@ -147,11 +131,7 @@ flowchart LR
       "Fine-tuned BERT-based parsing to convert natural language input into structured task JSON.",
     ],
     challenges:
-      "Maintaining behavior parity between web and desktop clients requires strict API contracts and normalization of input parsing outputs.",
-    nextSteps: [
-      "Status: Paused after the core web, desktop, CRUD, and natural-language input workflows were completed.",
-      "If I were able to continue, I would add optimistic updates with conflict resolution and improve parser confidence scoring for ambiguous input.",
-    ],
+      "Keeping web and desktop behavior consistent while normalizing ambiguous natural-language input.",
     mermaidTitle: "Web/Desktop System Flow",
     mermaidChart: `
 flowchart TD
@@ -180,11 +160,7 @@ flowchart TD
       "Kept interfaces simple and scriptable for fast personal usage loops.",
     ],
     challenges:
-      "CLI usability depends on concise output formatting and predictable command behavior across additive and query operations.",
-    nextSteps: [
-      "Status: Finished as a lightweight personal CLI tool.",
-      "If I were able to continue, I would add category-level analytics, monthly summary reports, and CSV import/export for external analysis.",
-    ],
+      "Making every command predictable and keeping terminal output easy to scan.",
     terminalTitle: "CLI Interaction",
     terminalLines: [
       "$ bookkeeping add --amount 24.50 --category food --note lunch",
@@ -217,11 +193,7 @@ flowchart TD
       "Optimized for local execution to keep iteration fast for exploratory workflows.",
     ],
     challenges:
-      "The hardest part was keeping training-state updates consistent between backend jobs and frontend visual state during frequent parameter changes.",
-    nextSteps: [
-      "Status: Paused after the team completed the local training playground and visualization loop.",
-      "If I were able to continue, I would add experiment versioning, run comparison, and resumable training jobs with checkpoint-aware UI state.",
-    ],
+      "Keeping backend training jobs and frontend charts in sync while parameters changed.",
     mermaidTitle: "Experiment Loop",
     mermaidChart: `
 flowchart LR
@@ -252,11 +224,7 @@ flowchart LR
       "Focused on deterministic response formatting so users can iterate quickly.",
     ],
     challenges:
-      "LLM-based feedback quality depends on prompt structure, output schema consistency, and robust handling of incomplete resume inputs.",
-    nextSteps: [
-      "Status: Finished as a focused resume feedback prototype.",
-      "If I were able to continue, I would add role-specific scoring rubrics and revision history for comparing resume improvements over time.",
-    ],
+      "Producing consistent feedback when resumes were incomplete or formatted differently.",
     mermaidTitle: "Feedback Generation Sequence",
     mermaidChart: `
 sequenceDiagram
@@ -290,11 +258,7 @@ sequenceDiagram
       "Kept the template lightweight so it compiles quickly and exports ATS-friendly PDFs.",
     ],
     challenges:
-      "Balancing visual polish with ATS readability required careful control of formatting commands and text semantics.",
-    nextSteps: [
-      "Status: Finished as a reusable LaTeX resume template.",
-      "If I were able to continue, I would add internship-focused and research-focused presets plus bilingual placeholders for English/Chinese resume maintenance.",
-    ],
+      "Balancing visual polish with readable text structure for applicant tracking systems.",
   },
   {
     anchor: "obsidian-oreo-theme",
@@ -314,10 +278,6 @@ sequenceDiagram
       "Balanced aesthetics with practical readability for long-form note taking.",
     ],
     challenges:
-      "Theme work required handling many edge UI states while keeping a coherent visual language across plugins and markdown content patterns.",
-    nextSteps: [
-      "Status: Paused after publishing the theme and reaching community adoption.",
-      "If I were able to continue, I would broaden plugin-specific style coverage, maintain compatibility across Obsidian updates, and ship stronger contrast variants.",
-    ],
+      "Covering edge states across Obsidian and its plugins without losing visual consistency.",
   },
 ];

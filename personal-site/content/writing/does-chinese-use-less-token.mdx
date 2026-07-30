@@ -2,7 +2,7 @@
 title: Do Other Languages Use Fewer Tokens Than English?
 seoTitle: Do Other Languages Use Fewer Tokens Than English?
 date: 2026-02-27
-summary: Diving into token efficiency of other languages vs English in LLMs, exploring tokenization, model performance, and implications for multilingual AI development.
+summary: A small experiment comparing token counts across English, Chinese, Japanese, German, French, and Spanish.
 tags:
   - LLM
   - Tokenization
@@ -52,7 +52,7 @@ The result is as follows<Sidenote label="Token Count Results">Percentage differe
 | French   | 188        | +59                  | +45.7%       |
 | Spanish  | 180        | +51                  | +39.5%       |
 
-## English is More Efficient?
+## Is English More Efficient?
 From the results, we surprisingly see that English actually has the lowest token count among the languages tested. Why is this so?
 
 ### Training Data Bias
@@ -87,7 +87,7 @@ However, token efficiency does not fully determine overall system cost in severa
 With that said, token count is a necessary factor in cost calculation, but it is not a sufficient measure of actual efficiency.
 
 ## Conclusion
-The experiment above shows that English is more token-efficient than other languages currently under modern byte-level BPE tokenizers. However, this efficiency does not originate from linguistic compactness or inherent simplicity. Instead, it reflects how tokenizers are trained and optimized.
+In this experiment, English used fewer tokens than the other languages tested. That result reflects how this tokenizer was trained, not an inherent simplicity in English.
 
 While fewer tokens often translate into lower billing under standard API pricing models, real-world system efficiency depends on the full interaction loop, which may require more or fewer tokens depending on a language's information density and the question itself.
 

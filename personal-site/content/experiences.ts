@@ -15,15 +15,15 @@ export const experienceEntries: ExperienceEntry[] = [
       { name: "Operations Tooling", href: "https://en.wikipedia.org/wiki/Operations_management" },
     ],
     highlights: [
-      "Worked on a new inventory system to make internal device and material tracking easier to operate.",
-      "Helped refine standard operating procedures so technical workflows could be documented and repeated more consistently.",
-      "Updated website structure and presentation to better match the company's product and operational direction.",
+      "Built an inventory system for tracking devices and materials.",
+      "Documented technical workflows as repeatable standard operating procedures.",
+      "Updated the public website to better explain the company's products.",
     ],
     focus:
-      "The work sits between engineering and operations: the product needs to be simple enough for repeated daily use, but structured enough to support traceability as the company grows.",
+      "Making daily tools simple to use without losing the records required for traceability.",
     outcomes: [
-      "Strengthened my understanding of how software supports physical-product operations.",
-      "Practiced turning informal internal workflows into clearer interfaces, records, and procedures.",
+      "Learned how software supports physical product operations.",
+      "Turned informal workflows into clearer interfaces and procedures.",
     ],
   },
   {
@@ -45,10 +45,10 @@ export const experienceEntries: ExperienceEntry[] = [
       "Contributed to a measured 20% improvement in vocal consistency.",
     ],
     focus:
-      "The core challenge was making subjective audio quality easier to compare through repeatable experiments and concrete evaluation notes.",
+      "Turning subjective listening tests into repeatable comparisons.",
     outcomes: [
-      "Built a stronger habit of treating ML work as an evaluation loop, not just model execution.",
-      "Learned how small changes in data, prompts, and evaluation criteria can shift perceived output quality.",
+      "Learned to treat ML work as an evaluation loop.",
+      "Saw how data and evaluation criteria change perceived audio quality.",
     ],
   },
   {
@@ -70,10 +70,10 @@ export const experienceEntries: ExperienceEntry[] = [
       "Operated the site through real usage growth, reaching about 1,000 daily active users.",
     ],
     focus:
-      "This was my first long-running product operation loop: performance, content structure, discoverability, and user experience all mattered because real students used the site every day.",
+      "Keeping the site useful and responsive as daily traffic grew.",
     outcomes: [
-      "Learned how infrastructure choices directly affect user experience and retention.",
-      "Developed a product-first engineering mindset from running something with real traffic.",
+      "Learned how infrastructure choices affect retention.",
+      "Developed a product mindset by running a site with real traffic.",
     ],
     link: "/writing/my-first-website",
   },
@@ -96,10 +96,10 @@ export const experienceEntries: ExperienceEntry[] = [
       "Ran handwriting recognition experiments and reached 96% accuracy.",
     ],
     focus:
-      "The work combined frontend responsiveness with data experimentation: map UI performance needed practical optimization, while recognition accuracy needed repeated test-and-measure cycles.",
+      "Improving map responsiveness while measuring handwriting recognition accuracy.",
     outcomes: [
-      "Gained early experience debugging performance on mobile-style interfaces.",
-      "Built confidence in measuring model behavior through data experiments instead of relying on intuition.",
+      "Debugged performance issues in a mobile interface.",
+      "Measured model behavior with data instead of intuition.",
     ],
   },
   {
@@ -118,13 +118,13 @@ export const experienceEntries: ExperienceEntry[] = [
     highlights: [
       "Prepared a local DeepSeek environment for research usage.",
       "Supported access for a group of 20 researchers.",
-      "Focused on a setup that could be used reliably without depending on a polished external product flow.",
+      "Kept the setup reliable without depending on an external service.",
     ],
     focus:
-      "The practical requirement was not only getting a model to run, but making the setup usable for people who needed to work with it repeatedly.",
+      "Making a local model easy for researchers to use repeatedly.",
     outcomes: [
-      "Learned how local AI tooling depends on documentation, environment setup, and predictable runtime behavior.",
-      "Connected ML experimentation with the operational details needed for real users.",
+      "Documented the environment and runtime for repeatable setup.",
+      "Connected ML experiments with the needs of real users.",
     ],
   },
 ];

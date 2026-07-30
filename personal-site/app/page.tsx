@@ -15,22 +15,22 @@ const focusItems = [
   {
     title: "Backend Systems",
     description:
-      "I build mostly using Typescript and Python(actively discovering new languages), focusing on accurate error handing, clear data ownership and clear API routes",
+      "I mainly use TypeScript and Python, with an emphasis on error handling, clear data ownership, and predictable APIs.",
   },
   {
     title: "Applied ML",
     description:
-      "I love fine-tuning and evaluating open-source models for practical use cases, and have a lot of fun with muti-agent experiments and prompt engineering.",
+      "I fine-tune and evaluate open-source models, and experiment with multi-agent systems and prompting.",
   },
   {
     title: "Practical Product Delivery",
     description:
-      "Turning prototypes into actual usable products across web, mobile, and desktop with measurable user outcomes and feedbacks.",
+      "I turn prototypes into usable web, mobile, and desktop products, then improve them with real feedback.",
   },
   {
-    title: "Light Weight Developer Tooling",
+    title: "Lightweight Developer Tooling",
     description:
-      "I like making small but useful tools that improve my daily productivity, and I prefer simple scripts and local setups over complex platforms and cloud services for most use cases.",
+      "I build small tools for daily work and prefer simple scripts or local setups when they are enough.",
   },
 ];
 
@@ -92,12 +92,12 @@ const growthTimeline = [
   {
     phase: "2025.09-present",
     period: "Software Engineering @ UWaterloo",
-    detail: "Deepening systems, maths and algorithm foundations while continuing to buildfull-stack projects and exploring other applications",
+    detail: "Deepening my systems, math, and algorithms foundations while building full-stack projects.",
   },
   {
     phase: "2026.04-present",
     period: "Software Engineer @ Mui Scientific",
-    detail: "Building new invetory system and refining standard operation procedures for a growing medical device company, while reshaping the company's website", 
+    detail: "Building a new inventory system, refining standard operating procedures, and updating the company's website.",
   }
 
 ];
@@ -175,7 +175,7 @@ export default function Home() {
           <div>
             <h2 className="section-title">What I Do</h2>
             <p className="mt-4 max-w-sm text-sm leading-6 text-gray-600">
-              Engineering focus areas that guide how I design systems, ship features, and iterate in production.
+              The areas I spend most of my time building and learning.
             </p>
           </div>
           <RevealStagger className="capability-rail">

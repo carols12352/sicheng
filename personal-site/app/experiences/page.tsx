@@ -34,8 +34,7 @@ export default async function ExperiencesPage({ searchParams }: ExperiencesPageP
           Experiences
         </h1>
         <p className="mt-4 max-w-2xl">
-          Work and product experience from my current resume, organized as a timeline with implementation notes,
-          measurable outcomes, and the stack behind each role.
+          Roles, responsibilities, and results from my recent work.
         </p>
         {query ? (
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">

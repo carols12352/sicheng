@@ -19,9 +19,7 @@ export default function AboutPage() {
               I&apos;m Sicheng Ouyang,
             </span>{" "}
             a Software Engineering student at the University of Waterloo,
-            Class of 2030. I&apos;m interested in building high-performance
-            software and AI systems that combine strong engineering foundations
-            with intelligent behavior.
+            Class of 2030. I build reliable software and practical AI systems.
           </p>
           <div className="mt-8 hidden items-center gap-4 text-sm text-gray-500 md:flex">
             <span className="h-px w-20 bg-gray-300" />
@@ -64,10 +62,8 @@ export default function AboutPage() {
       <section className="mt-12">
         <h2 className="text-lg font-semibold">Current Goal</h2>
         <p className="mt-4 max-w-2xl">
-          My main goal is turning technical ideas into reliable products:
-          backend systems with clear ownership, practical ML workflows that can
-          be evaluated, and full-stack interfaces that feel intuitive instead of
-          noisy.
+          I want to turn technical ideas into reliable products: clear backend
+          systems, measurable ML workflows, and interfaces that stay out of the way.
         </p>
       </section>
       <section className="mt-12">
@@ -95,11 +91,9 @@ export default function AboutPage() {
       <section className="mt-12">
         <h2 className="text-lg font-semibold">How I Work</h2>
         <p className="mt-4 max-w-2xl">
-          My usual loop is to read the docs or papers, build a small prototype,
-          test it with measurable results or real daily usage, then tighten the
-          system based on what actually breaks. I care about reliability, cost
-          performance, clear system behavior, and user experience as products
-          move from experiments into real use.
+          I read the source material, build a small prototype, test it with real
+          use or measurable results, and fix what breaks. I care about reliability,
+          cost, clear behavior, and a good user experience.
         </p>
       </section>
 

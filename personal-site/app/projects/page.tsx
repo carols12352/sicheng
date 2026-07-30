@@ -21,7 +21,6 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
     project.name,
     project.summary,
     ...project.highlights,
-    ...project.nextSteps,
     project.challenges,
     ...project.stack.map((item) => item.name),
   ]);
@@ -33,8 +32,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
           Projects
         </h1>
         <p className="mt-4 max-w-2xl">
-          Project work aligned with my current resume, with architecture notes
-          and implementation details from public repositories.
+          Selected builds, their technical decisions, and what I shipped.
         </p>
         {query ? (
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
