@@ -1,0 +1,109 @@
+---
+title: When to Add and When Not To
+seoTitle: When to Add and When Not To
+date: 2026-08-10
+summary: A reflection on when to add technologies to a stack and when to avoid them.
+tags: 
+  - Software Engineering
+  - Distributed Systems
+  - Projects
+  - Reflections
+---
+
+## An Interesting Observation
+While scrolling through Douyin, I occasionally come across people posting their resumes and asking for feedback. One thing that always catches my attention is the sheer number of technologies listed under their projects: Redis, RabbitMQ, MyBatis, microservices, distributed caching, message queues, and all sorts of other infrastructure tools.
+
+There is nothing inherently wrong with using any of these technologies. What confuses me is that many of the projects themselves appear to have few, if any, real users.
+
+This led me to think about my own projects. I've built projects that use various third-party services, but despite knowing about tools like Redis and message queues, I often choose not to use them. This is not because they are bad technologies, but because I can't find a problem they would actually solve.
+
+This raised a question for me: When does adding another piece of infrastructure make a project better, and when does it merely add complexity for the sake of a more impressive tech stack?
+
+In this article, I will share my perspective on technical trade-offs and technology choices when building projects.
+
+## Problem First
+When building a project, the first question should always be, "What problems do I need to solve?" This sounds obvious, but I find it surprisingly easy to do the opposite.
+
+For example, suppose I am building a small web application with a few users. A simple architecture might look something like this:
+
+<MermaidDiagram title="A simple architecture">
+flowchart LR
+  A[Frontend] --> B[Backend]
+  B --> C[(Database)]
+</MermaidDiagram>
+
+At this point, I could add Redis for caching, RabbitMQ for asynchronous jobs, split the backend into multiple services, and put everything behind a load balancer. None of these would necessarily be bad technical decisions on their own.
+
+However, before doing any of that, I think there is a more important question to ask:
+
+**What problem does each additional service actually solve?**
+
+If my database queries already take only a few milliseconds, adding Redis gives me another system to deploy, monitor, invalidate, and debug without really improving the user experience.
+
+If my background tasks finish almost instantly, adding a message queue introduces another component that can fail, while solving a latency problem that barely exists in the first place.
+
+If one backend service is already easy to understand and deploy, splitting it into five microservices means five deployments, five sets of logs, network calls between components, and a much larger surface area for things to go wrong.
+
+At the end of the day, software architecture is full of trade-offs. It reminds me a little of competitive programming, where we often trade memory or storage space for execution time.
+
+Adding a technology is rarely free. It may solve one problem, but it almost always introduces another kind of cost.
+
+This is why I tend to prefer the "boring" solution first. I would rather let the architecture become more complicated because the project demands it than make the architecture complicated in anticipation of problems that may never exist.
+
+## Earn the Complexity
+
+As the title suggests, complexity should be earned, not added in advance.
+
+Imagine that thousands of requests repeatedly ask for the same piece of data. The data rarely changes, but every request still has to query the database. As traffic increases, these repeated queries begin consuming database resources and slowing down other requests.
+
+Now we have an actual problem.
+
+In this case, introducing something like Redis starts to make sense. Instead of querying the database every time, frequently requested data can be cached and served directly from memory.
+
+In this scenario, Redis would not be added because caching sounds useful or because it looks good in the tech stack. It would be added because the existing architecture has reached a limitation.
+
+This is what I mean by earning complexity. Additional infrastructure should be introduced in response to a problem that the simpler architecture can no longer solve well, and its benefits should outweigh its costs.
+
+## Adding Right Away?
+
+Even when a real problem appears, I don't think introducing another service should be the first solution.
+
+Going back to the database example, suppose requests are becoming slower as traffic increases. It may be tempting to add Redis and cache the results, but the database itself might not actually be the problem.
+
+Maybe the query is missing an index. Maybe I am fetching far more data than I need. Maybe the application is making the same query repeatedly because of an N+1 problem.
+
+In those cases, adding Redis may hide the symptom without fixing the actual issue, while the inefficient SQL query still exists.
+
+A better approach is to first understand why the current architecture is failing and then ask whether the existing system can be improved before introducing something new.
+
+The important part is that adding infrastructure comes near the end of the process. Sometimes the simple fix is the better one.
+
+## What If the Goal Is Learning?
+
+There is one important exception to all of this: sometimes the complexity itself is the point.
+
+If I build a small project specifically because I want to learn Redis, RabbitMQ, Kubernetes, or microservices, then using those technologies without a real scaling problem is completely reasonable. The project's goal is not to handle traffic or improve reliability, but simply to learn how those technologies work.
+
+In that case, deliberately overengineering something can be useful. A simple todo app might not need a message queue, but adding one can still be a good way to understand retries, acknowledgements, workers, and failure handling.
+
+So I don't think unnecessary complexity is always bad. If learning is the goal, then learning itself is a valid reason to introduce it.
+
+## Knowing When to Stop
+
+One thing I have noticed while building projects is that there is almost always another improvement I could make.
+
+I could add caching. I could move background work into a queue. I could add replicas, split services apart, introduce distributed tracing, or redesign parts of the system to handle more traffic.
+
+There is technically no clear end to this process. Because of that, I don't think a project should be considered "finished" only when there is nothing left to optimize. That point probably never comes.
+
+Instead, I think the better question is whether the system already solves the problem it was designed to solve under its current constraints.
+
+If the application is fast enough, reliable enough, easy enough to maintain, and capable of handling the traffic it actually receives, then adding more infrastructure may not improve the system at all.
+
+In fact, it could make the system worse: every additional component adds another dependency to maintain and another thing that can fail. At some point, the benefit of another optimization becomes smaller than the complexity it introduces.
+
+That is usually where I think it is time to stop.
+
+Good engineering is not only about knowing what to add. Sometimes it is about knowing when the system is already good enough.
+
+<Copyright/>
