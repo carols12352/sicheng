@@ -28,10 +28,10 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   return (
     <>
       <section>
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+        <h1 className="page-title">
           Projects
         </h1>
-        <p className="mt-4 max-w-2xl">
+        <p className="page-lede">
           Selected builds, their technical decisions, and what I shipped.
         </p>
         {query ? (
@@ -47,7 +47,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
       </section>
 
       {visibleProjects.length === 0 ? (
-        <section className="mt-12 ui-item border-t border-gray-200 pt-4">
+        <section className="page-section-gap ui-item border-t border-gray-200 pt-4">
           <h2 className="text-lg font-semibold text-gray-900">No results</h2>
           <p className="mt-3 text-gray-600">
             No projects matched <span className="font-medium">{query}</span>.

@@ -243,7 +243,7 @@ export function getMdxComponents() {
     h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
       <AnchorHeading
         as="h2"
-        className="mt-12 mb-0 scroll-mt-24 text-[1.7rem] font-semibold tracking-tight text-gray-900 first:mt-0"
+        className="article-heading article-heading-h2 scroll-mt-24 text-gray-900 first:mt-0"
         resolveHeadingId={resolveHeadingId}
         {...props}
       />
@@ -251,7 +251,7 @@ export function getMdxComponents() {
     h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
       <AnchorHeading
         as="h3"
-        className="mt-10 mb-0 scroll-mt-24 text-[1.35rem] font-semibold tracking-tight text-gray-900 first:mt-0"
+        className="article-heading article-heading-h3 scroll-mt-24 text-gray-900 first:mt-0"
         resolveHeadingId={resolveHeadingId}
         {...props}
       />
@@ -259,33 +259,33 @@ export function getMdxComponents() {
   p: ({ children, ...props }: React.ComponentPropsWithoutRef<"p">) => {
     if (containsBlockNode(children)) {
       return (
-        <div className="leading-[1.9] text-gray-700" {...props}>
+        <div className="article-flow-block text-gray-700" {...props}>
           {children}
         </div>
       );
     }
 
     return (
-      <p className="leading-[1.9] text-gray-700" {...props}>
+      <p className="text-gray-700" {...props}>
         {children}
       </p>
     );
   },
   ul: (props: React.ComponentPropsWithoutRef<"ul">) => (
-    <ul className="mt-3 mb-2 list-disc pl-6 marker:text-gray-500 first:mt-0 [&>li]:m-0 [&>li+li]:mt-3" {...props} />
+    <ul className="article-list list-disc marker:text-gray-500 first:mt-0" {...props} />
   ),
   ol: (props: React.ComponentPropsWithoutRef<"ol">) => (
-    <ol className="mt-3 mb-2 list-decimal pl-6 marker:text-gray-500 first:mt-0 [&>li]:m-0 [&>li+li]:mt-3" {...props} />
+    <ol className="article-list list-decimal marker:text-gray-500 first:mt-0" {...props} />
   ),
   li: (props: React.ComponentPropsWithoutRef<"li">) => (
     <li
-      className="leading-[1.85] text-gray-700 [&>p]:mt-0 [&>p]:leading-[1.85] [&>ul]:mt-3 [&>ol]:mt-3"
+      className="text-gray-700 [&>p]:m-0"
       {...props}
     />
   ),
   a: (props: React.ComponentPropsWithoutRef<"a">) => <InternalLink {...props} />,
   blockquote: (props: React.ComponentPropsWithoutRef<"blockquote">) => (
-    <blockquote className="mt-0 mb-3 border-l-2 border-gray-300 pl-5 text-gray-600 italic [&+p]:mt-2" {...props} />
+    <blockquote className="article-blockquote border-l-2 border-gray-300 text-gray-600 italic" {...props} />
   ),
   code: ({ className, ...props }: React.ComponentPropsWithoutRef<"code">) => {
     const language = getCodeLanguage(className);
@@ -306,7 +306,7 @@ export function getMdxComponents() {
     const resolvedLanguage = language || inferLanguageFromCode(rawCode);
 
     return (
-      <figure className="codeblock-frame mt-7 overflow-hidden rounded-md border border-gray-200 bg-gray-50/40">
+      <figure className="codeblock-frame overflow-hidden rounded-md border border-gray-200 bg-gray-50/40">
         {resolvedLanguage ? (
           <figcaption className="codeblock-head border-b border-gray-200 px-3 py-1 text-[10px] uppercase tracking-[0.08em] text-gray-500">
             {resolvedLanguage}
@@ -324,7 +324,7 @@ export function getMdxComponents() {
     );
   },
   table: (props: React.ComponentPropsWithoutRef<"table">) => (
-    <div className="mt-8 overflow-x-auto">
+    <div className="article-table-wrap overflow-x-auto">
       <table className="w-full border-collapse text-sm" {...props} />
     </div>
   ),

@@ -16,7 +16,7 @@ export default function ResumePage() {
     <section className="mx-auto max-w-5xl">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+          <h1 className="page-title text-gray-900">
             Resume
           </h1>
           <p className="mt-2 text-sm text-gray-600">

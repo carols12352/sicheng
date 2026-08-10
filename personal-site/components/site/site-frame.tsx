@@ -283,7 +283,7 @@ export function SiteFrame({ children }: SiteFrameProps) {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-10 sm:py-12">
+    <div className="site-frame mx-auto flex min-h-screen w-full max-w-4xl flex-col px-5 sm:px-7">
       <header>
         <div className="flex items-center justify-between gap-3">
           <Link href="/" className="site-brand ui-link">
@@ -339,11 +339,11 @@ export function SiteFrame({ children }: SiteFrameProps) {
         ) : null}
       </header>
 
-      <main id="main-content" className="mt-12 flex-1">
+      <main id="main-content" className="site-main flex-1">
         <PageTransition>{children}</PageTransition>
       </main>
 
-      <footer className="footer-shell mt-24 border-t border-gray-200 pt-7 pb-4 text-sm text-gray-500">
+      <footer className="footer-shell border-t border-gray-200 pt-7 pb-4 text-sm text-gray-500">
         <div className="footer-top">
           <div className="footer-brand">
             <p className="site-brand font-semibold text-gray-900">

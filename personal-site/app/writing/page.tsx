@@ -84,10 +84,10 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
   return (
     <>
       <section>
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+        <h1 className="page-title">
           Writing
         </h1>
-        <p className="mt-4 max-w-2xl">
+        <p className="page-lede">
           Notes on software, machine learning, and lessons from my work.
         </p>
         {query ? (
@@ -102,7 +102,7 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
         ) : null}
       </section>
 
-      <section className="mt-12">
+      <section className="page-section-gap">
         {visiblePosts.length === 0 ? (
           <article className="ui-item border-t border-gray-200 pt-4">
             <h2 className="text-lg font-semibold text-gray-900">No results</h2>

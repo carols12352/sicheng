@@ -10,7 +10,7 @@ export const metadata: Metadata = buildPageMetadata({
 export default function PrivacyPolicyPage() {
   return (
     <section className="max-w-3xl">
-      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Privacy Policy</h1>
+      <h1 className="page-title">Privacy Policy</h1>
       <p className="mt-3 text-sm text-gray-500">Effective date: February 21, 2026</p>
 
       <div className="mt-8 space-y-8 leading-7">

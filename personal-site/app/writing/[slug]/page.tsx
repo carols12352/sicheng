@@ -161,9 +161,9 @@ export default async function WritingArticlePage({ params }: PageProps) {
       />
       <ArticleToc />
       <ArticleSearchBridge />
-      <header className="mx-auto max-w-[42.5rem] pt-12 sm:pt-16">
-        <nav className="mb-5 text-xs text-gray-500">
-          <ol className="m-0 flex items-center gap-2 p-0">
+      <header className="article-header mx-auto max-w-[40rem]">
+        <nav className="article-breadcrumb text-xs text-gray-500" aria-label="Breadcrumb">
+          <ol className="m-0 flex min-w-0 items-center gap-2 p-0">
             <li>
               <Link href="/" className="ui-link ui-underline">
                 Home
@@ -176,29 +176,29 @@ export default async function WritingArticlePage({ params }: PageProps) {
               </Link>
             </li>
             <li>/</li>
-            <li className="text-gray-600">
+            <li className="min-w-0 truncate text-gray-600">
               {post.meta.title}
             </li>
           </ol>
         </nav>
-        <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
+        <h1 className="article-title font-semibold tracking-tight text-gray-900">
           {post.meta.title}
         </h1>
-        <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs tracking-wide text-gray-500">
+        <div className="article-meta flex flex-wrap items-center gap-x-4 gap-y-2 text-xs tracking-wide text-gray-500">
           {post.meta.date ? <span>{post.meta.date}</span> : null}
           <span>{post.meta.readingTime}</span>
         </div>
         {post.meta.tags.length > 0 ? (
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 text-xs text-gray-500">
+          <div className="article-tags flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
             {post.meta.tags.map((tag) => (
               <span key={tag}>{tag}</span>
             ))}
           </div>
         ) : null}
-        <div className="mt-10 border-b border-gray-200" />
+        <div className="article-rule border-b border-gray-200" />
       </header>
 
-      <section className="mt-0">
+      <section>
         <Prose>
           <MDXRemote
             source={post.content}
