@@ -95,9 +95,9 @@ const growthTimeline = [
     detail: "Deepening my systems, math, and algorithms foundations while building full-stack projects.",
   },
   {
-    phase: "2026.04-present",
+    phase: "2026.04-2026.08",
     period: "Software Engineer @ Mui Scientific",
-    detail: "Building a new inventory system, refining standard operating procedures, and updating the company's website.",
+    detail: "Building a new inventory system, refining legacy software, and updating the company's website.",
   }
 
 ];
