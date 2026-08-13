@@ -136,9 +136,9 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
 
   return (
     <LayoutGroup id="experiences-window">
-      <div className="relative mt-12">
+      <div className="relative page-section-gap">
         <div className="project-timeline-rail pointer-events-none absolute top-2 bottom-2 left-[1.05rem] w-px" />
-        <div className="space-y-8">
+        <div className="space-y-10">
           {orderedExperiences.map((experience) => {
             const isActive = activeExperience?.anchor === experience.anchor;
             return (
@@ -147,7 +147,7 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
                 <motion.div
                   layoutId={reduceMotion ? undefined : `experience-card-${experience.anchor}`}
                   transition={cardTransition}
-                  className={`project-card-surface w-full rounded-xl border bg-white/95 p-5 text-left transition-colors ${
+                  className={`project-card-surface w-full rounded-xl border bg-white/95 p-6 text-left transition-colors ${
                     isActive ? "border-gray-300 project-card-active-shadow" : "border-gray-200 shadow-sm hover:border-gray-300"
                   }`}
                 >
@@ -172,7 +172,7 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
                           {highlightText(experience.organization)}
                           {experience.location ? <span> · {experience.location}</span> : null}
                         </p>
-                        <p className="mt-3 text-sm text-gray-600">{highlightText(experience.summary)}</p>
+                        <p className="mt-4 text-sm leading-6 text-gray-600">{highlightText(experience.summary)}</p>
                       </div>
                       <span className="mt-1 flex items-center gap-2 text-xs text-gray-500">
                         open

@@ -283,7 +283,7 @@ export function SiteFrame({ children }: SiteFrameProps) {
   };
 
   return (
-    <div className="site-frame mx-auto flex min-h-screen w-full max-w-4xl flex-col px-5 sm:px-7">
+    <div className="site-frame mx-auto flex min-h-screen w-full max-w-5xl flex-col px-5 sm:px-8 lg:px-10">
       <header>
         <div className="flex items-center justify-between gap-3">
           <Link href="/" className="site-brand ui-link">
@@ -319,7 +319,7 @@ export function SiteFrame({ children }: SiteFrameProps) {
             {mobileMenuOpen ? "Close" : "Menu"}
           </button>
         </div>
-        <nav className="mt-4 hidden flex-wrap gap-x-6 gap-y-2 text-sm md:flex">
+        <nav className="mt-5 hidden flex-wrap gap-x-7 gap-y-2 text-sm md:flex">
           {navItems.map((item) => (
             <NavLink key={item.href} href={item.href} label={item.label} />
           ))}
@@ -343,7 +343,7 @@ export function SiteFrame({ children }: SiteFrameProps) {
         <PageTransition>{children}</PageTransition>
       </main>
 
-      <footer className="footer-shell border-t border-gray-200 pt-7 pb-4 text-sm text-gray-500">
+      <footer className="footer-shell border-t border-gray-200 pt-9 pb-4 text-sm text-gray-500">
         <div className="footer-top">
           <div className="footer-brand">
             <p className="site-brand font-semibold text-gray-900">

@@ -111,9 +111,9 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
             </p>
           </article>
         ) : (
-          <div className="space-y-10">
+          <div className="space-y-12">
             {visiblePosts.map((post) => (
-              <article key={post.post.meta.slug} className="ui-item border-t border-gray-200 pt-4">
+              <article key={post.post.meta.slug} className="ui-item border-t border-gray-200 pt-5">
                 <h2 className="text-lg font-semibold">
                   <Link
                     href={`/writing/${post.post.meta.slug}`}
@@ -126,7 +126,7 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
                   {post.post.meta.date ? <span>{post.post.meta.date}</span> : null}
                   <span>{post.post.meta.readingTime}</span>
                 </div>
-                <p className="mt-3">{highlightText(post.snippet, normalizedQuery)}</p>
+                <p className="mt-4 max-w-2xl leading-7">{highlightText(post.snippet, normalizedQuery)}</p>
                 {post.post.meta.tags.length > 0 ? (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {post.post.meta.tags.map((tag) => (

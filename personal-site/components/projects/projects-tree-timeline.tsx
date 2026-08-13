@@ -146,9 +146,9 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
 
   return (
     <LayoutGroup id="projects-window">
-      <div className="relative mt-12">
+      <div className="relative page-section-gap">
         <div className="project-timeline-rail pointer-events-none absolute top-2 bottom-2 left-[1.05rem] w-px" />
-        <div className="space-y-8">
+        <div className="space-y-10">
           {orderedProjects.map((project) => {
             const isActive = activeProject?.anchor === project.anchor;
             return (
@@ -157,7 +157,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                 <motion.div
                   layoutId={reduceMotion ? undefined : `project-card-${project.anchor}`}
                   transition={cardTransition}
-                  className={`project-card-surface w-full rounded-xl border bg-white/95 p-5 text-left transition-colors ${
+                  className={`project-card-surface w-full rounded-xl border bg-white/95 p-6 text-left transition-colors ${
                     isActive ? "border-gray-300 project-card-active-shadow" : "border-gray-200 shadow-sm hover:border-gray-300"
                   }`}
                 >
@@ -176,7 +176,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                           {project.period}
                         </p>
                         <h2 className="mt-3 text-xl font-semibold tracking-tight text-gray-900 sm:text-2xl">{highlightText(project.name)}</h2>
-                        <p className="mt-3 text-sm text-gray-600">{highlightText(project.summary)}</p>
+                        <p className="mt-4 text-sm leading-6 text-gray-600">{highlightText(project.summary)}</p>
                       </div>
                       <span className="mt-1 flex items-center gap-2 text-xs text-gray-500">
                         open

@@ -145,15 +145,15 @@ export default function Home() {
               )}
             </div>
 
-            <h1 className="home-hero-title mt-4 text-gray-900">
+            <h1 className="home-hero-title mt-5 text-gray-900">
               Sicheng Ouyang
             </h1>
-            <span className="mt-5 block h-px w-20 bg-gray-300" />
-            <p className="mt-5 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg sm:leading-8">
+            <span className="mt-6 block h-px w-20 bg-gray-300" />
+            <p className="mt-6 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg sm:leading-8">
               Software Engineering student at UWaterloo focused on reliable backend systems, practical ML workflows, and product delivery.
             </p>
 
-            <div className="home-hero-actions mt-8 flex-col sm:flex-row">
+            <div className="home-hero-actions mt-9 flex-col sm:flex-row">
               <Link href="/projects" className="home-btn home-btn-primary w-full sm:w-auto">
                 View Projects
               </Link>
@@ -174,7 +174,7 @@ export default function Home() {
         <div className="capability-layout mx-auto w-full max-w-6xl">
           <div>
             <h2 className="section-title">What I Do</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-gray-600">
+            <p className="mt-5 max-w-sm text-sm leading-6 text-gray-600">
               The areas I spend most of my time building and learning.
             </p>
           </div>
@@ -206,7 +206,7 @@ export default function Home() {
               View all projects
             </Link>
           </div>
-          <RevealStagger className="work-layout mt-6">
+          <RevealStagger className="work-layout mt-7">
             {selectedWork.map((item, index) => (
               <RevealItem key={item.title} className="work-side">
                 <HoverCard>
@@ -227,7 +227,7 @@ export default function Home() {
         </div>
       </RevealSection>
 
-      <RevealSection className="home-band home-section home-section-connected px-6 pb-[4.5rem] pt-4 sm:px-10 sm:pb-[5.5rem] sm:pt-5 lg:px-14">
+      <RevealSection className="home-band home-section home-section-connected px-6 py-[4.5rem] sm:px-10 sm:py-[5.5rem] lg:px-14">
         <div className="mx-auto w-full max-w-6xl">
           <div className="flex items-end justify-between gap-4">
             <h2 className="section-title">Past Experience</h2>
@@ -235,7 +235,7 @@ export default function Home() {
               View all experience
             </Link>
           </div>
-          <RevealStagger className="work-layout mt-6">
+          <RevealStagger className="work-layout mt-7">
             {pastExperiences.map((item) => (
               <RevealItem key={`${item.organization}-${item.role}`} className="work-side">
                 <HoverCard>

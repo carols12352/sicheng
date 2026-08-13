@@ -59,17 +59,17 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mt-12">
+      <section className="mt-16">
         <h2 className="text-lg font-semibold">Current Goal</h2>
-        <p className="mt-4 max-w-2xl">
+        <p className="mt-5 max-w-2xl leading-7">
           I want to turn technical ideas into reliable products: clear backend
           systems, measurable ML workflows, and interfaces that stay out of the way.
         </p>
       </section>
-      <section className="mt-12">
+      <section className="mt-16">
         
         <h2 className="text-lg font-semibold">Current Focus</h2>
-        <ul className="mt-4 list-disc space-y-2 pl-5">
+        <ul className="mt-5 list-disc space-y-3 pl-5 leading-7">
           <li>Machine learning algorithms, model evaluation, and reasoning systems.</li>
           <li>AI-integrated architectures and intelligent product workflows.</li>
           <li>Scalable full-stack systems with clean API boundaries and reliable data flow.</li>
@@ -77,9 +77,9 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="mt-12">
+      <section className="mt-16">
         <h2 className="text-lg font-semibold">Experience Highlights</h2>
-        <ul className="mt-4 list-disc space-y-2 pl-5">
+        <ul className="mt-5 list-disc space-y-3 pl-5 leading-7">
           <li>Co-founded and built an A-Level study platform on Tencent Cloud, reaching roughly 1,000 daily active users.</li>
           <li>At Tencent Music, evaluated 10 speech synthesis models across 20+ experiments and improved vocal consistency by 20%.</li>
           <li>Built a React Native map app with location visualization and optimized trail storage and rendering performance.</li>
@@ -88,35 +88,35 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="mt-12">
+      <section className="mt-16">
         <h2 className="text-lg font-semibold">How I Work</h2>
-        <p className="mt-4 max-w-2xl">
+        <p className="mt-5 max-w-2xl leading-7">
           I read the source material, build a small prototype, test it with real
           use or measurable results, and fix what breaks. I care about reliability,
           cost, clear behavior, and a good user experience.
         </p>
       </section>
 
-      <section className="mt-12">
+      <section className="mt-16">
         <h2 className="text-lg font-semibold">Skills Snapshot</h2>
-        <ul className="mt-4 list-disc space-y-2 pl-5">
+        <ul className="mt-5 list-disc space-y-3 pl-5 leading-7">
           <li>Languages: Python, Java, C/C++, JavaScript, TypeScript, HTML/CSS.</li>
           <li>Frameworks and tools: FastAPI, Flask, React, React Native, MySQL, Git, WordPress, LaTeX, Node.js.</li>
           <li>Languages spoken: English, Mandarin Chinese, and basic French.</li>
         </ul>
       </section>
 
-      <section className="mt-12">
+      <section className="mt-16">
         <h2 className="text-lg font-semibold">Outside Engineering</h2>
-        <p className="mt-4 max-w-2xl">
+        <p className="mt-5 max-w-2xl leading-7">
           Outside of coding, I like going to the gym, playing tennis, gaming
           with friends, traveling, and exploring new places through food.
         </p>
       </section>
 
-      <section className="about-note-card mt-12 rounded-xl border border-gray-200 p-5">
+      <section className="about-note-card mt-16 rounded-xl border border-gray-200 p-6 sm:p-7">
         <h2 className="text-lg font-semibold">Small Note</h2>
-        <p className="mt-3">
+        <p className="mt-4 leading-7">
           If you&apos;ve made it this far, try the terminal puzzle in the &gt;_
           section. I built a few different animations into it and had a lot of
           fun making the interaction feel personal.
