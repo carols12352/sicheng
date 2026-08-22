@@ -43,3 +43,7 @@ next-env.d.ts
 .vscode/
 
 test/
+
+
+# pages that I wanted to ignore
+/personal-site/content/writing/employed-for-two-weeks.mdx
