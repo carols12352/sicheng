@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
+import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 import styles from "./terminal.module.css";
 
 export type EasterEggVariant = "kernel" | "matrix" | "rickroll";
@@ -14,6 +15,7 @@ type TerminalEasterEggProps = {
 const GLYPHS = "01/$#;[]{}<>*+";
 
 export default function TerminalEasterEgg({ variant, onClose }: TerminalEasterEggProps) {
+  const reduceMotion = useAppReducedMotion(true);
   useEffect(() => {
     if (!variant) return;
     const close = () => onClose();
@@ -31,6 +33,7 @@ export default function TerminalEasterEgg({ variant, onClose }: TerminalEasterEg
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
+          <button type="button" className={`ui-button ${styles.easterClose}`} onClick={onClose} autoFocus>Back to terminal ×</button>
           {variant === "kernel" ? (
             <motion.div
               className={styles.kernelPanic}
@@ -67,8 +70,8 @@ RESULT   denied by policy_guard`}</pre>
                   key={index}
                   style={{ left: `${(index * 37) % 100}%` }}
                   initial={{ y: "-20vh", opacity: 0 }}
-                  animate={{ y: "115vh", opacity: [0, 0.85, 0] }}
-                  transition={{ duration: 2.2 + (index % 7) * 0.23, delay: (index % 11) * 0.08, repeat: Infinity, ease: "linear" }}
+                  animate={reduceMotion ? { y: `${(index * 17) % 90}vh`, opacity: 0.65 } : { y: "115vh", opacity: [0, 0.85, 0] }}
+                  transition={{ duration: 2.2 + (index % 7) * 0.23, delay: (index % 11) * 0.08, repeat: reduceMotion ? 0 : Infinity, ease: "linear" }}
                 >
                   {GLYPHS[index % GLYPHS.length]}
                 </motion.span>

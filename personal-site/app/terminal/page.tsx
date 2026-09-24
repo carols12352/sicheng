@@ -1,7 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/navigation/theme-toggle";
+import { MotionToggle } from "@/components/navigation/motion-toggle";
+import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent, SubmitEvent } from "react";
@@ -188,6 +191,8 @@ function resolvePath(cwd: string, target: string) {
 
 export default function TerminalPage() {
   const router = useRouter();
+  const reduceMotion = useAppReducedMotion();
+  const [runbookOpen, setRunbookOpen] = useState(false);
   const [sessions, setSessions] = useState<ShellSession[]>(() => [createSession(1, true)]);
   const [activeId, setActiveId] = useState(1);
   const [difficulty, setDifficulty] = useState<Difficulty>("hard");
@@ -271,8 +276,8 @@ export default function TerminalPage() {
   };
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [activeId, difficulty, session.lines.length, session.awaitingPassword]);
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: reduceMotion ? "auto" : "smooth" });
+  }, [activeId, difficulty, session.lines.length, session.awaitingPassword, reduceMotion]);
 
   useEffect(() => {
     if (solvedAtSeconds !== null) return;
@@ -362,7 +367,7 @@ export default function TerminalPage() {
       return;
     }
     if (session.cwd === "/srv/app/experience") {
-      addLine("mui-scientific.txt    tencent-music.txt    study-platform.txt    map-uncharted.txt    oncall-notes.txt");
+      addLine("watcloud.txt    mui-scientific.txt    tencent-music.txt    study-platform.txt    map-uncharted.txt    oncall-notes.txt");
       return;
     }
     if (session.cwd === "/srv/app/projects") {
@@ -439,7 +444,8 @@ export default function TerminalPage() {
       "/srv/app/.bash_history": "npm run build\ngit status\nsudo rm -rf /",
       "/srv/app/logs/display.channel": "channel=01\nrenderer=matrix\nstate=standby",
       "/srv/app/experience/oncall-notes.txt": "On-call diagnostic database: fortune\nMultiple records available; repeated queries are supported.",
-      "/srv/app/experience/mui-scientific.txt": "Software Engineer · Mui Scientific · 2026.04—Present\nInternal inventory tooling, SOPs, and public website.",
+      "/srv/app/experience/watcloud.txt": "Infrastructure & DevOps Engineer · WATcloud · 2026.09—Present\nOngoing.",
+      "/srv/app/experience/mui-scientific.txt": "Software Engineer · Mui Scientific · 2026.04—2026.08\nInternal inventory tooling, SOPs, and public website.",
       "/srv/app/experience/tencent-music.txt": "Machine Learning Engineer · Tencent Music · 2024.06—2024.08\nEvaluated 10 speech models across 20+ experiments.",
       "/srv/app/experience/study-platform.txt": "Co-Founder · A-Level Study Platform · 2023—2025\nOperated a platform reaching roughly 1,000 DAU.",
       "/srv/app/experience/map-uncharted.txt": "Software Engineer · Map Uncharted · 2023\nReact Native mapping and handwriting recognition experiments.",
@@ -888,6 +894,7 @@ export default function TerminalPage() {
             ]
           : session.guiPath === "/srv/app/experience"
             ? [
+                { name: "watcloud.txt", kind: "file", size: "80 B", modified: "2026" },
                 { name: "mui-scientific.txt", kind: "file", size: "418 B", modified: "2026" },
                 { name: "tencent-music.txt", kind: "file", size: "376 B", modified: "2024" },
                 { name: "study-platform.txt", kind: "file", size: "352 B", modified: "2025" },
@@ -997,7 +1004,8 @@ export default function TerminalPage() {
       "/srv/app/contact.txt": "support@sicheng.dev\ngithub.com/carols12352",
       "/srv/app/resume.pdf": "PDF preview unavailable in remote shell.\nUse `open resume.pdf` in the terminal.",
       "/srv/app/definitely-not-a-rickroll.url": "Type: Internet shortcut\nClassification: unverified media redirect",
-      "/srv/app/experience/mui-scientific.txt": "Software Engineer · Mui Scientific\n2026.04—Present\nInventory tooling, SOPs, and website work.",
+      "/srv/app/experience/watcloud.txt": "Infrastructure & DevOps Engineer · WATcloud · 2026.09—Present\nOngoing.",
+      "/srv/app/experience/mui-scientific.txt": "Software Engineer · Mui Scientific\n2026.04—2026.08\nInventory tooling, SOPs, and website work.",
       "/srv/app/experience/tencent-music.txt": "Machine Learning Engineer · Tencent Music\nEvaluated 10 speech models across 20+ experiments.",
       "/srv/app/experience/study-platform.txt": "Co-Founder · A-Level Study Platform\nOperated a learning platform reaching ~1,000 DAU.",
       "/srv/app/experience/map-uncharted.txt": "Software Engineer · Map Uncharted\nReact Native maps and recognition experiments.",
@@ -1054,7 +1062,7 @@ export default function TerminalPage() {
       {session.lines.map((line) => (
         <motion.div
           key={line.id}
-          initial={{ opacity: 0, y: 2 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 2 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.12 }}
           className={`${styles.line} ${line.preserve ? styles.asciiLine : ""} ${styles[line.tone ?? "default"]}`}
@@ -1088,14 +1096,22 @@ export default function TerminalPage() {
   );
 
   return (
+    <MotionConfig reducedMotion={reduceMotion ? "always" : "user"}>
     <main className={styles.desktop}>
+      <header className={styles.gameHeader}>
+        <div>
+          <div className={styles.gameBrand}><Link href="/">← Sicheng Ouyang</Link><h1>Terminal / CTF</h1></div>
+          <p className={styles.gameIntro}>Investigate a simulated incident. Find the rogue process and restore the service.</p>
+        </div>
+        <div className={styles.gamePreferences}><MotionToggle /><ThemeToggle /></div>
+      </header>
       <motion.section
         ref={windowRef}
         className={`${styles.window} ${maximized ? styles.windowMaximized : ""} ${minimized ? styles.windowMinimized : ""}`}
-        initial={{ opacity: 0, y: 10, scale: 0.995 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 10, scale: 0.995 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        onPointerDown={() => inputRef.current?.focus()}
+
       >
         <header className={styles.titlebar} onDoubleClick={() => {
           setMinimized(false);
@@ -1105,6 +1121,7 @@ export default function TerminalPage() {
             <button type="button" className={styles.closeDot} aria-label="Close terminal" onClick={(event) => { event.stopPropagation(); router.push("/"); }} />
             <button type="button" className={styles.minDot} aria-label="Minimize window" onClick={(event) => {
               event.stopPropagation();
+              setMaximized(false);
               setMinimized((value) => !value);
             }} />
             <button type="button" className={styles.maxDot} aria-label="Toggle maximize" onClick={(event) => {
@@ -1148,8 +1165,8 @@ export default function TerminalPage() {
             ))}
           </div>
           <div className={styles.difficultySwitch} onPointerDown={(event) => event.stopPropagation()}>
-            <button type="button" className={difficulty === "hard" ? styles.modeActive : ""} onClick={() => setDifficulty("hard")}>Hard</button>
-            <button type="button" className={difficulty === "easy" ? styles.modeActive : ""} onClick={() => setDifficulty("easy")}>Easy</button>
+            <button type="button" aria-pressed={difficulty === "hard"} className={difficulty === "hard" ? styles.modeActive : ""} onClick={() => setDifficulty("hard")}>Hard</button>
+            <button type="button" aria-pressed={difficulty === "easy"} className={difficulty === "easy" ? styles.modeActive : ""} onClick={() => setDifficulty("easy")}>Easy</button>
           </div>
         </div>
 
@@ -1292,7 +1309,8 @@ export default function TerminalPage() {
             )}
           </div>
 
-          <aside className={styles.inspector}>
+          <aside className={`${styles.inspector} ${runbookOpen ? styles.inspectorOpen : ""}`} id="ctf-runbook" aria-label="Incident runbook">
+            <button type="button" className={`ui-button ${styles.runbookToggle}`} onClick={() => setRunbookOpen(false)}>Close runbook ×</button>
             <button type="button" className={styles.incidentHeader} onClick={() => execute("status")}>
               <span className={styles.eyebrow}>INCIDENT #042</span>
               <span className={styles.incidentTitle}>Duplicate echo</span>
@@ -1386,11 +1404,11 @@ export default function TerminalPage() {
           <button type="button" className={styles.shortcutHelp} onClick={() => execute("help")}>
             {difficulty === "hard" ? "CLI ONLY · tab complete · ctrl+l clear" : "ASSISTED · FILES + SHELL"}
           </button>
-          <span className={styles.mobileProgress}>
+          <button type="button" className={styles.mobileProgress} aria-controls="ctf-runbook" aria-expanded={runbookOpen} onClick={() => setRunbookOpen((value) => !value)}>
             {solved
               ? `EGGS ${foundEasterEggs.length}/${EASTER_EGG_COUNT}`
               : `RUNBOOK ${progress}/${MISSION_STEP_COUNT}`}
-          </span>
+          </button>
           <button type="button" onClick={() => addLine("LANG=en_CA.UTF-8", "muted")}>UTF-8</button>
         </footer>
       </motion.section>
@@ -1454,5 +1472,6 @@ export default function TerminalPage() {
         ) : null}
       </AnimatePresence>
     </main>
+    </MotionConfig>
   );
 }
