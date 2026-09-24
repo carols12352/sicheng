@@ -146,7 +146,7 @@ export default async function WritingArticlePage({ params }: PageProps) {
   const mdxComponents = getMdxComponents();
 
   return (
-    <article data-writing-article>
+    <article data-writing-article className="article-layout">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -159,9 +159,8 @@ export default async function WritingArticlePage({ params }: PageProps) {
           __html: JSON.stringify(breadcrumbJsonLd),
         }}
       />
-      <ArticleToc />
       <ArticleSearchBridge />
-      <header className="article-header mx-auto max-w-[40rem]">
+      <header className="article-header">
         <nav className="article-breadcrumb text-xs text-gray-500" aria-label="Breadcrumb">
           <ol className="m-0 flex min-w-0 items-center gap-2 p-0">
             <li>
@@ -198,7 +197,8 @@ export default async function WritingArticlePage({ params }: PageProps) {
         <div className="article-rule border-b border-gray-200" />
       </header>
 
-      <section>
+      <ArticleToc />
+      <section className="article-body">
         <Prose>
           <MDXRemote
             source={post.content}

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
-import { createPortal } from "react-dom";
 
 type TocHeading = {
   id: string;
@@ -20,22 +19,9 @@ export function ArticleToc() {
     () => true,
     () => false,
   );
-  const desktopReady = useSyncExternalStore(
-    (callback) => {
-      if (!isClient) {
-        return () => {};
-      }
-      const media = window.matchMedia("(min-width: 1280px)");
-      const onChange = () => callback();
-      media.addEventListener("change", onChange);
-      return () => media.removeEventListener("change", onChange);
-    },
-    () => (isClient ? window.matchMedia("(min-width: 1280px)").matches : false),
-    () => false,
-  );
 
   useEffect(() => {
-    if (!isClient || !desktopReady || typeof document === "undefined") {
+    if (!isClient || typeof document === "undefined") {
       return;
     }
 
@@ -83,7 +69,7 @@ export function ArticleToc() {
       }
       observer?.disconnect();
     };
-  }, [desktopReady, isClient, pathname]);
+  }, [isClient, pathname]);
 
   useEffect(() => {
     if (!headings.length) {
@@ -139,7 +125,7 @@ export function ArticleToc() {
     };
   }, [headings]);
 
-  if (!isClient || !desktopReady || headings.length === 0 || typeof document === "undefined") {
+  if (!isClient || headings.length === 0 || typeof document === "undefined") {
     return null;
   }
 
@@ -162,36 +148,33 @@ export function ArticleToc() {
     window.history.replaceState(null, "", `#${id}`);
   };
 
-  return createPortal(
-    <aside
-     
-      style={{
-        position: "fixed",
-        top: "7rem",
-        right: "1.5rem",
-        width: "14rem",
-      }}
-    >
-      <p className="mb-3 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">On This Page</p>
-      <nav>
-        <ol className="m-0 space-y-2 p-0">
-          {headings.map((heading, index) => (
-            <li key={`${heading.id}-${index}`} className={heading.level === 3 ? "pl-3" : ""}>
-              <Link
-                href={`#${heading.id}`}
-                onClick={(event) => handleTocClick(event, heading.id)}
-               
-                className={`text-xs transition-colors ${
-                  highlightedId === heading.id ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                {heading.text}
-              </Link>
-            </li>
-          ))}
-        </ol>
+  const links = (
+    <ol className="article-toc-list">
+      {headings.map((heading) => (
+        <li key={heading.id} className={heading.level === 3 ? "article-toc-nested" : ""}>
+          <Link
+            href={`#${heading.id}`}
+            onClick={(event) => handleTocClick(event, heading.id)}
+            aria-current={highlightedId === heading.id ? "location" : undefined}
+            className="article-toc-link"
+          >
+            {heading.text}
+          </Link>
+        </li>
+      ))}
+    </ol>
+  );
+
+  return (
+    <aside className="article-toc">
+      <nav className="article-toc-desktop" aria-label="On this page">
+        <p className="article-toc-label">On this page</p>
+        {links}
       </nav>
-    </aside>,
-    document.body,
+      <details className="article-toc-mobile">
+        <summary>On this page</summary>
+        <nav aria-label="On this page">{links}</nav>
+      </details>
+    </aside>
   );
 }

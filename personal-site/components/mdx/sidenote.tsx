@@ -26,7 +26,7 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
   const canCollapseDesktop = desktopOverflow;
 
   useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia("(min-width: 1100px)").matches) {
+    if (typeof window === "undefined") {
       return;
     }
 
@@ -78,7 +78,7 @@ export function Sidenote({ children, label = "Note" }: SidenoteProps) {
   }, [open]);
 
   const handleMarkerClick = () => {
-    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1100px)").matches) {
+    if (typeof window !== "undefined" && window.matchMedia("(min-width: 90rem)").matches) {
       if (!desktopOverflow) {
         return;
       }
