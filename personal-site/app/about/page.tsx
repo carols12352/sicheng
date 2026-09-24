@@ -84,7 +84,8 @@ export default function AboutPage() {
           <li>At Tencent Music, evaluated 10 speech synthesis models across 20+ experiments and improved vocal consistency by 20%.</li>
           <li>Built a React Native map app with location visualization and optimized trail storage and rendering performance.</li>
           <li>Ran handwriting recognition data experiments to 96% accuracy and deployed a local DeepSeek setup used by 20 researchers.</li>
-          <li>Currently building inventory tooling, SOP improvements, and website updates for Mui Scientific.</li>
+          <li>Infrastructure &amp; DevOps Engineer at WATcloud. Ongoing.</li>
+          <li>Built inventory tooling, SOP improvements, and website updates for Mui Scientific (April–August 2026).</li>
         </ul>
       </section>
 

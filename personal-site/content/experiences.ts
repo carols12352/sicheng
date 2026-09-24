@@ -2,12 +2,23 @@ import type { ExperienceEntry } from "@/components/experiences/experiences-tree-
 
 export const experienceEntries: ExperienceEntry[] = [
   {
+    anchor: "watcloud",
+    period: "2026.09 - Present",
+    role: "Infrastructure & DevOps Engineer",
+    organization: "WATcloud",
+    summary: "Ongoing.",
+    stack: [],
+    highlights: [],
+    focus: "",
+    outcomes: [],
+  },
+  {
     anchor: "mui-scientific",
-    period: "2026.04 - Present",
+    period: "2026.04 - 2026.08",
     role: "Software Engineer",
     organization: "Mui Scientific",
     summary:
-      "Building internal inventory tooling, refining standard operating procedures, and reshaping the public website for a growing medical device company.",
+      "Built internal inventory tooling, refined standard operating procedures, and reshaped the public website for a growing medical device company.",
     stack: [
       { name: "TypeScript", href: "https://www.typescriptlang.org/" },
       { name: "React", href: "https://react.dev/" },

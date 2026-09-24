@@ -51,11 +51,18 @@ const selectedWork = [
 
 const pastExperiences = [
   {
+    role: "Infrastructure & DevOps Engineer",
+    organization: "WATcloud",
+    period: "2026.09 - Present",
+    description: "Ongoing.",
+    href: "/experiences#watcloud",
+  },
+  {
     role: "Software Engineer",
     organization: "Mui Scientific",
-    period: "2026.04 - Present",
+    period: "2026.04 - 2026.08",
     description:
-      "Building internal inventory tooling, refining standard operating procedures, and reshaping the public website for a growing medical device company.",
+      "Built internal inventory tooling, refined standard operating procedures, and reshaped the public website for a growing medical device company.",
     href: "/experiences#mui-scientific",
   },
   {
@@ -97,9 +104,13 @@ const growthTimeline = [
   {
     phase: "2026.04-2026.08",
     period: "Software Engineer @ Mui Scientific",
-    detail: "Building a new inventory system, refining legacy software, and updating the company's website.",
-  }
-
+    detail: "Built a new inventory system, refined legacy software, and updated the company's website.",
+  },
+  {
+    phase: "2026.09 - Present",
+    period: "Infrastructure & DevOps Engineer @ WATcloud",
+    detail: "Ongoing.",
+  },
 ];
 
 export default function Home() {
@@ -117,7 +128,7 @@ export default function Home() {
     <div className="home-canvas home-load-enter">
       <RevealSection
         tone="hero"
-        className="home-band home-hero home-hero-sweep flex min-h-0 items-center px-6 py-8 sm:min-h-[calc(100svh-8.5rem)] sm:px-10 sm:py-14 lg:px-14"
+        className="home-band home-hero home-hero-sweep flex min-h-0 items-center px-6 py-8 sm:min-h-[min(38rem,calc(100svh-15rem))] sm:px-10 sm:py-14 lg:px-14"
       >
         <div className="home-hero-grid mx-auto w-full max-w-6xl">
           <div>
@@ -230,7 +241,7 @@ export default function Home() {
       <RevealSection className="home-band home-section home-section-connected px-6 py-[4.5rem] sm:px-10 sm:py-[5.5rem] lg:px-14">
         <div className="mx-auto w-full max-w-6xl">
           <div className="flex items-end justify-between gap-4">
-            <h2 className="section-title">Past Experience</h2>
+            <h2 className="section-title">Experience</h2>
             <Link href="/experiences" className="ui-link ui-underline text-sm">
               View all experience
             </Link>
