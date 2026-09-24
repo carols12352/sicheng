@@ -1,7 +1,9 @@
 "use client";
 
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { DETAIL_WINDOW_DURATION, DETAIL_WINDOW_TRANSITION } from "@/components/detail/detail-window-motion";
+import { DetailWindow } from "@/components/detail/detail-window";
 import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 import { MermaidDiagram } from "@/components/projects/mermaid-diagram";
 import { TerminalDemo } from "@/components/projects/terminal-demo";
@@ -29,9 +31,8 @@ type ProjectsTreeTimelineProps = {
 
 export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTreeTimelineProps) {
   const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const dialogRef = useRef<HTMLElement>(null);
   const reduceMotion = useAppReducedMotion();
+  const [windowMinimized, setWindowMinimized] = useState(false);
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
   const orderedProjects = useMemo(
@@ -50,7 +51,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
     if (window.location.hash === next) {
       return;
     }
-    window.history.replaceState(null, "", `${window.location.pathname}${next}`);
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${next}`);
   }, []);
 
   const clearHash = useCallback(() => {
@@ -60,72 +61,31 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
     if (!window.location.hash) {
       return;
     }
-    window.history.replaceState(null, "", window.location.pathname);
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
   }, []);
 
   const closeProject = useCallback(() => {
-    setIsFullscreen(false);
     setActiveProject(null);
     clearHash();
   }, [clearHash]);
 
   useEffect(() => {
-    if (!activeProject) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    const previousFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const dialogNode = dialogRef.current;
-    document.body.style.overflow = "hidden";
-
-    window.requestAnimationFrame(() => {
-      const target = dialogNode?.querySelector<HTMLElement>("button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
-      (target ?? dialogNode)?.focus();
-    });
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeProject();
-        return;
-      }
-      if (event.key !== "Tab" || !dialogNode) {
-        return;
-      }
-
-      const focusable = Array.from(
-        dialogNode.querySelectorAll<HTMLElement>(
-          "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])",
-        ),
-      );
-      if (focusable.length === 0) {
-        event.preventDefault();
-        dialogNode.focus();
-        return;
-      }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+    const syncHash = () => {
+      setWindowMinimized(false);
+      const anchor = window.location.hash.slice(1);
+      setActiveProject(projects.find((item) => item.anchor === anchor) ?? null);
     };
-
-    window.addEventListener("keydown", handleKeyDown);
+    const frame = window.requestAnimationFrame(syncHash);
+    window.addEventListener("hashchange", syncHash);
     return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-      previousFocused?.focus();
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", syncHash);
     };
-  }, [activeProject, closeProject]);
+  }, [projects]);
 
   const cardTransition = {
-    type: "tween",
-    duration: reduceMotion ? 0 : 0.36,
-    ease: [0.22, 1, 0.36, 1] as const,
+    ...DETAIL_WINDOW_TRANSITION,
+    duration: reduceMotion ? 0 : DETAIL_WINDOW_DURATION,
   };
   const highlightText = (text: string) => {
     if (!normalizedQuery) {
@@ -161,14 +121,21 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                     isActive ? "border-gray-300 project-card-active-shadow" : "border-gray-200 shadow-sm hover:border-gray-300"
                   }`}
                 >
+                  <motion.div
+                    initial={false}
+                    animate={{ opacity: isActive && !windowMinimized ? 0 : 1 }}
+                    transition={{ duration: 0, delay: reduceMotion || (isActive && !windowMinimized) ? 0 : DETAIL_WINDOW_DURATION }}
+                    data-detail-card-content
+                  >
                   <button
                     type="button"
                     onClick={() => {
-                      setIsFullscreen(false);
+                      setWindowMinimized(false);
                       setActiveProject(project);
                       setHash(project.anchor);
                     }}
                     className="w-full text-left"
+                    aria-haspopup="dialog"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
@@ -208,6 +175,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                     </a>
                     ) : null}
                   </div>
+                  </motion.div>
                 </motion.div>
               </article>
             );
@@ -217,64 +185,16 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
 
       <AnimatePresence initial={!reduceMotion}>
         {activeProject ? (
-          <>
-            <motion.button
-              type="button"
-             
-              className="project-modal-backdrop fixed inset-0 z-40 backdrop-blur-[1px]"
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.2, ease: "easeOut" }}
-              onClick={closeProject}
-            />
-
-            <div
-              className="fixed inset-0 z-50 overflow-y-auto px-4 py-8 sm:px-10 sm:py-14"
-              onClick={(event) => {
-                if (event.target === event.currentTarget) {
-                  closeProject();
-                }
-              }}
-            >
-              <motion.section
-                ref={dialogRef}
-                layoutId={reduceMotion ? undefined : `project-card-${activeProject.anchor}`}
-                transition={cardTransition}
-                className={`project-card-surface project-modal-surface mx-auto w-full rounded-2xl border border-gray-300 bg-white text-left ${
-                  isFullscreen
-                    ? "max-w-none min-h-[calc(100dvh-4rem)] p-6 sm:min-h-[calc(100dvh-6rem)] sm:p-8"
-                    : "max-w-5xl p-7 sm:p-12"
-                }`}
-              >
-                <div className="mb-6 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={closeProject}
-                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#ff5f57] text-[9px] text-black/60"
-                    >
-                      <span>×</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={closeProject}
-                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#febc2e] text-[9px] text-black/60"
-                    >
-                      <span>−</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsFullscreen((prev) => !prev)}
-                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#28c840] text-[8px] text-black/60"
-                    >
-                      <span>{isFullscreen ? "↙" : "↗"}</span>
-                    </button>
-                  </div>
-                </div>
-
+          <DetailWindow
+            key={activeProject.anchor}
+            layoutId={`project-card-${activeProject.anchor}`}
+            title={activeProject.name}
+            titleId={`project-dialog-title-${activeProject.anchor}`}
+            onClose={closeProject}
+            onMinimizedChange={setWindowMinimized}
+          >
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">
+                  <p className="text-xs font-medium tracking-wide text-gray-500">
                     {activeProject.period}
                   </p>
                   <div className="flex items-center gap-3">
@@ -362,9 +282,7 @@ export function ProjectsTreeTimeline({ projects, searchQuery = "" }: ProjectsTre
                   </section>
 
                 </div>
-              </motion.section>
-            </div>
-          </>
+          </DetailWindow>
         ) : null}
       </AnimatePresence>
     </LayoutGroup>

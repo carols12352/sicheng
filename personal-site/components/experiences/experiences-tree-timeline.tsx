@@ -1,7 +1,9 @@
 "use client";
 
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { DETAIL_WINDOW_DURATION, DETAIL_WINDOW_TRANSITION } from "@/components/detail/detail-window-motion";
+import { DetailWindow } from "@/components/detail/detail-window";
 import { useAppReducedMotion } from "@/hooks/use-app-reduced-motion";
 
 export type ExperienceEntry = {
@@ -25,9 +27,8 @@ type ExperiencesTreeTimelineProps = {
 
 export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: ExperiencesTreeTimelineProps) {
   const [activeExperience, setActiveExperience] = useState<ExperienceEntry | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const dialogRef = useRef<HTMLElement>(null);
   const reduceMotion = useAppReducedMotion();
+  const [windowMinimized, setWindowMinimized] = useState(false);
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
   const orderedExperiences = useMemo(
@@ -41,7 +42,7 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
     }
     const next = `#${anchor}`;
     if (window.location.hash !== next) {
-      window.history.replaceState(null, "", `${window.location.pathname}${next}`);
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${next}`);
     }
   }, []);
 
@@ -49,72 +50,31 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
     if (typeof window === "undefined" || !window.location.hash) {
       return;
     }
-    window.history.replaceState(null, "", window.location.pathname);
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
   }, []);
 
   const closeExperience = useCallback(() => {
-    setIsFullscreen(false);
     setActiveExperience(null);
     clearHash();
   }, [clearHash]);
 
   useEffect(() => {
-    if (!activeExperience) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    const previousFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const dialogNode = dialogRef.current;
-    document.body.style.overflow = "hidden";
-
-    window.requestAnimationFrame(() => {
-      const target = dialogNode?.querySelector<HTMLElement>("button, a[href], [tabindex]:not([tabindex='-1'])");
-      (target ?? dialogNode)?.focus();
-    });
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeExperience();
-        return;
-      }
-      if (event.key !== "Tab" || !dialogNode) {
-        return;
-      }
-
-      const focusable = Array.from(
-        dialogNode.querySelectorAll<HTMLElement>(
-          "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])",
-        ),
-      );
-      if (focusable.length === 0) {
-        event.preventDefault();
-        dialogNode.focus();
-        return;
-      }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+    const syncHash = () => {
+      setWindowMinimized(false);
+      const anchor = window.location.hash.slice(1);
+      setActiveExperience(experiences.find((item) => item.anchor === anchor) ?? null);
     };
-
-    window.addEventListener("keydown", handleKeyDown);
+    const frame = window.requestAnimationFrame(syncHash);
+    window.addEventListener("hashchange", syncHash);
     return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-      previousFocused?.focus();
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", syncHash);
     };
-  }, [activeExperience, closeExperience]);
+  }, [experiences]);
 
   const cardTransition = {
-    type: "tween",
-    duration: reduceMotion ? 0 : 0.36,
-    ease: [0.22, 1, 0.36, 1] as const,
+    ...DETAIL_WINDOW_TRANSITION,
+    duration: reduceMotion ? 0 : DETAIL_WINDOW_DURATION,
   };
 
   const highlightText = (text: string) => {
@@ -151,14 +111,21 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
                     isActive ? "border-gray-300 project-card-active-shadow" : "border-gray-200 shadow-sm hover:border-gray-300"
                   }`}
                 >
+                  <motion.div
+                    initial={false}
+                    animate={{ opacity: isActive && !windowMinimized ? 0 : 1 }}
+                    transition={{ duration: 0, delay: reduceMotion || (isActive && !windowMinimized) ? 0 : DETAIL_WINDOW_DURATION }}
+                    data-detail-card-content
+                  >
                   <button
                     type="button"
                     onClick={() => {
-                      setIsFullscreen(false);
+                      setWindowMinimized(false);
                       setActiveExperience(experience);
                       setHash(experience.anchor);
                     }}
                     className="w-full text-left"
+                    aria-haspopup="dialog"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
@@ -193,6 +160,7 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
                       </a>
                     </div>
                   ) : null}
+                  </motion.div>
                 </motion.div>
               </article>
             );
@@ -202,76 +170,19 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
 
       <AnimatePresence initial={!reduceMotion}>
         {activeExperience ? (
-          <>
-            <motion.button
-              type="button"
-              className="project-modal-backdrop fixed inset-0 z-40 backdrop-blur-[1px]"
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.2, ease: "easeOut" }}
-              onClick={closeExperience}
-            />
-
-            <div
-              className="fixed inset-0 z-50 overflow-y-auto px-4 py-8 sm:px-10 sm:py-14"
-              onClick={(event) => {
-                if (event.target === event.currentTarget) {
-                  closeExperience();
-                }
-              }}
-            >
-              <motion.section
-                ref={dialogRef}
-                layoutId={reduceMotion ? undefined : `experience-card-${activeExperience.anchor}`}
-                transition={cardTransition}
-                className={`project-card-surface project-modal-surface mx-auto w-full rounded-2xl border border-gray-300 bg-white text-left ${
-                  isFullscreen
-                    ? "max-w-none min-h-[calc(100dvh-4rem)] p-6 sm:min-h-[calc(100dvh-6rem)] sm:p-8"
-                    : "max-w-5xl p-7 sm:p-12"
-                }`}
-              >
-                <div className="mb-6 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={closeExperience}
-                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#ff5f57] text-[9px] text-black/60"
-                    >
-                      <span>×</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={closeExperience}
-                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#febc2e] text-[9px] text-black/60"
-                    >
-                      <span>−</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsFullscreen((prev) => !prev)}
-                      className="flex h-3 w-3 items-center justify-center rounded-full bg-[#28c840] text-[8px] text-black/60"
-                    >
-                      <span>{isFullscreen ? "↙" : "↗"}</span>
-                    </button>
-                  </div>
-                  {activeExperience.link ? (
-                    <a
-                      href={activeExperience.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-800 hover:decoration-gray-500"
-                    >
-                      <span>↗</span>
-                      Organization
-                    </a>
-                  ) : null}
-                </div>
-
-                <p className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-gray-500 uppercase">
+          <DetailWindow
+            key={activeExperience.anchor}
+            layoutId={`experience-card-${activeExperience.anchor}`}
+            title={activeExperience.organization}
+            titleId={`experience-dialog-title-${activeExperience.anchor}`}
+            onClose={closeExperience}
+            onMinimizedChange={setWindowMinimized}
+          >
+                {activeExperience.link ? <a href={activeExperience.link} target="_blank" rel="noreferrer" className="ui-link ui-underline text-xs">Organization ↗</a> : null}
+                <p className="text-xs font-medium tracking-wide text-gray-500">
                   {activeExperience.period}
                 </p>
-                <h2 className="mt-6 text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
+                <h2 id={`experience-dialog-title-${activeExperience.anchor}`} className="mt-6 text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
                   {activeExperience.role}
                 </h2>
                 <p className="mt-2 text-sm font-medium text-gray-500">
@@ -282,6 +193,7 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
                   {activeExperience.summary}
                 </p>
 
+                {activeExperience.stack.length || activeExperience.highlights.length || activeExperience.focus || activeExperience.outcomes.length ? (
                 <div className="mt-12 border-t border-gray-200 pt-0">
                   <section>
                     <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
@@ -337,9 +249,8 @@ export function ExperiencesTreeTimeline({ experiences, searchQuery = "" }: Exper
                     </ul>
                   </section>
                 </div>
-              </motion.section>
-            </div>
-          </>
+                ) : null}
+          </DetailWindow>
         ) : null}
       </AnimatePresence>
     </LayoutGroup>
