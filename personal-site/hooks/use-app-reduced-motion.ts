@@ -1,10 +1,18 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { useReducedMotion } from "framer-motion";
 
-export function useAppReducedMotion(): boolean {
-  const systemReducedMotion = useReducedMotion() ?? false;
+export function useAppReducedMotion(decorative = false): boolean {
+  // Use the server snapshot during hydration so motion wrappers have identical markup.
+  const systemReducedMotion = useSyncExternalStore(
+    (callback) => {
+      const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+      media.addEventListener("change", callback);
+      return () => media.removeEventListener("change", callback);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
   const appMotionMode = useSyncExternalStore<"full" | "reduced" | "none">(
     (callback) => {
       window.addEventListener("site:motion-pref-changed", callback);
@@ -24,5 +32,5 @@ export function useAppReducedMotion(): boolean {
     () => "full",
   );
 
-  return appMotionMode === "none" || systemReducedMotion;
+  return appMotionMode === "none" || systemReducedMotion || (decorative && appMotionMode === "reduced");
 }
