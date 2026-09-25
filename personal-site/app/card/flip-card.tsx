@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type PointerEvent, type KeyboardEvent, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type PointerEvent, type KeyboardEvent, type MouseEvent, type CSSProperties } from "react";
 import { CardIcon } from "./card-icon";
 import { ShareProfile } from "./share-profile";
 import styles from "./card.module.css";
@@ -13,6 +13,12 @@ const shortcuts = [
   { href: "/projects", title: "Projects", description: "Things I’ve built" },
   { href: "/resume", title: "Resume", description: "The short version" },
 ];
+
+const contacts = [
+  { icon: "mail", label: "sicheng.ouyang@uwaterloo.ca", href: "mailto:sicheng.ouyang@uwaterloo.ca", external: false },
+  { icon: "linkedin", label: "linkedin.com/in/sicheng-ouyang", href: "https://www.linkedin.com/in/sicheng-ouyang/", external: true },
+  { icon: "github", label: "github.com/carols12352", href: "https://github.com/carols12352", external: true },
+] as const;
 
 // Round trigonometric CSS values: JS engines can differ in their last float bits.
 // Eight tangent segments per rounded corner complete the extruded rim.
@@ -68,26 +74,27 @@ export function FlipCard() {
     } as CSSProperties;
   }
 
-  function startDrag(event: PointerEvent<HTMLButtonElement>) {
+  function startDrag(event: PointerEvent<HTMLDivElement>) {
     if (sequenceBusy.current || !event.isPrimary || event.button !== 0) return;
     gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, rx: angle.x, ry: angle.y, moved: false };
     suppressClick.current = false;
-    event.currentTarget.setPointerCapture(event.pointerId);
   }
 
-  function drag(event: PointerEvent<HTMLButtonElement>) {
+  function drag(event: PointerEvent<HTMLDivElement>) {
     const start = gesture.current;
     if (!start || start.id !== event.pointerId) return;
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
     if (!start.moved && Math.hypot(dx, dy) < 7) return;
+    // Capture only once it is a drag, so a plain tap still reaches links on the card.
+    if (!start.moved) event.currentTarget.setPointerCapture(event.pointerId);
     start.moved = true;
     suppressClick.current = true;
     setDragging(true);
     setAngle({ x: Math.max(-35, Math.min(35, start.rx - dy * .3)), y: start.ry + dx * .7 });
   }
 
-  function endDrag(event: PointerEvent<HTMLButtonElement>) {
+  function endDrag(event: PointerEvent<HTMLDivElement>) {
     if (gesture.current?.id !== event.pointerId) return;
     if (event.type === "pointercancel") suppressClick.current = true;
     gesture.current = null;
@@ -204,9 +211,21 @@ export function FlipCard() {
     }
   }
 
-  function keyboard(event: KeyboardEvent<HTMLButtonElement>) {
+  function tap(event: MouseEvent<HTMLDivElement>) {
+    if (suppressClick.current) {
+      event.preventDefault();
+      return;
+    }
+    if (!(event.target as Element).closest("a")) void reveal();
+  }
+
+  function keyboard(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.target !== event.currentTarget) return;
     if (sequenceBusy.current) { event.preventDefault(); return; }
-    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      void reveal();
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
       setAngle((value) => ({ ...value, y: value.y + (event.key === "ArrowRight" ? 30 : -30) }));
     } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
@@ -224,13 +243,14 @@ export function FlipCard() {
       <div ref={liftRef} className={styles.cardLift}>
         <div className={styles.stage}>
           <div ref={depthRef} className={styles.toss}>
-          <button type="button" className={styles.cardControl}
-            aria-label="Sicheng Ouyang’s card. Drag or use arrow keys to rotate. Click or press Enter to show quick links."
-            aria-expanded={opened} aria-busy={returning} aria-controls="card-links" aria-describedby="card-instructions"
+          <div role="group" tabIndex={0} className={styles.cardControl}
+            aria-roledescription="business card"
+            aria-label="Sicheng Ouyang’s card. Drag or use arrow keys to rotate. Tap or press Enter to show quick links."
+            aria-busy={returning} aria-describedby="card-instructions"
             onPointerDown={startDrag} onPointerMove={drag} onPointerUp={endDrag} onPointerCancel={endDrag}
             onLostPointerCapture={() => { gesture.current = null; setDragging(false); }}
             onKeyDown={keyboard}
-            onClick={(event) => { if (event.detail === 0 || !suppressClick.current) reveal(); }}
+            onClick={tap}
             data-dragging={dragging}
           >
             <span ref={bodyRef} className={styles.cardBody} data-returning={returning} data-dragging={dragging} style={{ ...metalLighting(), transform: `rotateX(${angle.x}deg) rotateY(${angle.y}deg)` }}>
@@ -240,20 +260,27 @@ export function FlipCard() {
               <span className={`${styles.rim} ${styles.rimRight}`} aria-hidden="true" />
               {cornerSegments.map((segment) => <span key={segment.key} className={`${styles.rim} ${styles.rimCorner}`} style={segment.style} aria-hidden="true" />)}
               <span className={`${styles.face} ${styles.front}`} aria-hidden={backVisible} style={metalLighting()}>
-                <Image className={styles.logo} src="/favicon-light.png" alt="" width={100} height={100} priority draggable={false} />
-                <span className={styles.frontIdentity}><span className={styles.name}>Sicheng Ouyang</span><span className={styles.frontRole}>Software Engineering</span></span>
+                <Link className={styles.logo} href="/" aria-label="Sicheng Ouyang’s website" tabIndex={backVisible ? -1 : 0} draggable={false}>
+                  <Image src="/favicon-light.png" alt="" width={100} height={100} priority draggable={false} />
+                </Link>
+                <span className={styles.frontIdentity}>
+                  <span className={styles.name}>Sicheng Ouyang</span>
+                  <a className={styles.frontRole} href="https://uwaterloo.ca/future-students/programs/software-engineering" target="_blank" rel="noreferrer" tabIndex={backVisible ? -1 : 0} draggable={false}>Software Engineering @ UWaterloo</a>
+                </span>
               </span>
               <span className={`${styles.face} ${styles.back}`} aria-hidden={!backVisible} style={metalLighting(true)}>
                 <span className={styles.backTop}>Let’s connect.<Image src="/favicon-light.png" alt="" width={32} height={32} draggable={false} /></span>
                 <span className={styles.contactRows}>
-                  <span><CardIcon name="mail" /><span>sicheng.ouyang@uwaterloo.ca</span></span>
-                  <span><CardIcon name="linkedin" /><span>linkedin.com/in/sicheng-ouyang</span></span>
-                  <span><CardIcon name="github" /><span>github.com/carols12352</span></span>
+                  {contacts.map((contact) => (
+                    <a key={contact.icon} href={contact.href} target={contact.external ? "_blank" : undefined} rel={contact.external ? "noreferrer" : undefined} tabIndex={backVisible ? 0 : -1} draggable={false}>
+                      <CardIcon name={contact.icon} /><span>{contact.label}</span>
+                    </a>
+                  ))}
                 </span>
                 <span className={styles.backBottom}>Sicheng Ouyang<span>Waterloo, Ontario</span></span>
               </span>
             </span>
-          </button>
+          </div>
           </div>
         </div>
       </div>
