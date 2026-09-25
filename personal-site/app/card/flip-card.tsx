@@ -50,9 +50,12 @@ export function FlipCard() {
   const sequenceBusy = useRef(false);
   const animations = useRef<Animation[]>([]);
   const openTimer = useRef<number | undefined>(undefined);
+  const dragFrame = useRef<number | undefined>(undefined);
+  const pendingAngle = useRef<{ x: number; y: number } | null>(null);
   const [returning, setReturning] = useState(false);
   useEffect(() => () => {
     window.clearTimeout(openTimer.current);
+    if (dragFrame.current !== undefined) window.cancelAnimationFrame(dragFrame.current);
     animations.current.forEach((animation) => animation.cancel());
   }, []);
   const backVisible = Math.cos(angle.y * Math.PI / 180) < 0;
@@ -91,12 +94,22 @@ export function FlipCard() {
     start.moved = true;
     suppressClick.current = true;
     setDragging(true);
-    setAngle({ x: Math.max(-35, Math.min(35, start.rx - dy * .3)), y: start.ry + dx * .7 });
+    // High-rate touch input would otherwise re-render and relight the card several times per frame.
+    pendingAngle.current = { x: Math.max(-35, Math.min(35, start.rx - dy * .3)), y: start.ry + dx * .7 };
+    dragFrame.current ??= window.requestAnimationFrame(flushDrag);
+  }
+
+  function flushDrag() {
+    if (dragFrame.current !== undefined) window.cancelAnimationFrame(dragFrame.current);
+    dragFrame.current = undefined;
+    if (pendingAngle.current) setAngle(pendingAngle.current);
+    pendingAngle.current = null;
   }
 
   function endDrag(event: PointerEvent<HTMLDivElement>) {
     if (gesture.current?.id !== event.pointerId) return;
     if (event.type === "pointercancel") suppressClick.current = true;
+    flushDrag();
     gesture.current = null;
     setDragging(false);
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
