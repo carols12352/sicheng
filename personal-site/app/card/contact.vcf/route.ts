@@ -10,6 +10,7 @@ export function GET() {
     "FN:Sicheng Ouyang",
     "ORG:University of Waterloo",
     "TITLE:Software Engineering Student",
+    "TEL;TYPE=CELL,VOICE:+1-647-531-8488",
     "EMAIL;TYPE=INTERNET:sicheng.ouyang@uwaterloo.ca",
     `URL:${SITE_URL}`,
     "X-SOCIALPROFILE;TYPE=linkedin:https://www.linkedin.com/in/sicheng-ouyang/",
