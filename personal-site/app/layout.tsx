@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteFrame } from "@/components/site/site-frame";
 import { AnalyticsConsentGate } from "@/components/analytics/analytics-consent-gate";
@@ -38,6 +38,10 @@ const THEME_INIT_SCRIPT = `
   } catch {}
 })();
 `;
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -106,7 +110,6 @@ export const metadata: Metadata = {
     ],
   },
   other: {
-    "theme-color": "#ffffff",
     "color-scheme": "light dark",
     "msapplication-TileColor": "#111111",
   },

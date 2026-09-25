@@ -1,8 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo";
 import { FlipCard } from "./flip-card";
 import styles from "./card.module.css";
+
+export const viewport: Viewport = {
+  themeColor: "#e6e9ee",
+  colorScheme: "light",
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Sicheng Ouyang — Digital card",

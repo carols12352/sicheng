@@ -1,11 +1,14 @@
+/* Mobile toolbars and overscroll reveal the document, not .page.
+   !important beats the inline color-scheme the theme script puts on <html>. */
+:global(html):has(.page), :global(body):has(.page) { background: #e6e9ee; color-scheme: light !important; }
 .page {
   --ink: #242b37;
   --muted: #6a7280;
-  min-height: 100svh;
+  min-height: 100dvh;
   display: grid;
   align-content: center;
   justify-items: center;
-  padding: max(115px, env(safe-area-inset-top)) 28px max(55px, env(safe-area-inset-bottom));
+  padding: calc(env(safe-area-inset-top) + clamp(40px, 9vh, 115px)) max(28px, env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + clamp(32px, 6vh, 55px)) max(28px, env(safe-area-inset-left));
   background: radial-gradient(ellipse at 50% 37%, #fff 0, #f0f1f4 50%, #e6e9ee 100%);
   color: var(--ink);
   color-scheme: light;
@@ -90,7 +93,7 @@
 .noScript { font-size: 13px; text-align: center; margin-top: 25px; }
 @media (hover: hover) { .save:hover { background: #40516e; } .share:hover { background: #e0e5ed; } .shortcuts a:hover, .turn:hover, .contactLinks a:hover { color: #305390; } }
 @media (max-width: 420px) {
-  .page { padding-inline: 25px; }
+  .page { padding-inline: max(22px, env(safe-area-inset-left)) max(22px, env(safe-area-inset-right)); }
   .composition { --radius: 14px; }
   .contactRows { gap: 9px; }
   .contactRows svg { width: 14px; height: 14px; }
