@@ -20,7 +20,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function CardPage() {
-  return <main className={styles.page}>
+  return <main className={styles.page} data-theme-fade="css">
     <h1 className={styles.srOnly}>Sicheng Ouyang — digital business card</h1>
     <FlipCard />
     <noscript><p className={styles.noScript}>Sicheng Ouyang · Software Engineering at Waterloo<br /><a href="/card/contact.vcf" download>Save contact</a> · <Link href="/">Visit my website</Link></p></noscript>

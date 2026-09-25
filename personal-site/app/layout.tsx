@@ -46,7 +46,9 @@ const THEME_INIT_SCRIPT = `
         root.style.colorScheme = next;
       };
       const still = root.dataset.motion !== "full" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (document.startViewTransition && !still) document.startViewTransition(apply);
+      // Pages that animate their own colors opt out: WebKit replays 3D transform transitions inside view transitions.
+      const ownFade = document.querySelector("[data-theme-fade='css']");
+      if (document.startViewTransition && !still && !ownFade) document.startViewTransition(apply);
       else apply();
     });
   } catch {}

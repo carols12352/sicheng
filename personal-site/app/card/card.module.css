@@ -1,5 +1,41 @@
 /* light-dark() follows the color-scheme the site theme script resolves onto <html>. */
+/* Registered as colors so a theme change interpolates them (gradients included) instead of snapping. */
+@property --canvas { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --canvas-mid { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --canvas-glow { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --ink { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --muted { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --ground { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --rim-1 { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --rim-2 { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --rim-3 { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --rim-4 { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --metal { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --metal-edge { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --sheen { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --sheen-soft { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --sheen-streak { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --sheen-shadow { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --shade { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --edge-hi { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --edge-side { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --edge-lo { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --emboss { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --name { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --role { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --icon { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --fine { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --turn { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --divider { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --save-bg { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --save-fg { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --share-border { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --link { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --line { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --chevron { syntax: "<color>"; inherits: true; initial-value: transparent; }
 :global(html):has(.page) {
+  transition: --canvas var(--theme-fade), --canvas-mid var(--theme-fade), --canvas-glow var(--theme-fade), --ink var(--theme-fade), --muted var(--theme-fade), --ground var(--theme-fade), --rim-1 var(--theme-fade), --rim-2 var(--theme-fade), --rim-3 var(--theme-fade), --rim-4 var(--theme-fade), --metal var(--theme-fade), --metal-edge var(--theme-fade), --sheen var(--theme-fade), --sheen-soft var(--theme-fade), --sheen-streak var(--theme-fade), --sheen-shadow var(--theme-fade), --shade var(--theme-fade), --edge-hi var(--theme-fade), --edge-side var(--theme-fade), --edge-lo var(--theme-fade), --emboss var(--theme-fade), --name var(--theme-fade), --role var(--theme-fade), --icon var(--theme-fade), --fine var(--theme-fade), --turn var(--theme-fade), --divider var(--theme-fade), --save-bg var(--theme-fade), --save-fg var(--theme-fade), --share-border var(--theme-fade), --link var(--theme-fade), --line var(--theme-fade), --chevron var(--theme-fade);
+  --theme-fade: 420ms cubic-bezier(.4,0,.2,1);
   --canvas: light-dark(#e6e9ee, #0f1114);
   --canvas-mid: light-dark(#f0f1f4, #15181c);
   --canvas-glow: light-dark(#fff, #252a31);
@@ -50,11 +86,15 @@
   align-content: center;
   justify-items: center;
   padding: calc(env(safe-area-inset-top) + clamp(40px, 9vh, 115px)) max(28px, env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + clamp(32px, 6vh, 55px)) max(28px, env(safe-area-inset-left));
-  background: radial-gradient(ellipse at 50% 37%, var(--canvas-glow) 0, var(--canvas-mid) 50%, var(--canvas) 100%);
+  position: relative;
+  isolation: isolate;
+  background: var(--canvas);
   color: var(--ink);
   font-family: "Avenir Next", "Segoe UI", sans-serif;
   line-height: 1.6;
 }
+/* The glow must fade to --canvas before the top and bottom edges, which toolbars and overscroll show as plain --canvas. */
+.page::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse min(80vw, 640px) 34vh at 50% 40%, var(--canvas-glow) 0, var(--canvas-mid) 50%, var(--canvas) 100%); }
 .page a { text-decoration: none; }
 .composition { --radius: 20px; --thickness: 4px; width: 100%; max-width: 500px; }
 .cardScene { position: relative; }
@@ -86,6 +126,7 @@
 .face[aria-hidden="true"] { pointer-events: none; }
 .face a { color: inherit; cursor: pointer; border-radius: 4px; -webkit-user-drag: none; transition: color 160ms, opacity 160ms; }
 .face > .logo { position: absolute; right: 6%; top: 7%; width: 20%; aspect-ratio: 1; filter: drop-shadow(0 .5px 0 var(--emboss)); }
+.face img { transition: filter var(--theme-fade); }
 :global(html[data-scheme="dark"]) .face img { filter: invert(1); }
 .logo img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .frontIdentity { display: flex; flex-direction: column; align-items: flex-start; margin-top: auto; text-shadow: 0 .5px 0 var(--emboss); }
@@ -149,5 +190,6 @@
   .instructions { gap: 10px; font-size: 9px; }
 
 }
-@media (prefers-reduced-motion: reduce) { .page * { animation: none !important; transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { :global(html):has(.page), .page * { animation: none !important; transition: none !important; } }
+:global(html[data-motion="none"]):has(.page), :global(html[data-motion="reduced"]):has(.page),
 :global(html[data-motion="none"]) .page *, :global(html[data-motion="reduced"]) .page * { animation: none !important; transition: none !important; }
