@@ -52,7 +52,7 @@
 .backTop { display: flex; align-items: center; justify-content: space-between; font-size: clamp(19px, 4vw, 26px); font-weight: 500; letter-spacing: -.04em; }
 .backTop img { width: 8%; height: auto; pointer-events: none; }
 .contactRows { display: grid; gap: 14px; margin: auto 0; }
-.contactRows > a { display: flex; align-items: center; gap: 11px; font-size: clamp(9px, 2.25vw, 13px); letter-spacing: -.015em; }
+.contactRows > a { display: inline-flex; justify-self: start; max-width: 100%; align-items: center; gap: 11px; font-size: clamp(9px, 2.25vw, 13px); letter-spacing: -.015em; }
 .contactRows svg { width: 17px; height: 17px; flex-shrink: 0; color: #5a6476; }
 .backBottom { display: flex; justify-content: space-between; gap: 8px; font-size: clamp(8px, 1.9vw, 10px); color: #5b6474; }
 .instructions { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 38px; font-size: 10px; color: var(--muted); }
