@@ -5,8 +5,11 @@ import { FlipCard } from "./flip-card";
 import styles from "./card.module.css";
 
 export const viewport: Viewport = {
-  themeColor: "#e6e9ee",
-  colorScheme: "light",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#e6e9ee" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1114" },
+  ],
+  colorScheme: "light dark",
   viewportFit: "cover",
 };
 
