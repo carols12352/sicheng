@@ -33,8 +33,9 @@
 @property --link { syntax: "<color>"; inherits: true; initial-value: transparent; }
 @property --line { syntax: "<color>"; inherits: true; initial-value: transparent; }
 @property --chevron { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --logo { syntax: "<color>"; inherits: true; initial-value: transparent; }
 :global(html):has(.page) {
-  transition: --canvas var(--theme-fade), --canvas-mid var(--theme-fade), --canvas-glow var(--theme-fade), --ink var(--theme-fade), --muted var(--theme-fade), --ground var(--theme-fade), --rim-1 var(--theme-fade), --rim-2 var(--theme-fade), --rim-3 var(--theme-fade), --rim-4 var(--theme-fade), --metal var(--theme-fade), --metal-edge var(--theme-fade), --sheen var(--theme-fade), --sheen-soft var(--theme-fade), --sheen-streak var(--theme-fade), --sheen-shadow var(--theme-fade), --shade var(--theme-fade), --edge-hi var(--theme-fade), --edge-side var(--theme-fade), --edge-lo var(--theme-fade), --emboss var(--theme-fade), --name var(--theme-fade), --role var(--theme-fade), --icon var(--theme-fade), --fine var(--theme-fade), --turn var(--theme-fade), --divider var(--theme-fade), --save-bg var(--theme-fade), --save-fg var(--theme-fade), --share-border var(--theme-fade), --link var(--theme-fade), --line var(--theme-fade), --chevron var(--theme-fade);
+  transition: --canvas var(--theme-fade), --canvas-mid var(--theme-fade), --canvas-glow var(--theme-fade), --ink var(--theme-fade), --muted var(--theme-fade), --ground var(--theme-fade), --rim-1 var(--theme-fade), --rim-2 var(--theme-fade), --rim-3 var(--theme-fade), --rim-4 var(--theme-fade), --metal var(--theme-fade), --metal-edge var(--theme-fade), --sheen var(--theme-fade), --sheen-soft var(--theme-fade), --sheen-streak var(--theme-fade), --sheen-shadow var(--theme-fade), --shade var(--theme-fade), --edge-hi var(--theme-fade), --edge-side var(--theme-fade), --edge-lo var(--theme-fade), --emboss var(--theme-fade), --name var(--theme-fade), --role var(--theme-fade), --icon var(--theme-fade), --fine var(--theme-fade), --turn var(--theme-fade), --divider var(--theme-fade), --save-bg var(--theme-fade), --save-fg var(--theme-fade), --share-border var(--theme-fade), --link var(--theme-fade), --line var(--theme-fade), --chevron var(--theme-fade), --logo var(--theme-fade);
   --theme-fade: 420ms cubic-bezier(.4,0,.2,1);
   --canvas: light-dark(#e6e9ee, #0f1114);
   --canvas-mid: light-dark(#f0f1f4, #15181c);
@@ -77,6 +78,7 @@
   --chevron: light-dark(#768296, #7d8797);
   --focus: light-dark(#526eaa, #7aa2e3);
   --hover: light-dark(#305390, #9ec0ff);
+  --logo: light-dark(#111, #eef1f5);
 }
 /* Mobile toolbars and overscroll reveal the document, not .page. */
 :global(html):has(.page), :global(body):has(.page) { background: var(--canvas); }
@@ -124,17 +126,17 @@
 .cardBody[data-dragging="true"] .face::before { transition: none; }
 .front { transform: translateZ(calc(var(--thickness) / 2)); }
 .face[aria-hidden="true"] { pointer-events: none; }
-.face a { color: inherit; cursor: pointer; border-radius: 4px; -webkit-user-drag: none; transition: color 160ms, opacity 160ms; }
-.face > .logo { position: absolute; right: 6%; top: 7%; width: 20%; aspect-ratio: 1; filter: drop-shadow(0 .5px 0 var(--emboss)); }
-.face img { transition: filter var(--theme-fade); }
-:global(html[data-scheme="dark"]) .face img { filter: invert(1); }
-.logo img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.face a { color: inherit; cursor: pointer; border-radius: 4px; -webkit-user-drag: none; transition: color 160ms; }
+.face > .logo { position: absolute; right: 6%; top: 7%; width: 20%; aspect-ratio: 1; }
+/* A mask tinted by a color variable: filters would promote the logo to its own layer and break 3D face culling. */
+.logoMark { display: block; aspect-ratio: 1; background: var(--logo); pointer-events: none; -webkit-mask: url("/favicon-light.png") center / contain no-repeat; mask: url("/favicon-light.png") center / contain no-repeat; }
+.logo .logoMark { width: 100%; height: 100%; }
 .frontIdentity { display: flex; flex-direction: column; align-items: flex-start; margin-top: auto; text-shadow: 0 .5px 0 var(--emboss); }
 .name { font-size: clamp(25px, 6.1vw, 39px); font-weight: 550; letter-spacing: -.06em; line-height: 1.25; color: var(--name); }
 .frontRole { font-size: clamp(10px, 2.4vw, 14px); font-weight: 500; letter-spacing: .015em; margin-top: 7px; color: var(--role); }
 .back { transform: rotateY(180deg) translateZ(calc(var(--thickness) / 2)); color: var(--name); text-shadow: 0 .5px 0 var(--emboss); }
 .backTop { display: flex; align-items: center; justify-content: space-between; font-size: clamp(19px, 4vw, 26px); font-weight: 500; letter-spacing: -.04em; }
-.backTop img { width: 8%; height: auto; pointer-events: none; }
+.backTop .logoMark { width: 8%; }
 .contactRows { display: grid; gap: 14px; margin: auto 0; }
 .contactRows > a { display: inline-flex; justify-self: start; max-width: 100%; align-items: center; gap: 11px; font-size: clamp(9px, 2.25vw, 13px); letter-spacing: -.015em; }
 .contactRows svg { width: 17px; height: 17px; flex-shrink: 0; color: var(--icon); }
@@ -180,8 +182,8 @@
 .cardControl:focus-visible { outline-offset: 8px; }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .noScript { font-size: 13px; text-align: center; margin-top: 25px; }
-@media (hover: hover) { .save:hover { background: var(--save-hover); } .share:hover { background: var(--share-hover); } .shortcuts a:hover, .turn:hover, .contactLinks a:hover, .face a:hover { color: var(--hover); } .face > .logo:hover { opacity: .8; } }
-@media (hover: none) { .face a:active { opacity: .6; } }
+@media (hover: hover) { .save:hover { background: var(--save-hover); } .share:hover { background: var(--share-hover); } .shortcuts a:hover, .turn:hover, .contactLinks a:hover, .face a:hover { color: var(--hover); } .face > .logo:hover .logoMark { background: var(--hover); } }
+@media (hover: none) { .face a:active { color: var(--hover); } .face > .logo:active .logoMark { background: var(--hover); } }
 @media (max-width: 420px) {
   .page { padding-inline: max(22px, env(safe-area-inset-left)) max(22px, env(safe-area-inset-right)); }
   .composition { --radius: 14px; }

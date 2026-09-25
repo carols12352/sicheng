@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type PointerEvent, type KeyboardEvent, type MouseEvent, type CSSProperties } from "react";
 import { CardIcon } from "./card-icon";
@@ -279,7 +278,7 @@ export function FlipCard() {
               {cornerSegments.map((segment) => <span key={segment.key} className={`${styles.rim} ${styles.rimCorner}`} style={segment.style} aria-hidden="true" />)}
               <span className={`${styles.face} ${styles.front}`} aria-hidden={backVisible} style={metalLighting()}>
                 <Link className={styles.logo} href="/" aria-label="Sicheng Ouyang’s website" tabIndex={backVisible ? -1 : 0} draggable={false}>
-                  <Image src="/favicon-light.png" alt="" width={100} height={100} priority draggable={false} />
+                  <span className={styles.logoMark} aria-hidden="true" />
                 </Link>
                 <span className={styles.frontIdentity}>
                   <span className={styles.name}>Sicheng Ouyang</span>
@@ -287,7 +286,7 @@ export function FlipCard() {
                 </span>
               </span>
               <span className={`${styles.face} ${styles.back}`} aria-hidden={!backVisible} style={metalLighting(true)}>
-                <span className={styles.backTop}>Let’s connect.<Image src="/favicon-light.png" alt="" width={32} height={32} draggable={false} /></span>
+                <span className={styles.backTop}>Let’s connect.<span className={styles.logoMark} aria-hidden="true" /></span>
                 <span className={styles.contactRows}>
                   {contacts.map((contact) => (
                     <a key={contact.icon} href={contact.href} target={contact.external ? "_blank" : undefined} rel={contact.external ? "noreferrer" : undefined} tabIndex={backVisible ? 0 : -1} draggable={false}>
