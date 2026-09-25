@@ -248,7 +248,12 @@ export function FlipCard() {
             aria-label="Sicheng Ouyang’s card. Drag or use arrow keys to rotate. Tap or press Enter to show quick links."
             aria-busy={returning} aria-describedby="card-instructions"
             onPointerDown={startDrag} onPointerMove={drag} onPointerUp={endDrag} onPointerCancel={endDrag}
-            onLostPointerCapture={() => { gesture.current = null; setDragging(false); }}
+            onLostPointerCapture={(event) => {
+              // Touch starts implicitly captured by the tapped child; taking capture fires a bubbling loss from it.
+              if (event.target !== event.currentTarget) return;
+              gesture.current = null;
+              setDragging(false);
+            }}
             onKeyDown={keyboard}
             onClick={tap}
             data-dragging={dragging}
