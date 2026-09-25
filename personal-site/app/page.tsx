@@ -51,13 +51,6 @@ const selectedWork = [
 
 const pastExperiences = [
   {
-    role: "Infrastructure & DevOps Engineer",
-    organization: "WATcloud",
-    period: "2026.09 - Present",
-    description: "Ongoing.",
-    href: "/experiences#watcloud",
-  },
-  {
     role: "Software Engineer",
     organization: "Mui Scientific",
     period: "2026.04 - 2026.08",
@@ -105,11 +98,6 @@ const growthTimeline = [
     phase: "2026.04-2026.08",
     period: "Software Engineer @ Mui Scientific",
     detail: "Built a new inventory system, refined legacy software, and updated the company's website.",
-  },
-  {
-    phase: "2026.09 - Present",
-    period: "Infrastructure & DevOps Engineer @ WATcloud",
-    detail: "Ongoing.",
   },
 ];
 
