@@ -34,7 +34,21 @@ const THEME_INIT_SCRIPT = `
     root.dataset.theme = mode;
     root.dataset.motion = motion;
     root.dataset.reduceMotion = motion === "none" ? "true" : "false";
+    root.dataset.scheme = resolved;
     root.style.colorScheme = resolved;
+    // Pages without the theme toggle (e.g. /card) still need to follow live OS changes.
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    media.addEventListener("change", () => {
+      if (root.dataset.theme !== "system") return;
+      const next = media.matches ? "dark" : "light";
+      const apply = () => {
+        root.dataset.scheme = next;
+        root.style.colorScheme = next;
+      };
+      const still = root.dataset.motion !== "full" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (document.startViewTransition && !still) document.startViewTransition(apply);
+      else apply();
+    });
   } catch {}
 })();
 `;

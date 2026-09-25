@@ -12,7 +12,6 @@
   --rim-4: light-dark(#b8bfc8, #5d646e);
   --metal: light-dark(#b9bdc3, #3a3f47);
   --metal-edge: light-dark(#ffffff30, #ffffff12);
-  --metal-drop: light-dark(#17213440, #00000090);
   --sheen: light-dark(#fff, #ffffff5c);
   --sheen-soft: light-dark(#ffffff42, #ffffff12);
   --sheen-streak: light-dark(#ffffff45, #ffffff1a);
@@ -42,10 +41,7 @@
   --chevron: light-dark(#768296, #7d8797);
   --focus: light-dark(#526eaa, #7aa2e3);
   --hover: light-dark(#305390, #9ec0ff);
-  --logo-invert: 0;
 }
-:global(html[data-theme="dark"]):has(.page) { --logo-invert: 1; }
-@media (prefers-color-scheme: dark) { :global(html:not([data-theme="light"]):not([data-theme="dark"])):has(.page) { --logo-invert: 1; } }
 /* Mobile toolbars and overscroll reveal the document, not .page. */
 :global(html):has(.page), :global(body):has(.page) { background: var(--canvas); }
 .page {
@@ -79,7 +75,9 @@
 .rimLeft { left: calc(var(--thickness) / -2); }
 .rimRight { right: calc(var(--thickness) / -2); }
 .rimCorner { width: calc(var(--radius) * .197 + .15px); height: var(--thickness); }
-.face { position: absolute; inset: 0; display: flex; flex-direction: column; border-radius: var(--radius); padding: 7%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--metal); box-shadow: inset 0 0 0 1px var(--metal-edge), 0 18px 28px -18px var(--metal-drop); }
+.face { position: absolute; inset: 0; display: flex; flex-direction: column; border-radius: var(--radius); padding: 7%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--metal); box-shadow: inset 0 0 0 1px var(--metal-edge); }
+/* WebKit gives filtered/positioned children their own layers, which ignore the face's backface culling. */
+.face *, .face::before, .face::after { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .face::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: radial-gradient(ellipse at center, color-mix(in srgb, var(--sheen) calc(var(--light-strength) * 100%), transparent) 0, var(--sheen-soft) 38%, transparent 74%), linear-gradient(115deg, var(--sheen-streak) 0, transparent 46%, var(--sheen-shadow) 100%), repeating-linear-gradient(0deg, #ffffff08 0 1px, #34465e06 1px 2px, transparent 2px 4px); background-size: 160% 190%, 100% 100%, 100% 100%; background-position: var(--reflection-x) var(--reflection-y), center, center; transition: background-position 760ms cubic-bezier(.3,1.25,.45,1); }
 .face::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: linear-gradient(color-mix(in srgb, var(--shade) calc(var(--metal-shade) * 100%), transparent), color-mix(in srgb, var(--shade) calc(var(--metal-shade) * 100%), transparent)), url("/card-grain.svg"); background-size: 100% 100%, 180px 180px; box-shadow: inset 0 1px 1px color-mix(in srgb, var(--edge-hi) calc(var(--edge-light) * 100%), transparent), inset 1px 0 1px var(--edge-side), inset -1px -1px 1px var(--edge-lo); }
 .face > * { position: relative; z-index: 1; }
@@ -88,7 +86,7 @@
 .face[aria-hidden="true"] { pointer-events: none; }
 .face a { color: inherit; cursor: pointer; border-radius: 4px; -webkit-user-drag: none; transition: color 160ms, opacity 160ms; }
 .face > .logo { position: absolute; right: 6%; top: 7%; width: 20%; aspect-ratio: 1; filter: drop-shadow(0 .5px 0 var(--emboss)); }
-.face img { filter: invert(var(--logo-invert)); }
+:global(html[data-scheme="dark"]) .face img { filter: invert(1); }
 .logo img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .frontIdentity { display: flex; flex-direction: column; align-items: flex-start; margin-top: auto; text-shadow: 0 .5px 0 var(--emboss); }
 .name { font-size: clamp(25px, 6.1vw, 39px); font-weight: 550; letter-spacing: -.06em; line-height: 1.25; color: var(--name); }

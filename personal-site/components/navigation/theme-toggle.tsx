@@ -17,7 +17,18 @@ function applyTheme(mode: ThemeMode) {
   const root = document.documentElement;
   const resolvedTheme = mode === "system" ? resolveSystemTheme() : mode;
   root.dataset.theme = mode;
+  root.dataset.scheme = resolvedTheme;
   root.style.colorScheme = resolvedTheme;
+}
+
+function withThemeTransition(update: () => void) {
+  const root = document.documentElement;
+  const still = root.dataset.motion !== "full" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!document.startViewTransition || still) {
+    update();
+    return;
+  }
+  document.startViewTransition(update);
 }
 
 export function ThemeToggle() {
@@ -55,23 +66,13 @@ export function ThemeToggle() {
     applyTheme(mode);
   }, [mode]);
 
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const onChange = () => {
-      if (mode === "system") {
-        applyTheme("system");
-      }
-    };
-
-    media.addEventListener("change", onChange);
-    return () => media.removeEventListener("change", onChange);
-  }, [mode]);
-
   const handleSelect = (nextMode: ThemeMode) => {
     window.localStorage.setItem(STORAGE_KEY, nextMode);
-    window.dispatchEvent(new Event("site:theme-pref-changed"));
-    applyTheme(nextMode);
+    // The old snapshot must be taken before anything, including the store listeners, repaints.
+    withThemeTransition(() => {
+      applyTheme(nextMode);
+      window.dispatchEvent(new Event("site:theme-pref-changed"));
+    });
   };
 
   return (
