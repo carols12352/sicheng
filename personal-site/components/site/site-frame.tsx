@@ -24,6 +24,12 @@ type SiteFrameProps = {
 };
 
 export function SiteFrame({ children }: SiteFrameProps) {
+  const pathname = usePathname();
+  if (pathname === "/card") return <>{children}</>;
+  return <PortfolioFrame>{children}</PortfolioFrame>;
+}
+
+function PortfolioFrame({ children }: SiteFrameProps) {
   const shortcutNudgeKey = "site-shortcut-nudge-dismissed";
   const router = useRouter();
   const pathname = usePathname();
