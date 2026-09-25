@@ -1857,18 +1857,23 @@ mark.article-search-hit {
 }
 
 .dust-sprite {
+  --sprite-body: #121212;
+  --sprite-fuzz: #111;
+  --sprite-eye: #f5f5f5;
+  --sprite-glow: transparent;
   position: absolute;
   transform: translate(-50%, -50%);
   width: 2.6rem;
   height: 2.6rem;
   border-radius: 999px;
-  background: #121212;
+  background: var(--sprite-body);
   box-shadow:
-    0 0 0 2px color-mix(in srgb, #111 70%, transparent),
-    -10px -2px 0 -8px color-mix(in srgb, #111 88%, transparent),
-    -6px 8px 0 -8px color-mix(in srgb, #111 88%, transparent),
-    7px -7px 0 -8px color-mix(in srgb, #111 88%, transparent),
-    10px 5px 0 -8px color-mix(in srgb, #111 88%, transparent);
+    0 0 0 2px color-mix(in srgb, var(--sprite-fuzz) 70%, transparent),
+    -10px -2px 0 -8px color-mix(in srgb, var(--sprite-fuzz) 88%, transparent),
+    -6px 8px 0 -8px color-mix(in srgb, var(--sprite-fuzz) 88%, transparent),
+    7px -7px 0 -8px color-mix(in srgb, var(--sprite-fuzz) 88%, transparent),
+    10px 5px 0 -8px color-mix(in srgb, var(--sprite-fuzz) 88%, transparent),
+    0 0 18px 2px var(--sprite-glow);
   transition-property: left, top, transform, opacity;
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1), cubic-bezier(0.22, 1, 0.36, 1), ease, ease;
   animation: dustIdleDrift 5.8s ease-in-out infinite;
@@ -1882,7 +1887,7 @@ mark.article-search-hit {
   width: 0.24rem;
   height: 0.24rem;
   border-radius: 999px;
-  background: #f5f5f5;
+  background: var(--sprite-eye);
 }
 
 .dust-sprite::before {
@@ -1891,6 +1896,23 @@ mark.article-search-hit {
 
 .dust-sprite::after {
   right: 0.86rem;
+}
+
+:root[data-theme="dark"] .dust-sprite {
+  --sprite-body: #d9dce2;
+  --sprite-fuzz: #c9cdd4;
+  --sprite-eye: #121212;
+  --sprite-glow: color-mix(in srgb, #dfe6f2 22%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .dust-sprite,
+  :root[data-theme="system"] .dust-sprite {
+    --sprite-body: #d9dce2;
+    --sprite-fuzz: #c9cdd4;
+    --sprite-eye: #121212;
+    --sprite-glow: color-mix(in srgb, #dfe6f2 22%, transparent);
+  }
 }
 
 .dust-sprite-startled {
