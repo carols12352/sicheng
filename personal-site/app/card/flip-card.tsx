@@ -42,6 +42,8 @@ export function FlipCard() {
   const [dragging, setDragging] = useState(false);
   const gesture = useRef<{ id: number; x: number; y: number; rx: number; ry: number; moved: boolean } | null>(null);
   const suppressClick = useRef(false);
+  const dragFrame = useRef<number | null>(null);
+  const pendingAngle = useRef<{ x: number; y: number } | null>(null);
   const liftRef = useRef<HTMLDivElement>(null);
   const shadowRef = useRef<HTMLSpanElement>(null);
   const bodyRef = useRef<HTMLSpanElement>(null);
@@ -52,6 +54,7 @@ export function FlipCard() {
   const [returning, setReturning] = useState(false);
   useEffect(() => () => {
     window.clearTimeout(openTimer.current);
+    if (dragFrame.current !== null) window.cancelAnimationFrame(dragFrame.current);
     animations.current.forEach((animation) => animation.cancel());
   }, []);
   const backVisible = Math.cos(angle.y * Math.PI / 180) < 0;
@@ -65,11 +68,10 @@ export function FlipCard() {
       + .48 * Math.sin(pitch) * Math.cos(yaw)
       + .78 * Math.cos(pitch) * Math.cos(yaw));
     return {
-      "--reflection-x": `${(45 + Math.sin(yaw) * 60).toFixed(3)}%`,
-      "--reflection-y": `${(30 + Math.sin(pitch) * 75).toFixed(3)}%`,
+      "--reflection-x": `${(-Math.sin(yaw) * 22).toFixed(3)}%`,
+      "--reflection-y": `${(-Math.sin(pitch) * 28).toFixed(3)}%`,
       "--light-strength": (.2 + illumination * .65).toFixed(3),
       "--metal-shade": (.025 + (1 - illumination) * .3).toFixed(3),
-      "--edge-light": (.2 + illumination * .55).toFixed(3),
     } as CSSProperties;
   }
 
@@ -90,12 +92,27 @@ export function FlipCard() {
     start.moved = true;
     suppressClick.current = true;
     setDragging(true);
-    setAngle({ x: Math.max(-35, Math.min(35, start.rx - dy * .3)), y: start.ry + dx * .7 });
+    pendingAngle.current = { x: Math.max(-35, Math.min(35, start.rx - dy * .3)), y: start.ry + dx * .7 };
+    if (dragFrame.current === null) {
+      dragFrame.current = window.requestAnimationFrame(() => {
+        dragFrame.current = null;
+        if (pendingAngle.current) setAngle(pendingAngle.current);
+        pendingAngle.current = null;
+      });
+    }
+  }
+
+  function flushDrag() {
+    if (dragFrame.current !== null) window.cancelAnimationFrame(dragFrame.current);
+    dragFrame.current = null;
+    if (pendingAngle.current) setAngle(pendingAngle.current);
+    pendingAngle.current = null;
   }
 
   function endDrag(event: PointerEvent<HTMLDivElement>) {
     if (gesture.current?.id !== event.pointerId) return;
     if (event.type === "pointercancel") suppressClick.current = true;
+    flushDrag();
     gesture.current = null;
     setDragging(false);
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
@@ -203,6 +220,7 @@ export function FlipCard() {
       // An unmounted card cancels its pending animation sequence.
     } finally {
       window.clearTimeout(openTimer.current);
+    if (dragFrame.current !== null) window.cancelAnimationFrame(dragFrame.current);
       animations.current.forEach((animation) => animation.cancel());
       animations.current = [];
       sequenceBusy.current = false;
@@ -250,6 +268,7 @@ export function FlipCard() {
             onLostPointerCapture={(event) => {
               // Touch starts implicitly captured by the tapped child; taking capture fires a bubbling loss from it.
               if (event.target !== event.currentTarget) return;
+              flushDrag();
               gesture.current = null;
               setDragging(false);
             }}
@@ -264,6 +283,7 @@ export function FlipCard() {
               <span className={`${styles.rim} ${styles.rimRight}`} aria-hidden="true" />
               {cornerSegments.map((segment) => <span key={segment.key} className={`${styles.rim} ${styles.rimCorner}`} style={segment.style} aria-hidden="true" />)}
               <span className={`${styles.face} ${styles.front}`} aria-hidden={backVisible} style={metalLighting()}>
+                <span className={styles.material} aria-hidden="true" />
                 <Link className={styles.logo} href="/" aria-label="Sicheng Ouyang’s website" tabIndex={backVisible ? -1 : 0} draggable={false}>
                   <span className={styles.logoMark} aria-hidden="true" />
                 </Link>
@@ -273,6 +293,7 @@ export function FlipCard() {
                 </span>
               </span>
               <span className={`${styles.face} ${styles.back}`} aria-hidden={!backVisible} style={metalLighting(true)}>
+                <span className={styles.material} aria-hidden="true" />
                 <span className={styles.backTop}>Let’s connect.<span className={styles.logoMark} aria-hidden="true" /></span>
                 <span className={styles.contactRows}>
                   {contacts.map((contact) => (

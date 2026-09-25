@@ -1,13 +1,13 @@
-const assert = require('node:assert/strict');
-const { readFileSync } = require('node:fs');
-const { join } = require('node:path');
-const { test } = require('node:test');
-const vm = require('node:vm');
-const ts = require('typescript');
-const React = require('react');
-const { renderToStaticMarkup } = require('react-dom/server');
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { test } from 'node:test';
+import vm from 'node:vm';
+import ts from 'typescript';
+import React from 'react';
+import * as jsxRuntime from 'react/jsx-runtime';
+import { renderToStaticMarkup } from 'react-dom/server';
 
-const source = readFileSync(join(__dirname, '../app/card/flip-card.tsx'), 'utf8');
+const source = readFileSync(new URL('../app/card/flip-card.tsx', import.meta.url), 'utf8');
 const code = ts.transpileModule(source, {
   compilerOptions: {
     jsx: ts.JsxEmit.ReactJSX,
@@ -26,10 +26,10 @@ function renderWithMath(roundingError) {
     exports: moduleExports,
     Math: runtimeMath,
     require(name) {
-      if (name === 'react' || name === 'react/jsx-runtime') return require(name);
+      if (name === 'react') return React;
+      if (name === 'react/jsx-runtime') return jsxRuntime;
       // Keep the actual card and its styles; isolate unrelated Next components.
-      if (name === 'next/image') return ({ priority, ...props }) => React.createElement('img', props);
-      if (name === 'next/link') return (props) => React.createElement('a', props);
+      if (name === 'next/link') return function MockLink(props) { return React.createElement('a', props); };
       if (name === './card-icon') return { CardIcon: () => null };
       if (name === './share-profile') return { ShareProfile: () => null };
       if (name.endsWith('.module.css')) {

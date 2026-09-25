@@ -1,87 +1,4 @@
-/* light-dark() follows the color-scheme the site theme script resolves onto <html>. */
-/* Registered as colors so a theme change interpolates them (gradients included) instead of snapping. */
-@property --canvas { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --canvas-mid { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --canvas-glow { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --ink { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --muted { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --ground { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --rim-1 { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --rim-2 { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --rim-3 { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --rim-4 { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --metal { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --metal-edge { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --sheen { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --sheen-soft { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --sheen-streak { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --sheen-shadow { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --shade { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --edge-hi { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --edge-side { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --edge-lo { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --emboss { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --name { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --role { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --icon { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --fine { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --turn { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --divider { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --save-bg { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --save-fg { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --share-border { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --link { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --line { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --chevron { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --logo { syntax: "<color>"; inherits: true; initial-value: transparent; }
-:global(html):has(.page) {
-  transition: --canvas var(--theme-fade), --canvas-mid var(--theme-fade), --canvas-glow var(--theme-fade), --ink var(--theme-fade), --muted var(--theme-fade), --ground var(--theme-fade), --rim-1 var(--theme-fade), --rim-2 var(--theme-fade), --rim-3 var(--theme-fade), --rim-4 var(--theme-fade), --metal var(--theme-fade), --metal-edge var(--theme-fade), --sheen var(--theme-fade), --sheen-soft var(--theme-fade), --sheen-streak var(--theme-fade), --sheen-shadow var(--theme-fade), --shade var(--theme-fade), --edge-hi var(--theme-fade), --edge-side var(--theme-fade), --edge-lo var(--theme-fade), --emboss var(--theme-fade), --name var(--theme-fade), --role var(--theme-fade), --icon var(--theme-fade), --fine var(--theme-fade), --turn var(--theme-fade), --divider var(--theme-fade), --save-bg var(--theme-fade), --save-fg var(--theme-fade), --share-border var(--theme-fade), --link var(--theme-fade), --line var(--theme-fade), --chevron var(--theme-fade), --logo var(--theme-fade);
-  --theme-fade: 420ms cubic-bezier(.4,0,.2,1);
-  --canvas: light-dark(#e6e9ee, #0f1114);
-  --canvas-mid: light-dark(#f0f1f4, #15181c);
-  --canvas-glow: light-dark(#fff, #252a31);
-  --ink: light-dark(#242b37, #e7eaef);
-  --muted: light-dark(#6a7280, #8b93a1);
-  --ground: light-dark(#273349, #000);
-  --rim-1: light-dark(#d5d9df, #737a85);
-  --rim-2: light-dark(#8c95a1, #3d424a);
-  --rim-3: light-dark(#68717d, #25292f);
-  --rim-4: light-dark(#b8bfc8, #5d646e);
-  --metal: light-dark(#b9bdc3, #3a3f47);
-  --metal-edge: light-dark(#ffffff30, #ffffff12);
-  --sheen: light-dark(#fff, #ffffff5c);
-  --sheen-soft: light-dark(#ffffff42, #ffffff12);
-  --sheen-streak: light-dark(#ffffff45, #ffffff1a);
-  --sheen-shadow: light-dark(#3a465630, #00000045);
-  --shade: light-dark(#202630, #000);
-  --edge-hi: light-dark(#fff, #ffffff80);
-  --edge-side: light-dark(#ffffff25, #ffffff10);
-  --edge-lo: light-dark(#25334735, #00000070);
-  --emboss: light-dark(#ffffff50, #00000070);
-  --name: light-dark(#28313e, #eef1f5);
-  --role: light-dark(#455367, #aab3c1);
-  --icon: light-dark(#5a6476, #9aa3b1);
-  --fine: light-dark(#5b6474, #8d96a4);
-  --turn: light-dark(#4d586e, #aab3c1);
-  --divider: light-dark(#c6cdd7, #333842);
-  --save-bg: light-dark(#242b37, #e7eaef);
-  --save-fg: light-dark(#fff, #14171b);
-  --save-hover: light-dark(#40516e, #c9d0da);
-  --share-border: light-dark(#bfc7d3, #3a404a);
-  --share-hover: light-dark(#e0e5ed, #1d2127);
-  --feedback: light-dark(#355080, #9db8e8);
-  --feedback-bg: light-dark(#eef0f4, #15181c);
-  --field: light-dark(#fff, #1b1e23);
-  --field-border: light-dark(#a1afc5, #3d4757);
-  --link: light-dark(#53627b, #9aa6ba);
-  --line: light-dark(#cfd5df, #2a2f37);
-  --chevron: light-dark(#768296, #7d8797);
-  --focus: light-dark(#526eaa, #7aa2e3);
-  --hover: light-dark(#305390, #9ec0ff);
-  --logo: light-dark(#111, #eef1f5);
-}
-/* Mobile toolbars and overscroll reveal the document, not .page. */
-:global(html):has(.page), :global(body):has(.page) { background: var(--canvas); }
+/* Page and 3D card geometry. */
 .page {
   min-height: 100dvh;
   display: grid;
@@ -98,16 +15,16 @@
 /* The glow must fade to --canvas before the top and bottom edges, which toolbars and overscroll show as plain --canvas. */
 .page::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse min(80vw, 640px) 34vh at 50% 40%, var(--canvas-glow) 0, var(--canvas-mid) 50%, var(--canvas) 100%); }
 .page a { text-decoration: none; }
-.composition { --radius: 20px; --thickness: 4px; width: 100%; max-width: 500px; }
+.composition { --radius: 14px; --thickness: 4px; width: 100%; max-width: 500px; }
 .cardScene { position: relative; }
 .groundShadow { position: absolute; left: 12%; right: 12%; bottom: -35px; height: 32px; border-radius: 50%; background: var(--ground); opacity: .18; filter: blur(17px); pointer-events: none; }
 /* Flat 3D ancestors would sit in front of the tilted card's far edge and swallow taps. */
-.cardLift { position: relative; z-index: 1; transform-style: preserve-3d; pointer-events: none; }
-.toss { transform-style: preserve-3d; }
-.stage { perspective: 1200px; transform-style: preserve-3d; }
-.cardControl { transform-style: preserve-3d; display: block; width: 100%; aspect-ratio: 1.586; padding: 0; border: 0; border-radius: var(--radius); background: transparent; text-align: left; color: inherit; font: inherit; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+.cardLift, .toss, .stage, .cardControl, .cardBody { transform-style: preserve-3d; }
+.cardLift { position: relative; z-index: 1; pointer-events: none; }
+.stage { perspective: 1200px; }
+.cardControl { display: block; width: 100%; aspect-ratio: 1.586; padding: 0; border: 0; border-radius: var(--radius); background: transparent; text-align: left; color: inherit; font: inherit; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
 .cardControl[data-dragging="true"] { cursor: grabbing; }
-.cardBody { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 760ms cubic-bezier(.3,1.25,.45,1); will-change: transform; pointer-events: auto; }
+.cardBody { position: relative; display: block; width: 100%; height: 100%; transition: transform 760ms cubic-bezier(.3,1.25,.45,1); will-change: transform; pointer-events: auto; }
 .cardBody[data-dragging="true"], .cardBody[data-returning="true"] { transition: none; }
 .rim { position: absolute; display: block; pointer-events: none; background: linear-gradient(to bottom, var(--rim-1), var(--rim-2) 30%, var(--rim-3) 55%, var(--rim-4)); backface-visibility: visible; }
 .rimTop, .rimBottom { left: var(--radius); width: calc(100% - var(--radius) * 2); height: var(--thickness); transform: rotateX(90deg); }
@@ -117,10 +34,21 @@
 .rimLeft { left: calc(var(--thickness) / -2); }
 .rimRight { right: calc(var(--thickness) / -2); }
 .rimCorner { width: calc(var(--radius) * .197 + .15px); height: var(--thickness); }
-.face { position: absolute; inset: 0; display: flex; flex-direction: column; border-radius: var(--radius); padding: 7%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--metal); box-shadow: inset 0 0 0 1px var(--metal-edge); }.face::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: radial-gradient(ellipse at center, color-mix(in srgb, var(--sheen) calc(var(--light-strength) * 100%), transparent) 0, var(--sheen-soft) 38%, transparent 74%), linear-gradient(115deg, var(--sheen-streak) 0, transparent 46%, var(--sheen-shadow) 100%), repeating-linear-gradient(0deg, #ffffff08 0 1px, #34465e06 1px 2px, transparent 2px 4px); background-size: 160% 190%, 100% 100%, 100% 100%; background-position: var(--reflection-x) var(--reflection-y), center, center; transition: background-position 760ms cubic-bezier(.3,1.25,.45,1); }
-.face::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: linear-gradient(color-mix(in srgb, var(--shade) calc(var(--metal-shade) * 100%), transparent), color-mix(in srgb, var(--shade) calc(var(--metal-shade) * 100%), transparent)), url("/card-grain.svg"); background-size: 100% 100%, 180px 180px; box-shadow: inset 0 1px 1px color-mix(in srgb, var(--edge-hi) calc(var(--edge-light) * 100%), transparent), inset 1px 0 1px var(--edge-side), inset -1px -1px 1px var(--edge-lo); }
+.face { position: absolute; inset: 0; display: flex; flex-direction: column; border-radius: var(--radius); padding: 7%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--metal); box-shadow: inset 0 0 0 1px var(--metal-edge); }
+
+/* Keep the surface image fixed. Dragging only composites light position/opacity,
+   instead of repainting gradients and a filtered texture for every pointer event. */
+.face > .material { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: inherit; pointer-events: none; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.material::before { content: ""; position: absolute; inset: -40%; background: linear-gradient(103deg, transparent 14%, var(--sheen-soft) 30%, var(--sheen) 46%, var(--sheen-soft) 64%, transparent 82%); transform: translate(var(--reflection-x), var(--reflection-y)); opacity: var(--light-strength); will-change: transform, opacity; transition: transform 760ms cubic-bezier(.3,1.25,.45,1), opacity 760ms cubic-bezier(.3,1.25,.45,1); }
+.material::after { content: ""; position: absolute; inset: 0; background: var(--shade); opacity: var(--metal-shade); will-change: opacity; transition: opacity 760ms cubic-bezier(.3,1.25,.45,1); }
+.face::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: url("/card-grain.svg") center / 100% 100% no-repeat; box-shadow: inset 0 1px 1px color-mix(in srgb, var(--edge-hi) 45%, transparent), inset 1px 0 1px var(--edge-side), inset -1px -1px 1px var(--edge-lo); }
 .face > * { position: relative; z-index: 1; }
-.cardBody[data-dragging="true"] .face::before { transition: none; }
+.cardBody[data-dragging="true"] .material::before,
+.cardBody[data-dragging="true"] .material::after { transition: none; }
+.cardBody[data-returning="true"] .material::before,
+.cardBody[data-returning="true"] .material::after { transition-duration: 300ms; transition-timing-function: cubic-bezier(.22,.65,.3,1); }
+
+/* Front and back content. */
 .front { transform: translateZ(calc(var(--thickness) / 2)); }
 .face[aria-hidden="true"] { pointer-events: none; }
 .face a { color: inherit; cursor: pointer; border-radius: 4px; -webkit-user-drag: none; transition: color 160ms; }
@@ -138,6 +66,8 @@
 .contactRows > a { display: inline-flex; justify-self: start; max-width: 100%; align-items: center; gap: 11px; font-size: clamp(9px, 2.25vw, 13px); letter-spacing: -.015em; }
 .contactRows svg { width: 17px; height: 17px; flex-shrink: 0; color: var(--icon); }
 .backBottom { display: flex; justify-content: space-between; gap: 8px; font-size: clamp(8px, 1.9vw, 10px); color: var(--fine); }
+
+/* Controls and expanding quick links. */
 .instructions { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 38px; font-size: 10px; color: var(--muted); }
 .instructions > span > span { padding: 0 5px; }
 .turn { font: inherit; color: var(--turn); cursor: pointer; border: 0; background: transparent; padding: 12px 0 12px 16px; position: relative; }
@@ -159,7 +89,7 @@
 .composition[data-opened="true"] .shortcuts a:nth-child(3) { transition-delay: 210ms; }
 .composition[data-opened="true"] .shortcuts a:nth-child(4) { transition-delay: 250ms; }
 .actions { display: flex; gap: 10px; position: relative; margin: 25px 0 0; }
-.save { display: flex; flex: 1; justify-content: center; align-items: center; gap: 10px; min-height: 50px; border-radius: 12px; background: var(--save-bg); color: var(--save-fg); font-size: 13px; font-weight: 500; }
+.save { display: flex; flex: 1; justify-content: center; align-items: center; gap: 10px; min-height: 50px; border-radius: 12px; background: var(--ink); color: var(--save-fg); font-size: 13px; font-weight: 500; }
 .save svg { width: 18px; }
 .shareWrap { flex: 0 0 50px; }
 .share { width: 50px; height: 50px; display: grid; place-items: center; border: 1px solid var(--share-border); background: transparent; border-radius: 12px; color: var(--ink); cursor: pointer; }
@@ -179,16 +109,16 @@
 .cardControl:focus-visible { outline-offset: 8px; }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .noScript { font-size: 13px; text-align: center; margin-top: 25px; }
+
+/* Interaction states and accessibility. */
 @media (hover: hover) { .save:hover { background: var(--save-hover); } .share:hover { background: var(--share-hover); } .shortcuts a:hover, .turn:hover, .contactLinks a:hover, .face a:hover { color: var(--hover); } .face > .logo:hover .logoMark { background: var(--hover); } }
 @media (hover: none) { .face a:active { color: var(--hover); } .face > .logo:active .logoMark { background: var(--hover); } }
 @media (max-width: 420px) {
   .page { padding-inline: max(22px, env(safe-area-inset-left)) max(22px, env(safe-area-inset-right)); }
-  .composition { --radius: 14px; }
+  .composition { --radius: 10px; }
   .contactRows { gap: 9px; }
   .contactRows svg { width: 14px; height: 14px; }
   .instructions { gap: 10px; font-size: 9px; }
-
 }
-@media (prefers-reduced-motion: reduce) { :global(html):has(.page), .page * { animation: none !important; transition: none !important; } }
-:global(html[data-motion="none"]):has(.page), :global(html[data-motion="reduced"]):has(.page),
+@media (prefers-reduced-motion: reduce) { .page * { animation: none !important; transition: none !important; } }
 :global(html[data-motion="none"]) .page *, :global(html[data-motion="reduced"]) .page * { animation: none !important; transition: none !important; }

@@ -1,0 +1,92 @@
+/* light-dark() follows the color-scheme the site theme script resolves onto <html>. */
+/* Registered as colors so a theme change interpolates them (gradients included) instead of snapping. */
+@property --canvas { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --canvas-mid { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --canvas-glow { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --ink { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --muted { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --ground { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --rim-1 { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --rim-2 { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --rim-3 { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --rim-4 { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --metal { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --metal-edge { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --sheen { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --sheen-soft { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --shade { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --edge-hi { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --edge-side { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --edge-lo { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --emboss { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --name { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --role { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --icon { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --fine { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --turn { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --divider { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --save-fg { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --share-border { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --link { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --line { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --chevron { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --logo { syntax: "<color>"; inherits: true; initial-value: transparent; }
+:global(html):has(.theme) {
+  transition-property:
+    --canvas, --canvas-mid, --canvas-glow, --ink, --muted,
+    --ground, --rim-1, --rim-2, --rim-3, --rim-4,
+    --metal, --metal-edge, --sheen, --sheen-soft, --shade,
+    --edge-hi, --edge-side, --edge-lo, --emboss, --name,
+    --role, --icon, --fine, --turn, --divider,
+    --save-fg, --share-border, --link, --line, --chevron,
+    --logo;
+  transition-duration: 420ms;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  --canvas: light-dark(#e6e9ee, #0f1114);
+  --canvas-mid: light-dark(#f0f1f4, #15181c);
+  --canvas-glow: light-dark(#fff, #252a31);
+  --ink: light-dark(#242b37, #e7eaef);
+  --muted: light-dark(#6a7280, #8b93a1);
+  --ground: light-dark(#273349, #000);
+  --rim-1: light-dark(#d5d9df, #737a85);
+  --rim-2: light-dark(#8c95a1, #3d424a);
+  --rim-3: light-dark(#68717d, #25292f);
+  --rim-4: light-dark(#b8bfc8, #5d646e);
+  --metal: light-dark(#c5c6c3, #464b50);
+  --metal-edge: light-dark(#ffffff30, #ffffff12);
+  --sheen: light-dark(#fff, #ffffff5c);
+  --sheen-soft: light-dark(#ffffff38, #ffffff12);
+  --shade: light-dark(#353832, #000);
+  --edge-hi: light-dark(#fff, #ffffff80);
+  --edge-side: light-dark(#ffffff25, #ffffff10);
+  --edge-lo: light-dark(#25334735, #00000070);
+  --emboss: light-dark(#ffffff50, #00000070);
+  --name: light-dark(#30322f, #eef1f5);
+  --role: light-dark(#50544f, #aab3c1);
+  --icon: light-dark(#5a6476, #9aa3b1);
+  --fine: light-dark(#5b6474, #8d96a4);
+  --turn: light-dark(#4d586e, #aab3c1);
+  --divider: light-dark(#c6cdd7, #333842);
+  --save-fg: light-dark(#fff, #14171b);
+  --save-hover: light-dark(#40516e, #c9d0da);
+  --share-border: light-dark(#bfc7d3, #3a404a);
+  --share-hover: light-dark(#e0e5ed, #1d2127);
+  --feedback: light-dark(#355080, #9db8e8);
+  --feedback-bg: light-dark(#eef0f4, #15181c);
+  --field: light-dark(#fff, #1b1e23);
+  --field-border: light-dark(#a1afc5, #3d4757);
+  --link: light-dark(#53627b, #9aa6ba);
+  --line: light-dark(#cfd5df, #2a2f37);
+  --chevron: light-dark(#768296, #7d8797);
+  --focus: light-dark(#526eaa, #7aa2e3);
+  --hover: light-dark(#305390, #9ec0ff);
+  --logo: light-dark(#111, #eef1f5);
+}
+/* Mobile toolbars and overscroll reveal the document, not .page. */
+:global(html):has(.theme), :global(body):has(.theme) { background: var(--canvas); }
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html):has(.theme) { animation: none !important; transition: none !important; }
+}
+:global(html[data-motion="none"]):has(.theme),
+:global(html[data-motion="reduced"]):has(.theme) { animation: none !important; transition: none !important; }
