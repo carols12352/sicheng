@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type PointerEvent, type KeyboardEvent, type MouseEvent, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type PointerEvent, type KeyboardEvent, type MouseEvent, type CSSProperties, type ReactNode } from "react";
 import { CardIcon } from "./card-icon";
 import { ShareProfile } from "./share-profile";
 import styles from "./card.module.css";
@@ -12,6 +12,7 @@ const shortcuts = [
   { href: "/projects", title: "Projects", description: "Things I’ve built" },
   { href: "/resume", title: "Resume", description: "The short version" },
 ];
+const immersiveShortcut = { href: "/immersive", title: "Immersive", description: "Step into the space" };
 
 const contacts = [
   { icon: "mail", label: "sicheng.ouyang@uwaterloo.ca", href: "mailto:sicheng.ouyang@uwaterloo.ca", external: false },
@@ -36,8 +37,15 @@ const cornerSegments = [
   } as CSSProperties };
 }));
 
-export function FlipCard() {
-  const [opened, setOpened] = useState(false);
+type FlipCardProps = {
+  immersive?: boolean;
+  spatial?: ReactNode;
+};
+
+export function FlipCard({ immersive = false, spatial }: FlipCardProps = {}) {
+  const [cardOpened, setOpened] = useState(false);
+  const opened = cardOpened || Boolean(spatial);
+  const links = immersive ? [...shortcuts, immersiveShortcut] : shortcuts;
   const [angle, setAngle] = useState({ x: -9, y: -16 });
   const [dragging, setDragging] = useState(false);
   const gesture = useRef<{ id: number; x: number; y: number; rx: number; ry: number; moved: boolean } | null>(null);
@@ -255,6 +263,7 @@ export function FlipCard() {
 
   return (
     <div className={styles.composition} data-opened={opened}>
+      {spatial ?? <>
       <div className={styles.cardScene}>
       <span ref={shadowRef} className={styles.groundShadow} aria-hidden="true" />
       <div ref={liftRef} className={styles.cardLift}>
@@ -314,13 +323,14 @@ export function FlipCard() {
         <span>Drag to rotate <span aria-hidden="true">·</span> Tap to {opened ? "close" : "open"}</span>
         <button className={styles.turn} type="button" disabled={returning} onClick={() => setAngle((value) => ({ x: -6, y: Math.round(value.y / 180) * 180 + 180 }))} aria-label={backVisible ? "Show front of card" : "Show contact details on back of card"}>Turn over <span aria-hidden="true">↻</span></button>
       </div>
+      </>}
       <div id="card-links" className={styles.tray} aria-hidden={!opened} inert={!opened}>
         <div className={styles.trayInner}>
           <div className={styles.actions}><a className={styles.save} href="/card/contact.vcf" download="Sicheng-Ouyang.vcf"><CardIcon name="contact" />Save contact</a><ShareProfile /></div>
           <nav className={styles.contactLinks} aria-label="Contact links"><a href="mailto:sicheng.ouyang@uwaterloo.ca">Email</a><a href="https://www.linkedin.com/in/sicheng-ouyang/" target="_blank" rel="noreferrer">LinkedIn</a><a href="https://github.com/carols12352" target="_blank" rel="noreferrer">GitHub</a></nav>
           <h2 className={styles.moreTitle}>More about me</h2>
           <nav className={styles.shortcuts} aria-label="More about Sicheng">
-            {shortcuts.map((link) => <Link key={link.href} href={link.href}><span><strong>{link.title}</strong><small>{link.description}</small></span><CardIcon name="arrow" /></Link>)}
+            {links.map((link) => <Link key={link.href} href={link.href}><span><strong>{link.title}</strong><small>{link.description}</small></span><CardIcon name="arrow" /></Link>)}
           </nav>
         </div>
       </div>
