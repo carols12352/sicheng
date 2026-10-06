@@ -36,6 +36,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
     },
     {
+      url: `${SITE_URL}/immersive`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+      lastModified: now,
+    },
+    {
       url: `${SITE_URL}/privacy`,
       changeFrequency: "yearly",
       priority: 0.4,

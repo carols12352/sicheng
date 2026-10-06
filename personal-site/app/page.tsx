@@ -127,7 +127,13 @@ export default function Home() {
               <Link href="/writing" className="home-btn home-btn-ghost w-full sm:w-auto">
                 Read Writing
               </Link>
+              <Link href="/immersive" className="home-btn home-btn-ghost w-full sm:w-auto">
+                Try it in VR
+              </Link>
             </div>
+            <p className="pt-4 text-xs text-gray-500">
+              VR works on Apple Vision Pro, Meta Quest, and any WebXR headset.
+            </p>
           </div>
 
           <div className="home-hero-panel">

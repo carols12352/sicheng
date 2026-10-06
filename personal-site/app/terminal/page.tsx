@@ -713,6 +713,10 @@ export default function TerminalPage() {
       router.push("/resume");
       return;
     }
+    if (command === "open immersive" || command === "visionos") {
+      router.push("/immersive");
+      return;
+    }
     if (command === "rm -rf /") {
       addLine("rm: refusing to remove '/': protected filesystem target", "warning");
       return;
