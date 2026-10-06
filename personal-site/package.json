@@ -10,7 +10,6 @@
     "indexnow": "node scripts/indexnow.mjs --all"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
     "@react-three/xr": "^6.6.31",
     "@vercel/analytics": "^1.6.1",

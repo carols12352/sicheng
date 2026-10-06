@@ -1,16 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
-
-const noopSubscribe = () => () => {};
-
-export function useModelElementSupport(): boolean {
-  return useSyncExternalStore(
-    noopSubscribe,
-    () => "HTMLModelElement" in window,
-    () => false,
-  );
-}
+import { useEffect, useState } from "react";
 
 export function useImmersiveSupport(): boolean {
   const [supported, setSupported] = useState(false);
