@@ -26,7 +26,7 @@ type SiteFrameProps = {
 
 export function SiteFrame({ children }: SiteFrameProps) {
   const pathname = usePathname();
-  if (pathname === "/card") return <>{children}</>;
+  if (pathname === "/card" || pathname === "/immersive") return <>{children}</>;
   return <PortfolioFrame>{children}</PortfolioFrame>;
 }
 

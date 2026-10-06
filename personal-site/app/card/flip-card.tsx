@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type PointerEvent, type KeyboardEvent, type MouseEvent, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type PointerEvent, type KeyboardEvent, type MouseEvent, type CSSProperties } from "react";
 import { CardIcon } from "./card-icon";
 import { ShareProfile } from "./share-profile";
 import styles from "./card.module.css";
@@ -37,14 +37,8 @@ const cornerSegments = [
   } as CSSProperties };
 }));
 
-type FlipCardProps = {
-  immersive?: boolean;
-  spatial?: ReactNode;
-};
-
-export function FlipCard({ immersive = false, spatial }: FlipCardProps = {}) {
-  const [cardOpened, setOpened] = useState(false);
-  const opened = cardOpened || Boolean(spatial);
+export function FlipCard({ immersive = false }: { immersive?: boolean } = {}) {
+  const [opened, setOpened] = useState(false);
   const links = immersive ? [...shortcuts, immersiveShortcut] : shortcuts;
   const [angle, setAngle] = useState({ x: -9, y: -16 });
   const [dragging, setDragging] = useState(false);
@@ -263,7 +257,6 @@ export function FlipCard({ immersive = false, spatial }: FlipCardProps = {}) {
 
   return (
     <div className={styles.composition} data-opened={opened}>
-      {spatial ?? <>
       <div className={styles.cardScene}>
       <span ref={shadowRef} className={styles.groundShadow} aria-hidden="true" />
       <div ref={liftRef} className={styles.cardLift}>
@@ -323,7 +316,6 @@ export function FlipCard({ immersive = false, spatial }: FlipCardProps = {}) {
         <span>Drag to rotate <span aria-hidden="true">·</span> Tap to {opened ? "close" : "open"}</span>
         <button className={styles.turn} type="button" disabled={returning} onClick={() => setAngle((value) => ({ x: -6, y: Math.round(value.y / 180) * 180 + 180 }))} aria-label={backVisible ? "Show front of card" : "Show contact details on back of card"}>Turn over <span aria-hidden="true">↻</span></button>
       </div>
-      </>}
       <div id="card-links" className={styles.tray} aria-hidden={!opened} inert={!opened}>
         <div className={styles.trayInner}>
           <div className={styles.actions}><a className={styles.save} href="/card/contact.vcf" download="Sicheng-Ouyang.vcf"><CardIcon name="contact" />Save contact</a><ShareProfile /></div>

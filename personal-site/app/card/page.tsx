@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo";
-import { SpatialCard } from "./spatial-card";
+import { CardShell } from "./card-shell";
 import styles from "./card.module.css";
 import theme from "./card-theme.module.css";
 
@@ -23,7 +23,7 @@ export const metadata: Metadata = buildPageMetadata({
 export default function CardPage() {
   return <main className={`${styles.page} ${theme.theme}`} data-theme-fade="css">
     <h1 className={styles.srOnly}>Sicheng Ouyang — digital business card</h1>
-    <SpatialCard />
+    <CardShell />
     <noscript><p className={styles.noScript}>Sicheng Ouyang · Software Engineering at Waterloo<br /><a href="/card/contact.vcf" download>Save contact</a> · <Link href="/">Visit my website</Link></p></noscript>
   </main>;
 }
