@@ -1,0 +1,436 @@
+---
+title: How does Apple Vision Pro realize pinpointing in 3D space?
+seoTitle: How does Apple Vision Pro realize pinpointing in 3D space?
+date: 2026-10-20
+summary: A technical exploration of the Apple Vision Pro's 3D spatial pinpointing capabilities, including its use of LiDAR, computer vision algorithms, and sensor fusion.
+tags:
+  - Apple Vision Pro
+  - Spatial Computing
+  - LiDAR
+  - Computer Vision
+  - Sensor Fusion
+---
+
+## Background
+I recently got my hands on the Apple Vision Pro, and like many others who got their new toys, I started playing around with it and exploring its new features and capabilities. 
+
+While I was enjoying the immersive experience, I noticed that sometimes I would walk around in my house, and find some widgets or windows I have left some time ago still sticking in the same exact spot, 
+even though I had moved around quite a bit.
+
+This made me curious about how the device made it happen and in such an unnoticeable way, so I decided to write an article about it while exploring.
+
+Of course, I could not reverse engineer the exact implementation of the system, but I could try approaching it from a more general perspective.
+
+## What Does It Mean to "Pin" Something in 3D Space?
+
+Although Apple provides APIs for world tracking, the algorithms used by visionOS to estimate its position are not disclosed by Apple. To understand how this could work, we can start with a classic model commonly used in computer vision and robotics called the 6-DoF rigid-body pose<Sidenote label="6-DoF">Six Degrees of Freedom describes the six independent ways a rigid body can move in 3D space: translation along the $x$, $y$, and $z$ axes, and rotations around the axes.</Sidenote>.
+
+As such, knowing its position alone is not enough to locate the Vision Pro in a room. We can describe its position using a translation vector as we would in an introductory linear algebra class:
+
+$$
+\mathbf{t} =
+\begin{bmatrix}
+x\\
+y\\
+z
+\end{bmatrix}
+$$
+
+However, just as we learnt in class, this only represents a point in 3D space, which means it only tells us where the headset is within the space, but no information about which direction it is facing.
+
+To solve this, we can use a homogeneous transformation matrix<Sidenote label="Homogeneous Transformation">A homogeneous transformation matrix combines rotation and translation into a single $4\times4$ matrix. It is widely used to represent rigid-body transformations in robotics, computer vision, and computer graphics.</Sidenote>:
+
+$$
+T =
+\begin{bmatrix}
+R & \mathbf{t}\\
+\mathbf{0}^{T} & 1
+\end{bmatrix}
+$$
+
+Here, $R$ is a $3\times3$ rotation matrix<Sidenote label="Rotation Matrix">A 3D rotation matrix describes orientation and satisfies $R^TR=I$ and $\det(R)=1$. These constraints ensure that the transformation rotates an object without scaling or deforming it.</Sidenote>, while $\mathbf{t}$ describes its position.
+
+For our problem, we can define three coordinate systems:
+
+- $\mathcal{W}$ — the world coordinate system
+- $\mathcal{H}$ — the coordinate system attached to the headset
+- $\mathcal{O}$ — the coordinate system attached to the virtual object
+
+Suppose I place a virtual window next to my desk. Its pose relative to the world can be represented as
+
+$$
+{}^{W}T_O
+$$
+
+As long as the window remains pinned to that location, the transform remains constant.
+
+The Vision Pro, however, moves together with my head. Therefore, its pose relative to the world,
+
+$$
+{}^{W}T_H(t),
+$$
+
+changes continuously.
+
+What we need for rendering is the position of the virtual window relative to the headset, denoted as ${}^{H}T_O$.
+
+Since ${}^{W}T_H$ transforms coordinates from headset space into world space, its inverse performs the opposite transformation:
+
+$$
+{}^{H}T_W =
+\left({}^{W}T_H\right)^{-1}
+$$
+
+We can then combine the two transformations:
+
+$$
+\boxed{
+{}^{H}T_O
+=
+\left({}^{W}T_H\right)^{-1}
+{}^{W}T_O
+}
+$$
+
+<Sidenote label="Why the inverse?">If ${}^{W}T_H$ converts a point from the headset coordinate system into the world coordinate system, $\left({}^{W}T_H\right)^{-1}$ intuitively converts it in the opposite direction, which is from world space back into headset space.</Sidenote>
+
+This equation basically gives the idea behind spatial pinning. 
+
+Notice that keeping ${}^{W}T_O$ constant does not mean ${}^{H}T_O$ is constant. As the headset moves, ${}^{W}T_H$ changes, so the object's pose relative to the headset must change accordingly.
+
+Hence, this narrows the problem down to a smaller question: **how does Vision Pro determine ${}^{W}T_H$?**
+
+## Estimating Motion from Camera Images
+
+Apple Vision Pro has six world-facing tracking cameras<Sidenote label="Tracking Cameras">Apple officially lists six world-facing tracking cameras on Vision Pro, alongside four IMUs and a LiDAR scanner. The exact pose-estimation algorithm used by visionOS is not publicly documented however.</Sidenote>. While Apple does not speak about how these camera streams are used internally, we can model the problem using standard multi-view geometry.
+
+For a 3D point $P_C=(X_C,Y_C,Z_C)$ expressed in the camera's coordinate system, its projection onto the image plane follows the pinhole camera model:
+
+$$
+s
+\begin{bmatrix}
+u\\
+v\\
+1
+\end{bmatrix}
+=
+K
+\begin{bmatrix}
+X_C\\
+Y_C\\
+Z_C
+\end{bmatrix},
+\qquad
+K=
+\begin{bmatrix}
+f_x&0&c_x\\
+0&f_y&c_y\\
+0&0&1
+\end{bmatrix}
+$$
+
+<Sidenote label="Intrinsic Matrix">$K$ contains the camera's intrinsic parameters: focal lengths $f_x,f_y$ and principal point $(c_x,c_y)$. The scale $s$ corresponds to the point's depth $Z_C$.</Sidenote>
+
+Now consider the same stationary 3D point observed from two camera poses. Its coordinates in the two camera frames are related by
+
+$$
+P_2 = RP_1 + t
+$$
+
+where $R$ and $t$ are the camera's relative rotation and translation between the two observations or images.
+
+However, we do not directly observe $P_1$ and $P_2$. The cameras only give us their 2D projections $p_1$ and $p_2$, which lacks depth in information.
+
+Therefore, the problem becomes how to recover $R$ and $t$ from the 2D correspondences $p_1$ and $p_2$, and with enough corresponding points between two images, multi-view geometry allows us to obtain those two parameters. The key relationship used to do this is known as **epipolar geometry**.
+
+### Epipolar Geometry
+
+To relate the 2D correspondences to camera motion, we can use **epipolar geometry**<Sidenote label="Epipolar Geometry">The geometry describing the relationship between two views of the same 3D scene.</Sidenote>.
+
+After removing the camera intrinsics with $x=K^{-1}p$, corresponding points in two images satisfy
+
+$$
+\boxed{x_2^T E x_1 = 0}
+$$
+
+where
+
+$$
+E=[t]_\times R
+$$
+
+is the **essential matrix**<Sidenote label="Essential Matrix">The essential matrix encodes the relative rotation $R$ and translation direction $t$ between two calibrated camera views.</Sidenote>.
+
+With enough corresponding points, $E$ can be estimated and decomposed to recover the relative camera rotation and translation direction.
+
+There is, however, one important limitation: the magnitude of $t$ cannot be recovered from two monocular images alone. This can be discovered directly by scaling $t$.
+
+$$
+E'=[\alpha t]_\times R=\alpha E
+$$
+
+which still satisfies the relationship
+
+$$
+x_2^TE'x_1=0.
+$$
+
+Therefore, camera motion recovered this way has an unknown absolute scale. To obtain a stable metric estimate of the headset's motion, we would need additional information, and that brings us to the Vision Pro's **IMUs**.
+
+## Inertial Measurement
+
+Vision Pro also contains four IMUs<Sidenote label="IMU">An Inertial Measurement Unit measures motion using accelerometers and gyroscopes. Apple officially lists four IMUs on Vision Pro.</Sidenote>, which provide two measurements particularly useful for tracking: angular velocity $\omega$ from the gyroscope and specific force $a_m$ from the accelerometer.
+
+The gyroscope measures
+
+$$
+\omega_m = \omega + b_g + n_g
+$$
+
+while the accelerometer can be modeled as
+
+$$
+a_m = R^T(a-g) + b_a + n_a
+$$
+
+where $b$ represents sensor bias and $n$ represents measurement noise<Sidenote label="Specific Force">An accelerometer does not directly measure world-space acceleration. It measures specific force in the sensor's local coordinate frame, which includes the effect of gravity and must be transformed appropriately.</Sidenote>.
+
+These measurements allow the headset to estimate how its orientation, velocity, and position change over short periods of time. For example, after transforming acceleration into the world frame and accounting for gravity,
+
+$$
+v_{k+1} \approx v_k + a_k\Delta t
+$$
+
+and
+
+$$
+p_{k+1} \approx p_k + v_k\Delta t + \frac{1}{2}a_k\Delta t^2.
+$$
+
+Unlike camera-based motion estimation, these measurements contain metric information. However, IMUs have their own limitations, by producing small measurement errors and biases accumulated during integration, the estimated pose will drift over time.
+
+And this is where the cameras kick in, by providing geometric constraints from the surrounding environment, the data combined with IMU measurements gives us something called **Visual-Inertial Odometry (VIO)**.
+
+### Visual-Inertial Odometry
+
+Between camera frames, the IMU provides high-frequency measurements that can be used to predict how the headset is moving. When new camera observations arrive, visual features in the environment provide geometric constraints that can be used to correct that estimate.
+
+Unfortunately, we would not be able to know how this is exactly realized, but a visual-inertial tracking system gives us a reasonable model for how the headset could continuously estimate for ${}^WT_H(t)$
+
+Ok, now this is found, we could take a break and maybe grab a drink, relax for a while, right?
+
+Well, not quite, We have now answered the first half of our original problem, but returning to our original equation,
+
+$$
+{}^HT_O
+=
+({}^WT_H)^{-1}{}^WT_O,
+$$
+
+there is still another quantity we have not explained:
+
+$$
+\boxed{{}^WT_O}
+$$
+
+How does the system know where the virtual object is supposed to stay?
+
+## Anchoring the Object
+
+At first, this might seem like the easier half of the problem.
+
+When I place a virtual object somewhere, we could simply record its transform in the world coordinate system ${}^WT_O$ and keep it unchanged while the headset moves.
+
+In fact, if we already know the headset pose ${}^WT_H$ and the object's pose relative to the headset ${}^HT_O$ at the moment it is placed, its world-space pose can be obtained directly:
+
+$$
+\boxed{
+{}^WT_O
+=
+{}^WT_H{}^HT_O
+}
+$$
+
+From that point onward, as long as ${}^WT_O$ remains fixed, the object can always be transformed back into the headset's coordinate system using
+
+$$
+{}^HT_O(t)
+=
+({}^WT_H(t))^{-1}{}^WT_O.
+$$
+
+So, are we done? Can we call it a day and go home now?
+
+Well...not really.
+
+There is a important assumption hidden behind this equation to make it work: **the world coordinate system $\mathcal W$ itself must remain consistent with the physical world.**
+
+Now remember, a transform such as ${}^WT_O$ is ultimately just a matrix of numbers. Knowing those numbers does not necessarily mean the headset remembers where my desk is.
+
+If the headset loses track of its position, accumulates tracking error, or later needs to determine where it is again, it somehow has to associate the coordinate system $\mathcal W$ with the physical environment around it.
+
+In other words, our question has changed once again: **how does the system know where the world coordinate system is in the physical environment?**
+
+## Giving the World a Physical Reference
+
+One way to think about this problem is to imagine that the system maintains a spatial representation of its surroundings.
+
+For a simplified model, suppose the environment contains a collection of 3D landmarks<Sidenote label="Landmark">A landmark is a recognizable feature in the environment whose position can be represented in a common coordinate system. This is a simplified model used here to explain localization, Apple did not disclose their realization.</Sidenote>:
+
+$$
+\mathcal M
+=
+\{
+{}^WP_1,
+{}^WP_2,
+\ldots,
+{}^WP_n
+\}.
+$$
+
+Unlike the abstract origin we introduced at the beginning, these points correspond to observations of the physical environment.
+
+Now we could reuse the camera model we discussed earlier, suppose the headset believes its current pose is
+
+$$
+T = {}^WT_H.
+$$
+
+A landmark ${}^WP_i$ expressed in world coordinates would first need to be transformed into the camera coordinate system:
+
+$$
+P_{C,i}
+=
+T^{-1}{}^WP_i.
+$$
+
+Using the same projection model from earlier, we can then predict where this point should appear in the camera image:
+
+$$
+\hat p_i
+=
+\pi(T^{-1}{}^WP_i),
+$$
+
+where $\pi$ represents the camera projection operation.
+
+But the camera also gives us an actual observation of that feature, so, if our estimate of the headset pose is wrong, the mapped points will generally not project onto where the camera actually sees them.
+
+This gives us a way to turn localization into an optimization problem. Conceptually, we can search for the pose that minimizes the total reprojection error:
+
+$$
+\boxed{
+T^*
+=
+\arg\min_T
+\sum_i
+\left\|
+p_i-\pi(T^{-1}{}^WP_i)
+\right\|^2
+}
+$$
+
+by doing so , we could finally recover the headset's pose relative to the world coordinate system, and thus, we can also recover the object's pose relative to the headset.
+
+## What Happens When Tracking Is Lost?
+
+This also explains another behavior I noticed while using Vision Pro: spatial persistence does not always work perfectly.
+
+Sometimes I could return to a place and find a window exactly where I remembered leaving it. Other times, the device seemed unable to recover the same spatial relationship.
+
+This makes sense once we stop thinking of spatial coordinates as absolute positions that somehow exist inside the room.
+
+Suppose continuous tracking is interrupted and the headset can no longer recover its original world-space pose simply by integrating motion forward from the previous frame.
+
+Instead, it needs to determine where it is relative to the environment again.
+
+Conceptually, this becomes a correspondence problem of mapping the current observations to the previously saved spatial map.
+
+If enough useful correspondences can be established, the device can estimate its pose relative to the existing map again, obtaining a new estimate of ${}^WT_H$ and thus recovering the pinned object's pose relative to the headset.
+
+This process is generally known as **relocalization**<Sidenote label="Relocalization">Relocalization is the process of recovering a device's pose relative to a previously established map after its position in that map has become uncertain or lost.</Sidenote>.
+
+This also explains why spatial persistence is not guaranteed to work perfectly, a scene with few distinctive visual features, large changes in viewpoint, occlusion, changes to the environment, or different visual conditions can all make correspondence more difficult in a general visual localization system.
+
+## Adding Depth to the Picture, I mean it
+
+So far, our simplified spatial map has relied almost entirely on visual observations. However, Vision Pro has another useful source of geometric information: its LiDAR scanner.
+
+Recall that one of the problems we encountered with camera images was depth. A 2D picture tells us where something appears in an image but no information about how far away it is.
+
+A depth measurement gives us another piece of information:
+
+$$
+(u,v)
+\quad\longrightarrow\quad
+(u,v,d),
+$$
+
+where $d$ represents the measured depth.
+
+Combined with the camera intrinsics, this allows an observed image point to be associated with a position in 3D space.
+
+## Back to the Actual Vision Pro
+
+So far, we have delved into the problem using general computer vision and robotics models.
+
+It was unfortunate that Apple does not disclose the exact algorithms used by visionOS, so we cannot know for sure how the system works internally.
+
+But Apple does expose the result of this tracking system to developers through ARKit.
+
+`WorldTrackingProvider` can provide a `DeviceAnchor` representing the device's position and orientation relative to a world coordinate system. In the notation we have been using throughout this article, this is essentially the quantity
+
+$$
+{}^WT_H.
+$$
+
+More importantly for our original question, ARKit also provides `WorldAnchor`<Sidenote label="WorldAnchor">A WorldAnchor represents a position and orientation that ARKit tracks relative to the surrounding environment.</Sidenote>.
+
+Suppose we introduce another coordinate system $\mathcal A$ attached to such an anchor.
+
+Instead of representing the virtual object's position directly in world space, we can express it relative to this anchor:
+
+$$
+{}^WT_O
+=
+{}^WT_A{}^AT_O.
+$$
+
+Substituting this into the equation we started with gives
+
+$$
+\boxed{
+{}^HT_O(t)
+=
+({}^WT_H(t))^{-1}
+{}^WT_A
+{}^AT_O
+}
+$$
+
+Hey, this is exactly what we needed!
+
+As the headset moves, ${}^WT_H(t)$ changes with it, while the anchor keeps our virtual object tied to its place in the tracked world. The equation above brings those two together and tells us where the object should appear relative to the headset at any given moment. Problem solved!
+
+And now, after all this hassle, I think we have finally earned that drink.
+
+This time, I can actually walk away and grab it, with reasonable confidence that the dozen windows I left floating around my room will still be there when I come back.
+
+
+## References / Further Reading
+
+- [Apple Vision Pro — Technical Specifications](https://www.apple.com/apple-vision-pro/specs/) — Hardware specifications for Vision Pro, including its tracking cameras, IMUs, and LiDAR scanner.
+
+- [Apple Developer — ARKit in visionOS](https://developer.apple.com/documentation/arkit/arkit-in-visionos) — Overview of the sensing and world-tracking capabilities exposed by ARKit on visionOS.
+
+- [Apple Developer — Tracking Specific Points in World Space](https://developer.apple.com/documentation/visionos/tracking-points-in-world-space) — Apple's explanation and sample code for using `WorldTrackingProvider` and world anchors to keep track of locations in physical space over time.
+
+- [Apple Developer — DeviceAnchor](https://developer.apple.com/documentation/arkit/deviceanchor) — Documentation for obtaining the position and orientation of Apple Vision Pro.
+
+- [Apple Developer — WorldAnchor](https://developer.apple.com/documentation/arkit/worldanchor) — Documentation for fixed locations tracked in a person's surroundings.
+
+- [Richard Hartley and Andrew Zisserman — *Multiple View Geometry in Computer Vision*](https://www.robots.ox.ac.uk/~vgg/hzbook/) — A standard reference for camera models, epipolar geometry, essential matrices, and multi-view reconstruction.
+
+- [Stefan Leutenegger et al. — *Keyframe-based Visual–Inertial Odometry Using Nonlinear Optimization*](https://doi.org/10.1177/0278364914554813) — A deeper reference on combining visual and inertial measurements for pose estimation.
+
+<Copyright />
